@@ -9,11 +9,12 @@ const SocketIo = require("socket.io")(Http, {
     }
 })
 var randomWords = require('random-words');
+const { electron } = require("webpack");
 
 var rooms = []
 
 SocketIo.on('connection', socket => {
-    socket.on('createroom', () => {
+    socket.on('createroom', data => {
         let roomname = randomWords({
             exactly: 3,
             join: '',
@@ -21,55 +22,43 @@ SocketIo.on('connection', socket => {
                 return word.slice(0, 1).toUpperCase().concat(word.slice(1))
             }
         });
-        rooms.forEach(existingroom => {
-            if (roomname == existingroom) {
-                roomname = randomWords({
-                    exactly: 3,
-                    join: '',
-                    formatter: (word) => {
-                        return word.slice(0, 1).toUpperCase().concat(word.slice(1))
-                    }
-                });
-            }
-        })
-        rooms.push(roomname);
+
+        while (rooms[roomname] != undefined) {
+            roomname = randomWords({
+                exactly: 3,
+                join: '',
+                formatter: (word) => {
+                    return word.slice(0, 1).toUpperCase().concat(word.slice(1))
+                }
+            });
+        }
+
+        rooms[roomname] = { player1: data.name, player2: "" };
         socket.join(roomname);
-<<<<<<< HEAD
-        console.log('le socket ' + socket.id + ' a rejoit le salon ' + roomname);
-=======
-        console.log('le socket ' + socket.id + ' a rejoint la salle ' + roomname);
->>>>>>> 306f5b5f3dc7c44787d52f544cdd078cb8f935bf
+        console.log('le joueur ' + playername + ' (socket ' + socket.id + ') a rejoit le salon ' + roomname);
         SocketIo.to(roomname).emit("roomjoined", { room: roomname });
-    })
+    });
 
     socket.on('joinroom', data => {
         let roomname = data.room
-        let exists = false;
-        rooms.forEach(existingroom => {
-            if (existingroom == roomname) {
-                exists = true;
-<<<<<<< HEAD
-                if (SocketIo.of("/").adapter.rooms.get(roomname).size < 2) {
-                    socket.join(roomname);
-                    console.log('le socket ' + socket.id + ' a rejoint le salon ' + roomname);
-                    SocketIo.to(roomname).emit("roomjoined", { room: roomname });
-                    if (SocketIo.of("/").adapter.rooms.get(roomname).size == 2) {
-                        console.log(SocketIo.of("/").adapter.rooms.get(roomname).values())
-                    }
-                } else {
-                    socket.emit("alert", { message: "Il y a déjà 2 joueurs dans ce salon" })
-                }
-                return;
-=======
+        let playername = data.name;
+
+        if (rooms[roomname] != undefined) {
+            if (SocketIo.of("/").adapter.rooms.get(roomname).size < 2) {
+                rooms[roomname].player2 = playername;
                 socket.join(roomname);
-                console.log('le socket ' + socket.id + ' a rejoint la salle ' + roomname);
+                console.log('le joueur ' + playername + ' (socket ' + socket.id + ') a rejoint le salon ' + roomname);
                 SocketIo.to(roomname).emit("roomjoined", { room: roomname });
->>>>>>> 306f5b5f3dc7c44787d52f544cdd078cb8f935bf
+                if (SocketIo.of("/").adapter.rooms.get(roomname).size == 2) {
+                    console.log(SocketIo.of("/").adapter.rooms.get(roomname).values())
+                    console.log(rooms[roomname]);
+                }
+            } else {
+                socket.emit("alert", { type: "error", message: "Il y a déjà 2 joueurs dans ce salon" })
             }
-        })
-        if (exists == false) {
+        } else {
             socket.emit("noroom", { room: roomname })
-            console.log('le socket ' + socket.id + ' a essayé de rejoindre le salon ' + roomname + ' mais elle n\'existe pas');
+            console.log('le joueur ' + playername + ' (socket ' + socket.id + ') a essayé de rejoindre le salon ' + roomname + ' mais il n\'existe pas');
         }
     })
 })
