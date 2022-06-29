@@ -1,41 +1,41 @@
 <template>
-<div>
-    <!-- Navigation -->
-    <div class="grille">
-        <div class="colonne1">
-        <h1 class="titre">Magnus Bazaar</h1>
-        <div class="bouton jeu">
-            <a class="lien" href="/jeu">Jouer contre une IA</a>
-        </div>
-        <form id="createRoom" action="">
-            <div class="bouton creer">
-                <input type="text" placeholder="Votre pseudo">
-                <input class="lien" type="submit" value="Créer">
+    <div style="display: none;">
+        <!-- Navigation -->
+        <div class="grille">
+            <div class="colonne1">
+            <h1 class="titre">Magnus Bazaar</h1>
+            <div class="bouton jeu">
+                <a class="lien" href="/jeu">Jouer contre une IA</a>
             </div>
-        </form>
-        <div class="bouton rejoindre">
-            <a class="lien" href="">Rejoindre un salon</a>
+            <form id="createRoom" action="">
+                <div class="bouton creer">
+                    <input type="text" placeholder="Votre pseudo">
+                    <input class="lien" type="submit" value="Créer">
+                </div>
+            </form>
+            <div class="bouton rejoindre">
+                <a class="lien" href="">Rejoindre un salon</a>
+            </div>
+            <div class="bouton regles">
+                <a class="lien" href="/regles">Règles du jeu</a>
+            </div>
+            <div class="copyright">
+                ©2022, QUEMERAS Arthur, FORSANS Paul, TRAVERS Nicolas
+            </div>
+            </div>
+            <div class="colonne2">
+                <img class="image_accueil" src="../assets/marchand.png" alt="" />
+            </div>
         </div>
-        <div class="bouton regles">
-            <a class="lien" href="/regles">Règles du jeu</a>
-        </div>
-        <div class="copyright">
-            ©2022, QUEMERAS Arthur, FORSANS Paul, TRAVERS Nicolas
-        </div>
-        </div>
-        <div class="colonne2">
-            <img class="image_accueil" src="../assets/marchand.png" alt="" />
-        </div>
-    </div>
 
-    <!-- Popup salon -->
-    <h2>Rejoindre un salon</h2>
-    <form id="joinRoom" action="">
-        <input type="text" placeholder="Votre pseudo">
-        <input type="text" placeholder="Nom du salon">
-        <input type="submit" value="Rejoindre">
-    </form>
-</div>
+        <!-- Popup salon -->
+        <h2>Rejoindre un salon</h2>
+        <form id="joinRoom" action="">
+            <input type="text" placeholder="Votre pseudo">
+            <input type="text" placeholder="Nom du salon">
+            <input type="submit" value="Rejoindre">
+        </form>
+    </div>
 </template>
 
 <script>
