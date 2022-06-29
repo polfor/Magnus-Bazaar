@@ -1,0 +1,278 @@
+{
+    "cards": [{
+            "id": 0,
+            "type": "camel",
+            "value": ""
+        },
+        {
+            "id": 1,
+            "type": "camel",
+            "value": ""
+        },
+        {
+            "id": 2,
+            "type": "camel",
+            "value": ""
+        },
+        {
+            "id": 3,
+            "type": "camel",
+            "value": ""
+        },
+        {
+            "id": 4,
+            "type": "camel",
+            "value": ""
+        },
+        {
+            "id": 5,
+            "type": "camel",
+            "value": ""
+        },
+        {
+            "id": 6,
+            "type": "camel",
+            "value": ""
+        },
+        {
+            "id": 7,
+            "type": "camel",
+            "value": ""
+        },
+        {
+            "id": 8,
+            "type": "camel",
+            "value": ""
+        },
+        {
+            "id": 9,
+            "type": "camel",
+            "value": ""
+        },
+        {
+            "id": 10,
+            "type": "camel",
+            "value": ""
+        },
+        {
+            "id": 11,
+            "type": "merchandise",
+            "value": "diamond"
+        },
+        {
+            "id": 12,
+            "type": "merchandise",
+            "value": "diamond"
+        },
+        {
+            "id": 13,
+            "type": "merchandise",
+            "value": "diamond"
+        },
+        {
+            "id": 14,
+            "type": "merchandise",
+            "value": "diamond"
+        },
+        {
+            "id": 15,
+            "type": "merchandise",
+            "value": "diamond"
+        },
+        {
+            "id": 16,
+            "type": "merchandise",
+            "value": "diamond"
+        },
+        {
+            "id": 17,
+            "type": "merchandise",
+            "value": "gold"
+        },
+        {
+            "id": 18,
+            "type": "merchandise",
+            "value": "gold"
+        },
+        {
+            "id": 19,
+            "type": "merchandise",
+            "value": "gold"
+        },
+        {
+            "id": 20,
+            "type": "merchandise",
+            "value": "gold"
+        },
+        {
+            "id": 21,
+            "type": "merchandise",
+            "value": "gold"
+        },
+        {
+            "id": 22,
+            "type": "merchandise",
+            "value": "gold"
+        },
+        {
+            "id": 23,
+            "type": "merchandise",
+            "value": "silver"
+        },
+        {
+            "id": 24,
+            "type": "merchandise",
+            "value": "silver"
+        },
+        {
+            "id": 25,
+            "type": "merchandise",
+            "value": "silver"
+        },
+        {
+            "id": 26,
+            "type": "merchandise",
+            "value": "silver"
+        },
+        {
+            "id": 27,
+            "type": "merchandise",
+            "value": "silver"
+        },
+        {
+            "id": 28,
+            "type": "merchandise",
+            "value": "silver"
+        },
+        {
+            "id": 29,
+            "type": "merchandise",
+            "value": "cloth"
+        },
+        {
+            "id": 30,
+            "type": "merchandise",
+            "value": "cloth"
+        },
+        {
+            "id": 31,
+            "type": "merchandise",
+            "value": "cloth"
+        },
+        {
+            "id": 32,
+            "type": "merchandise",
+            "value": "cloth"
+        },
+        {
+            "id": 33,
+            "type": "merchandise",
+            "value": "cloth"
+        },
+        {
+            "id": 34,
+            "type": "merchandise",
+            "value": "cloth"
+        },
+        {
+            "id": 35,
+            "type": "merchandise",
+            "value": "cloth"
+        },
+        {
+            "id": 36,
+            "type": "merchandise",
+            "value": "cloth"
+        },
+        {
+            "id": 37,
+            "type": "merchandise",
+            "value": "spice"
+        },
+        {
+            "id": 38,
+            "type": "merchandise",
+            "value": "spice"
+        },
+        {
+            "id": 39,
+            "type": "merchandise",
+            "value": "spice"
+        },
+        {
+            "id": 40,
+            "type": "merchandise",
+            "value": "spice"
+        },
+        {
+            "id": 41,
+            "type": "merchandise",
+            "value": "spice"
+        },
+        {
+            "id": 42,
+            "type": "merchandise",
+            "value": "spice"
+        },
+        {
+            "id": 43,
+            "type": "merchandise",
+            "value": "spice"
+        },
+        {
+            "id": 44,
+            "type": "merchandise",
+            "value": "spice"
+        },
+        {
+            "id": 45,
+            "type": "merchandise",
+            "value": "leather"
+        },
+        {
+            "id": 46,
+            "type": "merchandise",
+            "value": "leather"
+        },
+        {
+            "id": 47,
+            "type": "merchandise",
+            "value": "leather"
+        },
+        {
+            "id": 48,
+            "type": "merchandise",
+            "value": "leather"
+        },
+        {
+            "id": 49,
+            "type": "merchandise",
+            "value": "leather"
+        },
+        {
+            "id": 50,
+            "type": "merchandise",
+            "value": "leather"
+        },
+        {
+            "id": 51,
+            "type": "merchandise",
+            "value": "leather"
+        },
+        {
+            "id": 52,
+            "type": "merchandise",
+            "value": "leather"
+        },
+        {
+            "id": 53,
+            "type": "merchandise",
+            "value": "leather"
+        },
+        {
+            "id": 54,
+            "type": "merchandise",
+            "value": "leather"
+        }
+    ]
+}

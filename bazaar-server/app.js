@@ -1,3 +1,5 @@
+const Game = require("./game");
+const Player = require('./player');
 const Express = require("express");
 const Http = require('http').Server(Express)
 const SocketIo = require("socket.io")(Http, {
@@ -32,7 +34,7 @@ SocketIo.on('connection', socket => {
         })
         rooms.push(roomname);
         socket.join(roomname);
-        console.log('le socket ' + socket.id + ' a rejoit la salle ' + roomname);
+        console.log('le socket ' + socket.id + ' a rejoit le salon ' + roomname);
         SocketIo.to(roomname).emit("roomjoined", { room: roomname });
     })
 
@@ -42,14 +44,22 @@ SocketIo.on('connection', socket => {
         rooms.forEach(existingroom => {
             if (existingroom == roomname) {
                 exists = true;
-                socket.join(roomname);
-                console.log('le socket ' + socket.id + ' a rejoit la salle ' + roomname);
-                SocketIo.to(roomname).emit("roomjoined", { room: roomname });
+                if (SocketIo.of("/").adapter.rooms.get(roomname).size < 2) {
+                    socket.join(roomname);
+                    console.log('le socket ' + socket.id + ' a rejoint le salon ' + roomname);
+                    SocketIo.to(roomname).emit("roomjoined", { room: roomname });
+                    if (SocketIo.of("/").adapter.rooms.get(roomname).size == 2) {
+                        console.log(SocketIo.of("/").adapter.rooms.get(roomname).values())
+                    }
+                } else {
+                    socket.emit("alert", { message: "Il y a déjà 2 joueurs dans ce salon" })
+                }
+                return;
             }
         })
         if (exists == false) {
             socket.emit("noroom", { room: roomname })
-            console.log('le socket ' + socket.id + ' a essayé de rejoindre la salle ' + roomname + ' mais elle n\'existe pas');
+            console.log('le socket ' + socket.id + ' a essayé de rejoindre le salon ' + roomname + ' mais elle n\'existe pas');
         }
     })
 })
@@ -58,3 +68,6 @@ SocketIo.on('connection', socket => {
 Http.listen(3000, () => {
     console.log('listening at 3000');
 })
+
+let game = new Game()
+game.createGame()
