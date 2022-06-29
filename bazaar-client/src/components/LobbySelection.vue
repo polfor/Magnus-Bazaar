@@ -69,8 +69,7 @@ export default {
 .grille {
   display: flex;
 }
-.bouton{
-
+.bouton {
 }
 .colonne1 {
   text-align: center;
@@ -104,10 +103,12 @@ export default {
   background-color: #e2c372;
   cursor: pointer;
 }
+.nom_salon{
+    display: none;
+}
 
 .copyright {
   margin: auto;
   color: white;
 }
-
 </style>

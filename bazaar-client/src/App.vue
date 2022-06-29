@@ -24,6 +24,7 @@
 import io from "socket.io-client";
 import BazaarGame from "./components/BazaarGame.vue";
 import LobbySelection from "./components/LobbySelection.vue";
+import ReglesDuJeu from "./components/ReglesDuJeu.vue";
 
 export default {
   name: "App",
@@ -37,6 +38,7 @@ export default {
   components: {
     BazaarGame,
     LobbySelection,
+    ReglesDuJeu,
   },
   methods: {
     createAlert(data) {
