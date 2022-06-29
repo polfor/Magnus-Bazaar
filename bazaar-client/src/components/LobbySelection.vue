@@ -7,11 +7,12 @@
         <div class="bouton jeu">
             <a class="lien" href="/jeu">Jouer contre une IA</a>
         </div>
-            <form id="createRoom" action="">
-                <div class="bouton creer">
-                    <input class="lien" type="submit" value="Créer">
-                </div>
-            </form>
+        <form id="createRoom" action="">
+            <div class="bouton creer">
+                <input type="text" placeholder="Votre pseudo">
+                <input class="lien" type="submit" value="Créer">
+            </div>
+        </form>
         <div class="bouton rejoindre">
             <a class="lien" href="">Rejoindre un salon</a>
         </div>
@@ -30,6 +31,7 @@
     <!-- Popup salon -->
     <h2>Rejoindre un salon</h2>
     <form id="joinRoom" action="">
+        <input type="text" placeholder="Votre pseudo">
         <input type="text" placeholder="Nom du salon">
         <input type="submit" value="Rejoindre">
     </form>
@@ -46,11 +48,11 @@ export default {
         const roomJoin = document.querySelector('#joinRoom')
         roomCreation.addEventListener('submit', e => {
             e.preventDefault()
-            this.socket.emit("createroom");
+            this.socket.emit("createroom", {name : e.target[0].value});
         })
         roomJoin.addEventListener('submit', e => {
             e.preventDefault()
-            this.socket.emit('joinroom', {room: e.target[0].value})
+            this.socket.emit('joinroom', {name: e.target[0].value, room: e.target[1].value})
         })
         this.socket.on('roomjoined', data => {
             console.log("rejoint la salle "+ data.room)
