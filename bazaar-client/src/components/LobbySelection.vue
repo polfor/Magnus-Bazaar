@@ -1,7 +1,5 @@
 <template>
 <div>
-    <h1>Accueil</h1>
-
     <h2>Créer un salon</h2>
     <form id="createRoom" action="">
         <input type="submit" value="Créer">
