@@ -13,6 +13,8 @@ const { electron } = require("webpack");
 
 var rooms = []
 
+var games = []
+
 SocketIo.on('connection', socket => {
     socket.on('createroom', data => {
         let roomname = randomWords({
@@ -33,9 +35,9 @@ SocketIo.on('connection', socket => {
             });
         }
 
-        rooms[roomname] = { player1: data.name, player2: "" };
+        rooms[roomname] = { player1: { name: data.name, socket: socket.id }, player2: {} };
         socket.join(roomname);
-        console.log('le joueur ' + playername + ' (socket ' + socket.id + ') a rejoit le salon ' + roomname);
+        console.log('le joueur ' + data.name + ' (socket ' + socket.id + ') a rejoit le salon ' + roomname);
         SocketIo.to(roomname).emit("roomjoined", { room: roomname });
     });
 
@@ -45,13 +47,12 @@ SocketIo.on('connection', socket => {
 
         if (rooms[roomname] != undefined) {
             if (SocketIo.of("/").adapter.rooms.get(roomname).size < 2) {
-                rooms[roomname].player2 = playername;
+                rooms[roomname].player2 = { name: playername, socket: socket.id };
                 socket.join(roomname);
                 console.log('le joueur ' + playername + ' (socket ' + socket.id + ') a rejoint le salon ' + roomname);
                 SocketIo.to(roomname).emit("roomjoined", { room: roomname });
                 if (SocketIo.of("/").adapter.rooms.get(roomname).size == 2) {
-                    console.log(SocketIo.of("/").adapter.rooms.get(roomname).values())
-                    console.log(rooms[roomname]);
+                    startGame(roomname);
                 }
             } else {
                 socket.emit("alert", { type: "error", message: "Il y a déjà 2 joueurs dans ce salon" })
@@ -59,6 +60,8 @@ SocketIo.on('connection', socket => {
         } else {
             socket.emit("noroom", { room: roomname })
             console.log('le joueur ' + playername + ' (socket ' + socket.id + ') a essayé de rejoindre le salon ' + roomname + ' mais il n\'existe pas');
+            socket.emit("alert", { type: "error", message: "Le salon " + roomname + " n'existe pas" })
+
         }
     })
 })
@@ -68,5 +71,9 @@ Http.listen(3000, () => {
     console.log('listening at 3000');
 })
 
-let game = new Game()
-game.createGame()
+
+
+function startGame(roomName) {
+    games[roomName] = (new Game(SocketIo, roomName, new Player(rooms[roomName].player1.socket, rooms[roomName].player1.name), new Player(rooms[roomName].player2.socket, rooms[roomName].player2.name)));
+    games[roomName].createGame();
+}
