@@ -1,0 +1,28 @@
+{
+    "name": "magnus-bazaar",
+    "version": "1.0.0",
+    "description": "Jeu de ressources en ligne basé sur Jaipur",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "nodemon app.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://gitlab.com/nico.travers.49/magnus-bazaar.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://gitlab.com/nico.travers.49/magnus-bazaar/issues"
+    },
+    "homepage": "https://gitlab.com/nico.travers.49/magnus-bazaar#readme",
+    "dependencies": {
+        "express": "^4.18.1",
+        "random-words": "^1.2.0",
+        "socket.io": "^4.5.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.18"
+    }
+}
