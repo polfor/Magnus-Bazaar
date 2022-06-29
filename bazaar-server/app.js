@@ -67,13 +67,13 @@ SocketIo.on('connection', socket => {
 })
 
 
-Http.listen(3000, () => {
-    console.log('listening at 3000');
+Http.listen(4000, () => {
+    console.log('listening at 4000');
 })
 
 
 
 function startGame(roomName) {
-    games[roomName] = (new Game(SocketIo, roomName, new Player(rooms[roomName].player1.socket, rooms[roomName].player1.name), new Player(rooms[roomName].player2.socket, rooms[roomName].player2.name)));
-    games[roomName].createGame();
+    // games[roomName] = (new Game(SocketIo, roomName, new Player(rooms[roomName].player1.socket, rooms[roomName].player1.name), new Player(rooms[roomName].player2.socket, rooms[roomName].player2.name)));
+    // games[roomName].createGame();
 }
