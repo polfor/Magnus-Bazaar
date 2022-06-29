@@ -1,7 +1,7 @@
 <template>
 <div>
    <LobbySelection :socket=this.socket />
-   <BazaarGame />
+   <BazaarGame :socket=this.socket />
 </div>
 </template>
 

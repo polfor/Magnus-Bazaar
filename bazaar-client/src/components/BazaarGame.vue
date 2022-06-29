@@ -12,6 +12,7 @@
 
 export default {
   name: 'BazaarGame',
+  props : ['socket'],
   methods: {
     sell:  () => {
       console.log("vendu")
@@ -19,8 +20,18 @@ export default {
 
     buy: () => {
       console.log("acheté")
+    },
+
+    createGame: (gameState) => {
+      console.log(gameState)
     }
-  }
+
+  }, mounted () {
+      this.socket.on('gamecreated', gameData => {
+        this.createGame(gameData);
+      });
+    }
+
 }
 
 
