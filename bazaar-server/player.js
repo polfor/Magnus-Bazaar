@@ -15,6 +15,12 @@ class Player {
             this.hand.push(card);
         });
     }
+
+    addToTokens(tokens) {
+        tokens.forEach(token => {
+            this.tokens.push(token);
+        })
+    }
 }
 
 module.exports = Player;

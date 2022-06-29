@@ -9,7 +9,6 @@ const SocketIo = require("socket.io")(Http, {
     }
 })
 var randomWords = require('random-words');
-const { electron } = require("webpack");
 
 var rooms = []
 
@@ -35,7 +34,7 @@ SocketIo.on('connection', socket => {
             });
         }
 
-        rooms[roomname] = { player1: { name: data.name, socket: socket.id }, player2: {} };
+        rooms[roomname] = { player1: { name: data.name, socket: socket }, player2: {} };
         socket.join(roomname);
         console.log('le joueur ' + data.name + ' (socket ' + socket.id + ') a rejoit le salon ' + roomname);
         SocketIo.to(roomname).emit("roomjoined", { room: roomname });
@@ -47,7 +46,7 @@ SocketIo.on('connection', socket => {
 
         if (rooms[roomname] != undefined) {
             if (SocketIo.of("/").adapter.rooms.get(roomname).size < 2) {
-                rooms[roomname].player2 = { name: playername, socket: socket.id };
+                rooms[roomname].player2 = { name: playername, socket: socket };
                 socket.join(roomname);
                 console.log('le joueur ' + playername + ' (socket ' + socket.id + ') a rejoint le salon ' + roomname);
                 SocketIo.to(roomname).emit("roomjoined", { room: roomname });
@@ -67,13 +66,12 @@ SocketIo.on('connection', socket => {
 })
 
 
-Http.listen(4000, () => {
-    console.log('listening at 4000');
+Http.listen(3000, () => {
+    console.log('listening at 3000');
 })
 
 
 
 function startGame(roomName) {
-    // games[roomName] = (new Game(SocketIo, roomName, new Player(rooms[roomName].player1.socket, rooms[roomName].player1.name), new Player(rooms[roomName].player2.socket, rooms[roomName].player2.name)));
-    // games[roomName].createGame();
+    games[roomName] = (new Game(SocketIo, roomName, new Player(rooms[roomName].player1.socket, rooms[roomName].player1.name), new Player(rooms[roomName].player2.socket, rooms[roomName].player2.name)));
 }

@@ -1,79 +1,115 @@
-const Game = require("./game");
 const Player = require('./player');
-const Express = require("express");
-const Http = require('http').Server(Express)
-const SocketIo = require("socket.io")(Http, {
-    cors: {
-        origin: '*',
-        methods: ["GET", "POST"]
+seedrandom = require('seedrandom');
+const cardsTemplate = {
+    "cards": [{
+        "current_position": "",
+        "new_position": "",
+        "type": "",
+        "value": ""
+    }],
+    "deck": ""
+}
+const baseCards = require('./cards.json').cards;
+const baseTokens = require('./tokens.json').tokens;
+
+class Game {
+
+    io;
+    room;
+    seed;
+    deck = [];
+    graveyard = [];
+    market = [];
+    tokens = {
+        diamond: [],
+        gold: [],
+        silver: [],
+        cloth: [],
+        spice: [],
+        leather: [],
+        bonus: {
+            3: [],
+            4: [],
+            5: []
+        }
     }
-})
-var randomWords = require('random-words');
-const { electron } = require("webpack");
+    players = [];
+    currentPlayer;
 
-var rooms = []
+    constructor(io, roomName, player1, player2) {
+        this.io = io;
+        this.room = roomName;
+        this.seed = seedrandom(roomName)
+        this.players.push(player1, player2);
 
-var games = []
+        if (this.seed.quick() >= .5) {
+            this.currentPlayer = this.players[0]
+        } else {
+            this.currentPlayer = this.players[1]
+        }
 
-SocketIo.on('connection', socket => {
-    socket.on('createroom', data => {
-        let roomname = randomWords({
-            exactly: 3,
-            join: '',
-            formatter: (word) => {
-                return word.slice(0, 1).toUpperCase().concat(word.slice(1))
-            }
+        baseCards.slice(0, 3).forEach(card => {
+            this.market.push(card)
+        })
+        this.deck = this.shuffle(baseCards.slice(3))
+        this.deck.splice(0, 2).forEach(card => {
+            this.market.push(card)
         });
 
-        while (rooms[roomname] != undefined) {
-            roomname = randomWords({
-                exactly: 3,
-                join: '',
-                formatter: (word) => {
-                    return word.slice(0, 1).toUpperCase().concat(word.slice(1))
-                }
-            });
+        this.tokens.diamond = baseTokens.diamond;
+        this.tokens.gold = baseTokens.gold;
+        this.tokens.silver = baseTokens.silver;
+        this.tokens.cloth = baseTokens.cloth;
+        this.tokens.spice = baseTokens.spice;
+        this.tokens.leather = baseTokens.leather;
+        this.tokens.bonus[3] = this.shuffle(baseTokens.bonus[3]);
+        this.tokens.bonus[4] = this.shuffle(baseTokens.bonus[4]);
+        this.tokens.bonus[5] = this.shuffle(baseTokens.bonus[5]);
+
+        let i = 0
+        this.players.forEach(player => {
+            player.addToHand(this.deck.splice(0, 5))
+            player.socket.on('sell', data => {
+                sell(player, data);
+            })
+            player.socket.on('buy', data => {
+                buy(player, data);
+            })
+            this.io.to(player.socket).emit('game-start', { playerNo: i++ })
+        })
+
+
+        this.updateGame();
+    }
+
+    shuffle(array) {
+        let curId = array.length;
+        while (0 !== curId) {
+            let randId = Math.floor(this.seed.quick() * curId);
+            curId -= 1;
+            let tmp = array[curId];
+            array[curId] = array[randId];
+            array[randId] = tmp;
         }
+        return array;
+    }
 
-        rooms[roomname] = { player1: { name: data.name, socket: socket.id }, player2: {} };
-        socket.join(roomname);
-        console.log('le joueur ' + data.name + ' (socket ' + socket.id + ') a rejoit le salon ' + roomname);
-        SocketIo.to(roomname).emit("roomjoined", { room: roomname });
-    });
+    updateGame() {
+        this.io.to(this.room).emit('game-update', {
+            players: this.players,
+            deck: this.deck,
+            graveyard: this.graveyard,
+            market: this.market,
+            tokens: this.tokens,
+            currentPlayer: this.currentPlayer
+        })
+    }
 
-    socket.on('joinroom', data => {
-        let roomname = data.room
-        let playername = data.name;
-
-        if (rooms[roomname] != undefined) {
-            if (SocketIo.of("/").adapter.rooms.get(roomname).size < 2) {
-                rooms[roomname].player2 = { name: playername, socket: socket.id };
-                socket.join(roomname);
-                console.log('le joueur ' + playername + ' (socket ' + socket.id + ') a rejoint le salon ' + roomname);
-                SocketIo.to(roomname).emit("roomjoined", { room: roomname });
-                if (SocketIo.of("/").adapter.rooms.get(roomname).size == 2) {
-                    startGame(roomname);
-                }
-            } else {
-                socket.emit("alert", { type: "error", message: "Il y a déjà 2 joueurs dans ce salon" })
-            }
-        } else {
-            socket.emit("noroom", { room: roomname })
-            console.log('le joueur ' + playername + ' (socket ' + socket.id + ') a essayé de rejoindre le salon ' + roomname + ' mais il n\'existe pas');
-            socket.emit("alert", { type: "error", message: "Le salon " + roomname + " n'existe pas" })
-
-        }
-    })
-})
+    sell(player, sellData) {
+        sellData.forEach(card => {})
+    }
 
 
-Http.listen(3000, () => {
-    console.log('listening at 3000');
-})
-
-
-
-function startGame(roomName) {
-    games[roomName] = (new Game(SocketIo, roomName, new Player(rooms[roomName].player1.socket, rooms[roomName].player1.name), new Player(rooms[roomName].player2.socket, rooms[roomName].player2.name)));
-    games[roomName].createGame();
 }
+
+module.exports = Game;
