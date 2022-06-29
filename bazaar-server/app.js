@@ -34,7 +34,11 @@ SocketIo.on('connection', socket => {
         })
         rooms.push(roomname);
         socket.join(roomname);
+<<<<<<< HEAD
         console.log('le socket ' + socket.id + ' a rejoit le salon ' + roomname);
+=======
+        console.log('le socket ' + socket.id + ' a rejoint la salle ' + roomname);
+>>>>>>> 306f5b5f3dc7c44787d52f544cdd078cb8f935bf
         SocketIo.to(roomname).emit("roomjoined", { room: roomname });
     })
 
@@ -44,6 +48,7 @@ SocketIo.on('connection', socket => {
         rooms.forEach(existingroom => {
             if (existingroom == roomname) {
                 exists = true;
+<<<<<<< HEAD
                 if (SocketIo.of("/").adapter.rooms.get(roomname).size < 2) {
                     socket.join(roomname);
                     console.log('le socket ' + socket.id + ' a rejoint le salon ' + roomname);
@@ -55,6 +60,11 @@ SocketIo.on('connection', socket => {
                     socket.emit("alert", { message: "Il y a déjà 2 joueurs dans ce salon" })
                 }
                 return;
+=======
+                socket.join(roomname);
+                console.log('le socket ' + socket.id + ' a rejoint la salle ' + roomname);
+                SocketIo.to(roomname).emit("roomjoined", { room: roomname });
+>>>>>>> 306f5b5f3dc7c44787d52f544cdd078cb8f935bf
             }
         })
         if (exists == false) {

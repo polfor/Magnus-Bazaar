@@ -7,25 +7,29 @@
 
 <script>
 import io from "socket.io-client";
-import BazaarGame from './components/BazaarGame.vue'
-import LobbySelection from './components/LobbySelection.vue'
+import BazaarGame from "./components/BazaarGame.vue";
+import LobbySelection from "./components/LobbySelection.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   data() {
     return {
-       socket: {}
-    }
+      socket: {},
+    };
   },
   components: {
     BazaarGame,
-    LobbySelection
+    LobbySelection,
   },
   created() {
-    this.socket = io("http://localhost:3000")
-  }
-}
+    this.socket = io("http://localhost:3000");
+  },
+};
 </script>
 
 <style>
+body {
+  background-image: url(./assets/Background.png);
+   margin: 0rem;
+}
 </style>
