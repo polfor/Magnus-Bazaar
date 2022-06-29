@@ -24,7 +24,7 @@
         </div>
         </div>
         <div class="colonne2">
-        <img class="image_accueil" src="../assets/marchand.png" alt="" />
+            <img class="image_accueil" src="../assets/marchand.png" alt="" />
         </div>
     </div>
 
@@ -84,7 +84,6 @@ export default {
 .titre {
   margin-top: 5rem;
   color: white;
-  font-family: sans-serif;
 }
 .image_accueil {
   max-width: 100%;
@@ -98,7 +97,6 @@ export default {
   font-size: large;
   padding: 1rem;
   border-radius: 0.5rem;
-  font-family: sans-serif;
   border: none;
 }
 .lien:hover {
