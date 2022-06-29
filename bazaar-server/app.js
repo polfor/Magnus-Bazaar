@@ -32,7 +32,7 @@ SocketIo.on('connection', socket => {
         })
         rooms.push(roomname);
         socket.join(roomname);
-        console.log('le socket ' + socket.id + ' a rejoit la salle ' + roomname);
+        console.log('le socket ' + socket.id + ' a rejoint la salle ' + roomname);
         SocketIo.to(roomname).emit("roomjoined", { room: roomname });
     })
 
@@ -43,7 +43,7 @@ SocketIo.on('connection', socket => {
             if (existingroom == roomname) {
                 exists = true;
                 socket.join(roomname);
-                console.log('le socket ' + socket.id + ' a rejoit la salle ' + roomname);
+                console.log('le socket ' + socket.id + ' a rejoint la salle ' + roomname);
                 SocketIo.to(roomname).emit("roomjoined", { room: roomname });
             }
         })
