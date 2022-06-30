@@ -27,15 +27,39 @@
                 <img class="image_accueil" src="../assets/marchand.png" alt="" />
             </div>
         </div>
-
-        <!-- Popup salon -->
-        <h2>Rejoindre un salon</h2>
-        <form id="joinRoom" action="">
-            <input type="text" placeholder="Votre pseudo">
-            <input type="text" placeholder="Nom du salon">
-            <input type="submit" value="Rejoindre">
+        <form id="createRoom" action="">
+          <div class="bouton creer">
+            <input type="text" placeholder="Votre pseudo" />
+            <input class="lien" type="submit" value="Créer" />
+          </div>
         </form>
+        <div class="bouton rejoindre">
+          <a class="lien" href="">Rejoindre un salon</a>
+        </div>
+        <div class="bouton regles">
+          <router-link class="lien" to="/regles">Règles du jeu</router-link>
+        </div>
+        <div class="bouton communication">
+          <router-link class="lien" to="/communication">Communication</router-link>
+        </div>
+        <div class="copyright">
+          ©2022, QUEMERAS Arthur, FORSANS Paul, TRAVERS Nicolas
+        </div>
+      </div>
+      <div class="colonne2">
+        <img class="image_accueil" src="../assets/marchand.png" alt="" />
+      </div>
     </div>
+    <div style="display:none">
+      <h2>Rejoindre un salon</h2>
+      <form id="joinRoom" action="">
+        <input type="text" placeholder="Votre pseudo" />
+        <input type="text" placeholder="Nom du salon" />
+        <input type="submit" value="Rejoindre" />
+      </form>
+    </div>
+    <!-- Popup salon -->
+  </div>
 </template>
 
 <script>
@@ -103,8 +127,8 @@ export default {
   background-color: #e2c372;
   cursor: pointer;
 }
-.nom_salon{
-    display: none;
+.nom_salon {
+  display: none;
 }
 
 .copyright {

@@ -1,6 +1,6 @@
 <template>
+<router-link to="/">Accueil</router-link>
   <span>
-    <a href="/accueil">retour à l'accueil</a>
     <h1>Règles du jeu</h1>
   </span>
   <h2>Déroulement d’une partie</h2>
