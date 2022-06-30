@@ -1,51 +1,51 @@
-const Player = require('./player');
-seedrandom = require('seedrandom');
-const cardsTemplate = {
-    "cards": [{
-        "current_position": "",
-        "new_position": "",
-        "type": "",
-        "value": ""
-    }],
-    "deck": ""
-}
-const baseCards = require('./cards.json').cards;
-const baseTokens = require('./tokens.json').tokens;
+class Player {
+    socket;
+    name;
+    hand = [];
+    enclos = [];
+    tokens = [];
 
-class Game {
-
-    io;
-    room;
-    seed;
-    deck = [];
-    graveyard = [];
-    market = [];
-    tokens = {
-        diamond: [],
-        gold: [],
-        silver: [],
-        cloth: [],
-        spice: [],
-        leather: [],
-        bonus: {
-            3: [],
-            4: [],
-            5: []
-        }
+    constructor(socket, name) {
+        this.socket = socket;
+        this.name = name;
     }
-    players = [];
-    currentPlayer;
 
-    constructor(io, roomName, player1, player2) {
-        this.io = io;
-        this.room = roomName;
-        this.seed = seedrandom(roomName)
+    addToHand(card) {
+        this.hand.push(card);
+    }
+
+    addToTokens(token) {
+        this.tokens.push(token);
+    }
+
+    addCamel(camel) {
+        this.enclos.push(camel)
+    }
+
+    removeFromHand(card) {
+        // this.
+    }
+
+    getHand() {
+        return this.hand;
+    }
+
+    getEnclos() {
+        return this.enclos;
+    }
+
+    getTokens() {
+        return this.tokens;
+    }
+}
+
+module.exports = Player;random(roomName)
         this.players.push(player1, player2);
 
         if (this.seed.quick() >= .5) {
-            this.currentPlayer = this.players[0]
+            this.currentPlayer = 0
         } else {
-            this.currentPlayer = this.players[1]
+            this.currentPlayer = 1
         }
 
         baseCards.slice(0, 3).forEach(card => {
@@ -66,16 +66,18 @@ class Game {
         this.tokens.bonus[4] = this.shuffle(baseTokens.bonus[4]);
         this.tokens.bonus[5] = this.shuffle(baseTokens.bonus[5]);
 
-        let i = 0
+        let i = 1
         this.players.forEach(player => {
-            player.addToHand(this.deck.splice(0, 5))
+            this.deck.splice(0, 5).forEach(card => {
+                player.addToHand(card)
+            })
             player.socket.on('sell', data => {
                 sell(player, data);
             })
             player.socket.on('buy', data => {
                 buy(player, data);
             })
-            this.io.to(player.socket).emit('game-start', { playerNo: i++ })
+            this.io.to(player.socket).emit('game-start', { playerNo: i++, player1Name: this.players[0].name, player2Name: this.players[1].name })
         })
 
 
@@ -96,17 +98,42 @@ class Game {
 
     updateGame() {
         this.io.to(this.room).emit('game-update', {
-            players: this.players,
             deck: this.deck,
-            graveyard: this.graveyard,
+            players: [{
+                    hand: this.players[0].getHand(),
+                    enclos: this.players[0].getEnclos(),
+                    tokens: this.players[0].getTokens()
+                },
+                {
+                    hand: this.players[1].getHand(),
+                    enclos: this.players[1].getEnclos(),
+                    tokens: this.players[1].getTokens()
+                }
+            ],
             market: this.market,
+            graveyard: this.graveyard,
             tokens: this.tokens,
             currentPlayer: this.currentPlayer
         })
+
     }
 
-    sell(player, sellData) {
-        sellData.forEach(card => {})
+    trade(player, data) {
+        data.tradedCards.forEach(card => {
+            if (card.type != "camel") {
+                player.removeFromHand(card)
+            } else {
+                player.removeCamel(card)
+            }
+        })
+
+        data.takenCards.forEach(card => {
+            if (card.type != "camel") {
+                player.addToHand(card)
+            } else {
+                player.addCamel(card)
+            }
+        })
     }
 
 
