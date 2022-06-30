@@ -66,10 +66,15 @@ class Game {
         this.tokens.bonus[4] = this.shuffle(baseTokens.bonus[4]);
         this.tokens.bonus[5] = this.shuffle(baseTokens.bonus[5]);
 
-        let i = 1
+        let i = 0
         this.players.forEach(player => {
             this.deck.splice(0, 5).forEach(card => {
-                player.addToHand(card)
+                if(card.type != "camel") {
+                    player.addToHand(card)
+                }
+                else {
+                    player.addCamel(card)
+                }
             })
             player.socket.on('sell', data => {
                 sell(player, data);
@@ -77,9 +82,10 @@ class Game {
             player.socket.on('buy', data => {
                 buy(player, data);
             })
-            this.io.to(player.socket).emit('game-start', { playerNo: i++, player1Name: this.players[0].name, player2Name: this.players[1].name })
+            player.socket.emit('game-start', { playerNo: i++, playerNames : [this.players[0].name, this.players[1].name] })
         })
 
+        this.buildEvents();
 
         this.updateGame();
     }
@@ -96,7 +102,22 @@ class Game {
         return array;
     }
 
+    buildEvents() {
+        this.players.forEach(player => {
+            player.socket.on('trade', data => {
+                this.trade(player, data)
+                this.updateGame();
+            })
+
+            player.socket.on('sell', data => {
+                this.sell(player, data)
+                this.updateGame();
+            })
+        })
+    }
+
     updateGame() {
+
         this.io.to(this.room).emit('game-update', {
             deck: this.deck,
             players: [{
@@ -134,6 +155,49 @@ class Game {
                 player.addCamel(card)
             }
         })
+
+        while (this.market.length < 5) {
+            this.market.push(this.deck.splice(0, 1));
+        }
+    }
+
+    sell(player, data) {
+        data.soldCards.forEach(card => {
+            this.graveyard.push(player.removeFromHand(card));
+            switch (card.value) {
+                case "diamond" : 
+                    player.addToTokens(this.tokens.diamond.splice(0, 1))
+                    break;
+                case "gold" : 
+                    player.addToTokens(this.tokens.gold.splice(0, 1))
+                    break;
+                case "silver" : 
+                    player.addToTokens(this.tokens.silver.splice(0, 1))
+                    break;
+                case "cloth" : 
+                    player.addToTokens(this.tokens.cloth.splice(0, 1))
+                    break;
+                case "spice" : 
+                    player.addToTokens(this.tokens.spice.splice(0, 1))
+                    break;
+                case "leather" : 
+                    player.addToTokens(this.tokens.leather.splice(0, 1))
+                    break;
+                default :
+                    player.socket.emit("alert", { type: "error", message: "Essayé de vendre une carte illégale", card: card })
+                    return;
+            }
+        })
+        let nbSoldCards = data.soldCards.length
+        if(nbSoldCards >=3) {
+            if(nbSoldCards >= 5) {
+                player.addToTokens(this.tokens.bonus[5].splice(0, 1));
+            }
+            else {
+                player.addToTokens(this.tokens.bonus[nbSoldCards].splice(0, 1));
+            }
+        }
+
     }
 }
 
