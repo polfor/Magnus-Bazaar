@@ -1,45 +1,45 @@
-class Player {
-    socket;
-    name;
-    hand = [];
-    enclos = [];
-    tokens = [];
-
-    constructor(socket, name) {
-        this.socket = socket;
-        this.name = name;
-    }
-
-    addToHand(card) {
-        this.hand.push(card);
-    }
-
-    addToTokens(token) {
-        this.tokens.push(token);
-    }
-
-    addCamel(camel) {
-        this.enclos.push(camel)
-    }
-
-    removeFromHand(card) {
-        // this.
-    }
-
-    getHand() {
-        return this.hand;
-    }
-
-    getEnclos() {
-        return this.enclos;
-    }
-
-    getTokens() {
-        return this.tokens;
-    }
+const Player = require('./player');
+seedrandom = require('seedrandom');
+const cardsTemplate = {
+    "cards": [{
+        "current_position": "",
+        "new_position": "",
+        "type": "",
+        "value": ""
+    }],
+    "deck": ""
 }
+const baseCards = require('./cards.json').cards;
+const baseTokens = require('./tokens.json').tokens;
 
-module.exports = Player;random(roomName)
+class Game {
+
+    io;
+    room;
+    seed;
+    deck = [];
+    graveyard = [];
+    market = [];
+    tokens = {
+        diamond: [],
+        gold: [],
+        silver: [],
+        cloth: [],
+        spice: [],
+        leather: [],
+        bonus: {
+            3: [],
+            4: [],
+            5: []
+        }
+    }
+    players = [];
+    currentPlayer;
+
+    constructor(io, roomName, player1, player2) {
+        this.io = io;
+        this.room = roomName;
+        this.seed = seedrandom(roomName)
         this.players.push(player1, player2);
 
         if (this.seed.quick() >= .5) {
@@ -135,8 +135,6 @@ module.exports = Player;random(roomName)
             }
         })
     }
-
-
 }
 
 module.exports = Game;
