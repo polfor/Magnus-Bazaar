@@ -23,7 +23,7 @@ class Player {
     }
 
     removeFromHand(card) {
-        // this.
+        this.hand.splice(this.hand.indexOf(card), 1)
     }
 
     getHand() {
