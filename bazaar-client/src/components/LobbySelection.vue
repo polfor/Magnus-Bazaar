@@ -1,5 +1,5 @@
 <template>
-    <div style="display: none;">
+    <div>
         <!-- Navigation -->
         <div class="grille">
             <div class="colonne1">

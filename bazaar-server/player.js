@@ -10,16 +10,32 @@ class Player {
         this.name = name;
     }
 
-    addToHand(cards) {
-        cards.forEach(card => {
-            this.hand.push(card);
-        });
+    addToHand(card) {
+        this.hand.push(card);
     }
 
-    addToTokens(tokens) {
-        tokens.forEach(token => {
-            this.tokens.push(token);
-        })
+    addToTokens(token) {
+        this.tokens.push(token);
+    }
+
+    addCamel(camel) {
+        this.enclos.push(camel)
+    }
+
+    removeFromHand(card) {
+        // this.
+    }
+
+    getHand() {
+        return this.hand;
+    }
+
+    getEnclos() {
+        return this.enclos;
+    }
+
+    getTokens() {
+        return this.tokens;
     }
 }
 
