@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="lobby">
         <!-- Navigation -->
         <div class="grille">
             <div class="colonne1">
@@ -41,7 +41,7 @@
 <script>
 export default {
     name: "LobbySeletion",
-    props: ['socket'],
+    props: ['socket', 'lobby'],
     mounted () {
         console.log(this.socket)
         const roomCreation = document.querySelector('#createRoom')
@@ -53,6 +53,7 @@ export default {
         roomJoin.addEventListener('submit', e => {
             e.preventDefault()
             this.socket.emit('joinroom', {name: e.target[0].value, room: e.target[1].value})
+            this.$emit('lobby', false);
         })
         this.socket.on('roomjoined', data => {
             console.log("rejoint la salle "+ data.room)

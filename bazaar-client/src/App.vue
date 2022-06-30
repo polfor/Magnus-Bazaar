@@ -1,7 +1,7 @@
 <template>
 <div>
-    <LobbySelection :socket=this.socket />
-    <BazaarGame :socket=this.socket />
+    <LobbySelection :socket=this.socket :lobby=this.lobby />
+    <BazaarGame :socket=this.socket :lobby=this.lobby />
    
     <!-- Notifications -->
     <ul id="alert" class="alert">
@@ -30,6 +30,7 @@ export default {
   data() {
     return {
       socket: {},
+      lobby: false,
       alerts: []
     };
   },
