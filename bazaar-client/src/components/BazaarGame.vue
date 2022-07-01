@@ -1,41 +1,49 @@
 <template>
   <div v-if="lobby == false" class="bazaarGame">
     <!-- Leave -->
-    <button  class="test" @click="this.emitter.emit('setLobby', true);"><svg
-        class="bouton_maison"
-        width="36"
-        height="35"
-        viewBox="0 0 36 35"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M28.2004 14L31.9498 18.375L28.2004 14ZM28.2004 22.75L31.9498 18.375L28.2004 22.75Z"
-          stroke="white"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M29.7 18.375H18M7.19995 6.125H23.4M7.19995 30.625H23.4M23.4 6.125V13.125M23.4 23.625V30.625M7.19995 6.125V30.625"
-          stroke="white"
-          stroke-width="2"
-          stroke-linecap="round"
-        />
-      </svg></button>
+    <button @click="this.emitter.emit('setLobby', true)">Quitter le salon</button>
+
+    <!-- Loaded -->
+    <div class="loaded" v-if="wait">
+      <div class="loaded-container">
+        <div>
+          <h2>Nom de la partie</h2>
+          <div class="room">
+            <p id="room">{{ room }}</p>
+            <button @click="copy">
+              <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 20 20">
+                <g fill="currentColor">
+                  <path d="M8 2a1 1 0 0 0 0 2h2a1 1 0 1 0 0-2H8Z"/>
+                  <path d="M3 5a2 2 0 0 1 2-2a3 3 0 0 0 3 3h2a3 3 0 0 0 3-3a2 2 0 0 1 2 2v6h-4.586l1.293-1.293a1 1 0 0 0-1.414-1.414l-3 3a1 1 0 0 0 0 1.414l3 3a1 1 0 0 0 1.414-1.414L10.414 13H15v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5Zm12 6h2a1 1 0 1 1 0 2h-2v-2Z"/>
+                </g>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <p>En attente de l'adversaire ...</p>
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="2em" height="2em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-dasharray="15" stroke-dashoffset="15" stroke-linecap="round" stroke-width="2" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></svg>
+      </div>
+    </div>
 
     <!-- Hand player one -->
     <div @mouseenter="handOpen = true" @mouseleave="handOpen = false" v-bind:class="{ open: handOpen }" class="player-cards player-cards-one">
       <!-- Hand -->
       <div class="hand-container-one">
         <div class="hand">
-          <img @click="active" v-for="index in 7" :key="index" class="little-card card-player" src="@/assets/Back_card.png" alt="">
+          <div v-for="card in player.hand" :key="card.id">
+            <img @click="active" v-if="card.value == 'leather'" class="little-card card-player" src="@/assets/Leather_card.png" alt="">
+            <img @click="active" v-if="card.value == 'spice'" class="little-card card-player" src="@/assets/Spices_card.png" alt="">
+            <img @click="active" v-if="card.value == 'cloth'" class="little-card card-player" src="@/assets/Carpet_card.png" alt="">
+            <img @click="active" v-if="card.value == 'silver'" class="little-card card-player" src="@/assets/Silver_card.png" alt="">
+            <img @click="active" v-if="card.value == 'gold'" class="little-card card-player" src="@/assets/Gold_card.png" alt="">
+            <img @click="active" v-if="card.value == 'ruby'" class="little-card card-player" src="@/assets/Ruby_card.png" alt="">
+          </div>
         </div>
       </div>
       
       <!-- Enclosure -->
       <div class="enclosure enclosure-one">
-        <img @click="active" v-for="enclosure in playerOne.enclosure" :key="enclosure.index" class="little-card camel-card camel-card-one" src="@/assets/Camel_card.png" alt="">
+        <img @click="active" v-for="enclosure in player.enclosure" :key="enclosure.index" class="little-card camel-card camel-card-one" src="@/assets/Camel_card.png" alt="">
       </div>
     </div>
 
@@ -45,13 +53,13 @@
     <div class="player-cards player-cards-two">
       <!-- Enclosure -->
       <div>
-        <img class="little-card" src="@/assets/Camel_card.png" alt="">
+        <img v-if="opponent.enclosure.length != 0" class="little-card" src="@/assets/Camel_card.png" alt="">
       </div>
 
       <!-- Hand -->
       <div class="hand-container-two">
         <div class="hand">
-          <img v-for="index in 5" :key="index" class="little-card card-player" src="@/assets/Back_card.png" alt="">
+          <img v-for="index in opponent.hand" :key="index" class="little-card card-player" src="@/assets/Back_card.png" alt="">
         </div>
       </div>
     </div>
@@ -102,8 +110,15 @@
 
         <!-- Market -->
         <div class="market">
-          <img @click="active" v-for="index in 3" :key="index" class="card" src="@/assets/Camel_card.png" alt="">
-          <div v-for="index in 2" :key="index" class="card empty-cards"></div>
+          <div v-for="card in market" :key="card.id">
+            <img @click="active" v-if="card.type == 'camel'" class="card empty-cards" src="@/assets/Camel_card.png" alt="">
+            <img @click="active" v-if="card.value == 'leather'" class="card empty-cards" src="@/assets/Leather_card.png" alt="">
+            <img @click="active" v-if="card.value == 'spice'" class="card empty-cards" src="@/assets/Spices_card.png" alt="">
+            <img @click="active" v-if="card.value == 'cloth'" class="card empty-cards" src="@/assets/Carpet_card.png" alt="">
+            <img @click="active" v-if="card.value == 'silver'" class="card empty-cards" src="@/assets/Silver_card.png" alt="">
+            <img @click="active" v-if="card.value == 'gold'" class="card empty-cards" src="@/assets/Gold_card.png" alt="">
+            <img @click="active" v-if="card.value == 'ruby'" class="card empty-cards" src="@/assets/Ruby_card.png" alt="">
+          </div>
 
           <!-- Buttons -->
           <div class="buttons">
@@ -117,7 +132,7 @@
         <div class="interface">
           <!-- Name player 1 -->
           <div class="player player-one">
-            <p>{{ playerOne.playerNo }}</p>
+            <p>{{ player.name }}</p>
           </div>
 
           <!-- Game cards -->
@@ -133,7 +148,7 @@
 
           <!-- Name player 2 -->
           <div class="player player-two">
-            <p>{{ playerTwo.playerNo }}</p>
+            <p>{{ opponent.name }}</p>
           </div>
         </div>
       </div>
@@ -142,32 +157,36 @@
 </template>
 
 <script>
-
 export default {
   name: 'BazaarGame',
-  props : ['socket', 'lobby'],
+  props : ['socket', 'lobby', 'room'],
   data () {
     return {
+      wait: true,
+
+      // hand
       handOpen: false,
 
-      hand: [],
-      playerOne: {
-        playerNo: "",
-        hand: [],
-        enclosure: ['fzv', 'fqer', 'fedrz']
+      // json send
+      playerNo: 0,
+      opponentNo: 1,
+      player: {
+          name: "You",
+          hand: [],
+          enclosure: [],
+          tokens: []
       },
-      playerTwo: {
-        playerNo: "",
-        hand: [],
-        enclosure:  ['fzv', 'fqer']
+      opponent: {
+          name: "Opponent",
+          hand: [],
+          enclosure: [],
+          tokens: []
       },
-      board: {
-        market: [],
-        deck: "full",
-        graveyard: []
-      },
-      tradedCards: [],
-      takenCards: []
+      market: [],
+
+      // trade
+      tradeGive: [],
+      tradeWant: []
     }
   },
   methods: {
@@ -193,18 +212,39 @@ export default {
       this.socket.emit('buy')
     },
 
-  }, 
+    copy() {
+      var copyText = document.getElementById("room");
+      navigator.clipboard.writeText(copyText.innerHTML);
+    }
+  },
   mounted () {
-    this.socket.on('game-start', data=> {
-      this.playerNo = data.playerNo
+    this.socket.on('game-start', data => {
+        this.playerNo = data.playerNo;
+        if(!this.playerNo){
+            this.opponentNo = 1;
+            data.playerNames[1] ? this.opponent.name = data.playerNames[1] : '';
+            data.playerNames[0] ? this.player.name = data.playerNames[0] : '';
+        }
+        else {
+            this.opponentNo = 0;
+            data.playerNames[0] ? this.opponent.name = data.playerNames[0] : '';
+            data.playerNames[1] ? this.player.name = data.playerNames[1] : '';
+        }
+
+        this.wait = false;
     })
 
     this.socket.on('game-update', data => {
-      if(this.hand != data[this.playerOne.playerNo].hand) this.playerOne.hand = data[this.playerOne.playerNo].hand;
-      if(this.board.market != data[this.playerOne.playerNo].market) this.market = data[this.playerOne.playerNo].market;
-      if(this.playerTwo.hand != data[this.playerOne.playerNo].oppHand) this.playerTwo.hand = data[this.playerOne.playerNo].oppHand;
-    })
+        this.market = data.market
 
+        this.player.hand = data.players[this.playerNo].hand
+        this.player.enclosure = data.players[this.playerNo].enclosure
+        this.player.tokens = data.players[this.playerNo].tokens
+
+        this.opponent.hand = data.players[this.opponentNo].hand
+        this.opponent.enclosure = data.players[this.opponentNo].enclosure
+        this.opponent.tokens = data.players[this.opponentNo].tokens
+    })
   }
 
 }
@@ -215,6 +255,56 @@ export default {
   height: 100vh;
   overflow: hidden;
   position: relative;
+}
+
+/* Loader */
+.loaded {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 30;
+  padding: 1rem;
+}
+
+.loaded p{
+  margin: 0;
+}
+
+.loaded h2{
+  margin-top: 0;
+}
+
+.loaded-container {
+  border-radius: 20px;
+  background: var(--main-color);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* -- Room */
+.room {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+#room {
+  background: #fff;
+  border: solid 2px var(--main-color);
+  padding: .5rem 1rem;
+  border-radius: 10px;
+  color: #000;
 }
 
 /* Buttons */
@@ -425,11 +515,11 @@ export default {
 }
 
 .player-cards-one:hover .enclosure{
-  margin-top: 18vw;
+  margin-top: 16vw;
 }
 
 .player-cards-one:hover .camel-card{
-  margin-top: -26vh;
+  margin-top: -16vw;
   position: relative;
 }
 
@@ -455,20 +545,14 @@ export default {
     width: 11vw;
     max-width: none;
   }
-}
-.bouton_maison {
-  background-color: var(--main-color);
-  padding: 0.4rem;
-  border-radius: 100%;
-}
-.test{
-  background: none;
-	color: inherit;
-	border: none;
-	padding: 0;
-	font: inherit;
-	cursor: pointer;
-	outline: inherit;
 
+  .player-cards-one:hover .enclosure{
+    margin-top: 12vw;
+  }
+
+  .player-cards-one:hover .camel-card{
+    margin-top: -12vw;
+    position: relative;
+  }
 }
 </style>
