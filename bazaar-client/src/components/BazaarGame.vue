@@ -10,8 +10,9 @@
           <h2>Nom de la partie</h2>
           <div class="room">
             <p id="room">{{ room }}</p>
-            <button @click="copy">
-              <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 20 20">
+            <button class="room-copy" :class="{ 'active': copy }" @click="copyText">
+              <svg v-if="copy" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m4 12l6 6L20 6"/></svg>
+              <svg v-else xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 20 20">
                 <g fill="currentColor">
                   <path d="M8 2a1 1 0 0 0 0 2h2a1 1 0 1 0 0-2H8Z"/>
                   <path d="M3 5a2 2 0 0 1 2-2a3 3 0 0 0 3 3h2a3 3 0 0 0 3-3a2 2 0 0 1 2 2v6h-4.586l1.293-1.293a1 1 0 0 0-1.414-1.414l-3 3a1 1 0 0 0 0 1.414l3 3a1 1 0 0 0 1.414-1.414L10.414 13H15v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5Zm12 6h2a1 1 0 1 1 0 2h-2v-2Z"/>
@@ -163,6 +164,7 @@ export default {
   data () {
     return {
       wait: true,
+      copy: false,
 
       // hand
       handOpen: false,
@@ -212,9 +214,11 @@ export default {
       this.socket.emit('buy')
     },
 
-    copy() {
+    copyText() {
       var copyText = document.getElementById("room");
       navigator.clipboard.writeText(copyText.innerHTML);
+
+      this.copy = true
     }
   },
   mounted () {
@@ -289,6 +293,7 @@ export default {
   justify-content: center;
   align-items: center;
   gap: 2rem;
+  min-width: 340px;
 }
 
 /* -- Room */
@@ -296,15 +301,33 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: .5rem;
 }
 
 #room {
   background: #fff;
-  border: solid 2px var(--main-color);
   padding: .5rem 1rem;
-  border-radius: 10px;
+  border-radius: 5px;
   color: #000;
+}
+
+.room-copy {
+  height: 34px;
+  width: 34px;
+  padding: .5rem;
+  border-radius: 5px;
+  border: none;
+  background-color: #ddd;
+  transition: all .3s ease-in-out;
+}
+
+.room-copy.active {
+  background-color: rgb(var(--secondary-color));
+}
+
+.room-copy:hover {
+  cursor: pointer;
+  background-color: rgb(var(--secondary-color));
 }
 
 /* Buttons */
