@@ -3,7 +3,7 @@
     <div class="hero">
       
       <div class="hero-content">
-        <h1>Bienvenue sur le projet <br><span>Magnus Bazaar !</span></h1>
+        <h1 class="title_communication">Bienvenue sur le projet <br><br><span class="title_hero">Magnus Bazaar !</span></h1>
         <p>
           Notre équipe de passionné de jeux de société s’est mis en tête de
           créer un jeu de société en ligne accessible à tous pour jouer entre
@@ -14,7 +14,7 @@
           nos soins.<br /><br />
 
           Créer par
-          <strong>QUEMERAS Arthur, FORSANS Paul et TRAVERS Nicolas</strong>
+          <strong>FORSANS Paul, QUEMERAS Arthur et TRAVERS Nicolas</strong>
         </p>
       </div>
       <div class="hero-image"></div>
@@ -58,7 +58,7 @@
                 </clipPath>
               </defs>
             </svg>
-            <p class="text">Mesuré vous avec votre entourage en jouant en local ou en ligne avec </p>
+            <p class="text">Mesuré vous avec votre entourage en jouant en local ou en ligne avec un ami </p>
           </div>
           <div class="bloc_top_right">
             <svg
@@ -134,11 +134,15 @@
                 stroke-width="3"
               />
             </svg>
-            <p class="text">Explorer l’univers de magnus avec de toute nouvelles cartes</p>
+            <p class="text">Explorer l’univers de Magnus Bazaar avec de toute nouvelles cartes</p>
           </div>
         </div>
       </div>
     </div>
+  </div>
+  <div class="bottom">
+    N'hésitez plus et rejoigner l'univers de Magnus Bazaar
+    <router-link class="lien" to="/">Jouer</router-link>
   </div>
 </template>
 
@@ -158,14 +162,18 @@ export default {
 }
 .column_right {
   grid-column: 2/4;
-  background-color: var(--main-color);
+  background-color: #383838;
 }
 .merchant {
   transform: scaleX(-1);
   width: 100%;
   height: 100%;
 }
+.title_communication{
+  margin: 5rem;
+}
 h2 {
+  margin-top: 3rem;
   text-decoration: none;
   
 }
@@ -196,14 +204,41 @@ h2 {
 }
 .grid_2{
   max-width: 768px;
-  margin: auto;
+  margin: 7rem auto;
   padding: 1rem;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2,1fr);
   grid-gap: 5rem;
 }
-span{
+.title_hero{
   color: rgb(var(--secondary-color));
+}
+.bottom{
+  display: none;
+  /*display: flex;*/
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  color: black;
+  background-color: rgb(var(--secondary-color));
+}
+.name_game{
+  text-decoration: underline;
+  color: #272626;
+}
+.lien {
+  color: white;
+  background-color: #272626;
+  text-decoration: none;
+  font-size: large;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: solid #272626 2px;  
+}
+.lien:hover {
+  color: black;
+  background-color: #e2c372;
+  cursor: pointer;
 }
 </style>
