@@ -1,5 +1,5 @@
 <template>
-  <div v-if="lobby">
+  <div v-if="lobby" class="lobby">
     <!-- Navigation -->
     <div class="grille">
       <div class="colonne1">
@@ -33,6 +33,9 @@
       </div>
       <div class="colonne2">
         <img class="image_accueil" src="../assets/marchand.png" alt="" />
+        <svg class="divide_home" width="8" height="100%" viewBox="0 0 8 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0.499955 1024.5L0.499955 -0.5L7.5 -0.5L7.50002 1024.5L0.499955 1024.5Z" fill="#1F1A17" stroke="black"/>
+        </svg>
       </div>
     </div>
 
@@ -122,7 +125,10 @@ export default {
             this.socket.emit('joinroom', {name: e.target[0].value, room: e.target[1].value});
         })
         this.socket.on('roomjoined', data => {
-            console.log("rejoint la salle "+ data.room);
+            this.emitter.emit('addAlert', {
+                type: "enter",
+                message: data.player + " a rejoint la salle " + data.room,
+            });
             this.emitter.emit('setRoom', data.room);
             this.emitter.emit('setLobby', false);
         })
@@ -145,6 +151,7 @@ export default {
 .colonne2 {
   width: 50%;
   display: grid;
+  position: relative;
 }
 
 .titre {
@@ -156,20 +163,13 @@ export default {
   width: 100%;
   object-fit: cover;
 }
-.lien {
-  width: 10rem;
-  display: inline-block;
-  color: white;
-  background-color: #272626;
-  text-decoration: none;
-  font-size: large;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  border: none;
+.divide_home {
+  position: absolute;
+  left: -2px;
+  top: 0;
 }
-.lien:hover {
-  background-color: #e2c372;
-  cursor: pointer;
+.lobby .lien:hover {
+  border-color: rgb(var(--secondary-color));
 }
 .lien_popup {
   width: 10rem;

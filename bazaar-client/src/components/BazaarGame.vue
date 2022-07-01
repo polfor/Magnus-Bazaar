@@ -1,7 +1,9 @@
 <template>
   <div v-if="lobby == false" class="bazaarGame">
     <!-- Leave -->
-    <button @click="this.emitter.emit('setLobby', true)">Quitter le salon</button>
+    <div class="sortir" @click="this.emitter.emit('setLobby', true)">
+      <svg class="bouton_maison" width="36" height="35" viewBox="0 0 36 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M28.2004 14L31.9498 18.375L28.2004 14ZM28.2004 22.75L31.9498 18.375L28.2004 22.75Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M29.7 18.375H18M7.19995 6.125H23.4M7.19995 30.625H23.4M23.4 6.125V13.125M23.4 23.625V30.625M7.19995 6.125V30.625" stroke="white" stroke-width="2" stroke-linecap="round"></path></svg>
+    </div>
 
     <!-- Loaded -->
     <div class="loaded" v-if="wait">
@@ -133,7 +135,7 @@
         <div class="interface">
           <!-- Name player 1 -->
           <div class="player player-one">
-            <p>{{ player.name }}</p>
+            <p>{{ opponent.name }}</p>
           </div>
 
           <!-- Game cards -->
@@ -149,7 +151,7 @@
 
           <!-- Name player 2 -->
           <div class="player player-two">
-            <p>{{ opponent.name }}</p>
+            <p>{{ player.name }}</p>
           </div>
         </div>
       </div>
@@ -264,6 +266,7 @@ export default {
 .bazaarGame .lien {
   font-size: 0.875rem;
   padding: .5rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%);
 }
 
 .bazaarGame .lien:hover {

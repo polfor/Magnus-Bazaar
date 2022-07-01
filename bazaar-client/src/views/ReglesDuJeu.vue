@@ -11,14 +11,14 @@
       >
         <path
           d="M28.2004 14L31.9498 18.375L28.2004 14ZM28.2004 22.75L31.9498 18.375L28.2004 22.75Z"
-          stroke="white"
+          stroke="currentColor"
           stroke-width="2"
           stroke-linecap="round"
           stroke-linejoin="round"
         />
         <path
           d="M29.7 18.375H18M7.19995 6.125H23.4M7.19995 30.625H23.4M23.4 6.125V13.125M23.4 23.625V30.625M7.19995 6.125V30.625"
-          stroke="white"
+          stroke="currentColor"
           stroke-width="2"
           stroke-linecap="round"
         />
@@ -259,10 +259,5 @@ li {
 }
 body {
   background-color: #408070;
-}
-.bouton_maison {
-  background-color: var(--main-color);
-  padding: 0.4rem;
-  border-radius: 100%;
 }
 </style>

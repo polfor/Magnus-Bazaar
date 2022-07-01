@@ -33,4 +33,41 @@ body {
 .fade-enter, .fade-leave-active {
   opacity: 0
 }
+
+/* Buttons */
+.bouton_maison {
+  background-color: var(--main-color);
+  padding: 0.4rem;
+  border-radius: 100%;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 100;
+  color: #fff;
+  transition: all .3s ease-in-out;
+}
+
+.bouton_maison:hover {
+  background-color: rgb(var(--secondary-color));
+  color: var(--main-color);
+  cursor: pointer;
+}
+
+/* links */
+.lien {
+  width: 10rem;
+  display: inline-block;
+  color: white;
+  background-color: #272626;
+  text-decoration: none;
+  font-size: large;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  transition: all .3s ease-in-out;
+}
+.lien:hover {
+  background-color: #e2c372;
+  cursor: pointer;
+}
 </style>

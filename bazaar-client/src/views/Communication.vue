@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="communication">
+    <!-- Hero -->
     <div class="hero">
-      
       <div class="hero-content">
-        <h1 class="title_communication">Bienvenue sur le projet <br><br><span class="title_hero">Magnus Bazaar !</span></h1>
+        <h1 class="title_communication">Bienvenue sur le projet <br><span class="title_hero">Magnus Bazaar !</span></h1>
         <p>
           Notre équipe de passionné de jeux de société s’est mis en tête de
           créer un jeu de société en ligne accessible à tous pour jouer entre
@@ -19,6 +19,8 @@
       </div>
       <div class="hero-image"></div>
     </div>
+
+    <!-- Features -->
     <div class="grid">
       <div class="column_left">
         <img class="merchant" src="@/assets/marchand.png" alt="" />
@@ -139,10 +141,12 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="bottom">
-    N'hésitez plus et rejoigner l'univers de Magnus Bazaar
-    <router-link class="lien" to="/">Jouer</router-link>
+
+    <!-- CTA -->
+    <div class="bottom">
+      <p>N'hésitez plus et rejoigner l'univers de Magnus Bazaar</p>
+      <router-link class="lien" to="/">Jouer</router-link>
+    </div>
   </div>
 </template>
 
@@ -161,6 +165,7 @@ export default {
   grid-column: 1;
 }
 .column_right {
+  padding: 4rem;
   grid-column: 2/4;
   background-color: #383838;
 }
@@ -168,14 +173,18 @@ export default {
   transform: scaleX(-1);
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 .title_communication{
   margin: 5rem;
 }
-h2 {
-  margin-top: 3rem;
+.communication h1 {
+  text-align: left;
+  margin: 0;
+}
+.communication h2 {
   text-decoration: none;
-  
+  text-align: left;
 }
 .hero {
   padding: 4rem;
