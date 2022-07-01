@@ -1,6 +1,6 @@
 <template>
 <div>
-  <router-view />
+    <!-- <router-view/> -->
     <LobbySelection :socket=this.socket :lobby=this.lobby />
     <BazaarGame :socket=this.socket :lobby=this.lobby />
    
@@ -23,22 +23,21 @@
 
 <script>
 import io from "socket.io-client";
-
-
-
+import LobbySelection from "./components/LobbySelection.vue";
+import BazaarGame from "./components/BazaarGame.vue";
 
 export default {
   name: "App",
   data() {
     return {
       socket: {},
-      lobby: false,
+      lobby: true,
       alerts: []
     };
   },
   components: {
-
-
+    LobbySelection,
+    BazaarGame
   },
   methods: {
     createAlert(data) {
@@ -109,6 +108,7 @@ body {
   display: flex;
   gap: .5rem;
   align-items: center;
+  color: #000;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 }
 

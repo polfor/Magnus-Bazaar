@@ -1,64 +1,42 @@
 <template>
-    <div v-if="lobby">
-        <!-- Navigation -->
-        <div class="grille">
-            <div class="colonne1">
-            <h1 class="titre">Magnus Bazaar</h1>
-            <div class="bouton jeu">
-                <a class="lien" href="/jeu">Jouer contre une IA</a>
-            </div>
-            <form id="createRoom" action="">
-                <div class="bouton creer">
-                    <input type="text" placeholder="Votre pseudo">
-                    <input class="lien" type="submit" value="Créer">
-                </div>
-            </form>
-            <div class="bouton rejoindre">
-                <a class="lien" href="">Rejoindre un salon</a>
-            </div>
-            <div class="bouton regles">
-                <a class="lien" href="/regles">Règles du jeu</a>
-            </div>
-            <div class="copyright">
-                ©2022, QUEMERAS Arthur, FORSANS Paul, TRAVERS Nicolas
-            </div>
-            </div>
-            <div class="colonne2">
-                <img class="image_accueil" src="../assets/marchand.png" alt="" />
-            </div>
+  <div v-if="lobby">
+    <!-- Navigation -->
+    <div class="grille">
+        <div class="colonne1">
+        <h1 class="titre">Magnus Bazaar</h1>
+        <div class="bouton jeu">
+            <a class="lien" href="/jeu">Jouer contre une IA</a>
         </div>
         <form id="createRoom" action="">
-          <div class="bouton creer">
-            <input type="text" placeholder="Votre pseudo" />
-            <input class="lien" type="submit" value="Créer" />
-          </div>
+            <div class="bouton creer">
+                <input type="text" placeholder="Votre pseudo">
+                <input class="lien" type="submit" value="Créer">
+            </div>
         </form>
         <div class="bouton rejoindre">
-          <a class="lien" href="">Rejoindre un salon</a>
+            <a class="lien" href="">Rejoindre un salon</a>
         </div>
         <div class="bouton regles">
-          <router-link class="lien" to="/regles">Règles du jeu</router-link>
-        </div>
-        <div class="bouton communication">
-          <router-link class="lien" to="/communication">Communication</router-link>
+            <a class="lien" href="/regles">Règles du jeu</a>
         </div>
         <div class="copyright">
-          ©2022, QUEMERAS Arthur, FORSANS Paul, TRAVERS Nicolas
+            ©2022, QUEMERAS Arthur, FORSANS Paul, TRAVERS Nicolas
         </div>
-      </div>
-      <div class="colonne2">
-        <img class="image_accueil" src="../assets/marchand.png" alt="" />
-      </div>
+        </div>
+        <div class="colonne2">
+            <img class="image_accueil" src="../assets/marchand.png" alt="" />
+        </div>
     </div>
-    <div style="display:none">
+    
+    <!-- Popup salon -->
+    <div>
       <h2>Rejoindre un salon</h2>
       <form id="joinRoom" action="">
-        <input type="text" placeholder="Votre pseudo" />
-        <input type="text" placeholder="Nom du salon" />
-        <input type="submit" value="Rejoindre" />
+        <input type="text" placeholder="Votre pseudo" >
+        <input type="text" placeholder="Nom du salon" >
+        <input type="submit" value="Rejoindre" >
       </form>
     </div>
-    <!-- Popup salon -->
   </div>
 </template>
 
