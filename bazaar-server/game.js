@@ -69,10 +69,9 @@ class Game {
         let i = 0
         this.players.forEach(player => {
             this.deck.splice(0, 5).forEach(card => {
-                if(card.type != "camel") {
+                if (card.type != "camel") {
                     player.addToHand(card)
-                }
-                else {
+                } else {
                     player.addCamel(card)
                 }
             })
@@ -82,7 +81,7 @@ class Game {
             player.socket.on('buy', data => {
                 buy(player, data);
             })
-            player.socket.emit('game-start', { playerNo: i++, playerNames : [this.players[0].name, this.players[1].name] })
+            player.socket.emit('game-start', { playerNo: i++, playerNames: [this.players[0].name, this.players[1].name] })
         })
 
         this.buildEvents();
@@ -166,39 +165,60 @@ class Game {
         data.soldCards.forEach(card => {
             this.graveyard.push(player.removeFromHand(card));
             switch (card.value) {
-                case "diamond" : 
+                case "diamond":
                     player.addToTokens(this.tokens.diamond.splice(0, 1))
                     break;
-                case "gold" : 
+                case "gold":
                     player.addToTokens(this.tokens.gold.splice(0, 1))
                     break;
-                case "silver" : 
+                case "silver":
                     player.addToTokens(this.tokens.silver.splice(0, 1))
                     break;
-                case "cloth" : 
+                case "cloth":
                     player.addToTokens(this.tokens.cloth.splice(0, 1))
                     break;
-                case "spice" : 
+                case "spice":
                     player.addToTokens(this.tokens.spice.splice(0, 1))
                     break;
-                case "leather" : 
+                case "leather":
                     player.addToTokens(this.tokens.leather.splice(0, 1))
                     break;
-                default :
+                default:
                     player.socket.emit("alert", { type: "error", message: "Essayé de vendre une carte illégale", card: card })
                     return;
             }
         })
         let nbSoldCards = data.soldCards.length
-        if(nbSoldCards >=3) {
-            if(nbSoldCards >= 5) {
+        if (nbSoldCards >= 3) {
+            if (nbSoldCards >= 5) {
                 player.addToTokens(this.tokens.bonus[5].splice(0, 1));
-            }
-            else {
+            } else {
                 player.addToTokens(this.tokens.bonus[nbSoldCards].splice(0, 1));
             }
         }
 
+    }
+
+    changePlayerSocket(playerNb, socket) {
+        this.players[playerNb].setSocket(socket);
+        socket.emit('game-update', {
+            deck: this.deck,
+            players: [{
+                    hand: this.players[0].getHand(),
+                    enclos: this.players[0].getEnclos(),
+                    tokens: this.players[0].getTokens()
+                },
+                {
+                    hand: this.players[1].getHand(),
+                    enclos: this.players[1].getEnclos(),
+                    tokens: this.players[1].getTokens()
+                }
+            ],
+            market: this.market,
+            graveyard: this.graveyard,
+            tokens: this.tokens,
+            currentPlayer: this.currentPlayer
+        })
     }
 }
 
