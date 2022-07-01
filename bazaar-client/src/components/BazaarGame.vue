@@ -261,6 +261,15 @@ export default {
   position: relative;
 }
 
+.bazaarGame .lien {
+  font-size: 0.875rem;
+  padding: .5rem;
+}
+
+.bazaarGame .lien:hover {
+  border-color: rgb(var(--secondary-color));
+}
+
 /* Loader */
 .loaded {
   position: fixed;
@@ -335,7 +344,7 @@ export default {
   display: flex;
   gap: 1rem;
   position: absolute;
-  top: 110%;
+  bottom: 110%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 20;
@@ -344,6 +353,7 @@ export default {
 /* Cards */
 .card, .little-card {
   width: 10vw;
+  max-width: 9.5rem;
   height: auto;
   border-radius: .7vw;
 }
@@ -373,7 +383,7 @@ export default {
 }
 
 .empty-cards {
-  border-radius: 10px;
+  border-radius: .7vw;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -392,17 +402,17 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding-left: 1rem;
 }
 
 .token-list {
   display: flex;
   justify-content: flex-end;
-  margin-right: 17%;
+  margin-right: 19%;
 }
 
 .token {
   width: 5vw;
+  max-width: 3.5rem;
   height: auto;
   margin-right: -20%;
 }
@@ -469,7 +479,7 @@ export default {
   display: flex;
   flex-direction: column;
   min-width: 10vw;
-  max-width: 100px;
+  max-width: 6.5rem;
 }
 
 .camel-card {
@@ -534,7 +544,7 @@ export default {
 /* Hand */
 .player-cards-one:hover .little-card{
   width: 14vw;
-  max-width: none;
+  max-width: 11rem;
 }
 
 .player-cards-one:hover .enclosure{
@@ -566,7 +576,7 @@ export default {
 @media (min-width: 1280px) { 
   .player-cards-one:hover .little-card{
     width: 11vw;
-    max-width: none;
+    max-width: 16rem;
   }
 
   .player-cards-one:hover .enclosure{
