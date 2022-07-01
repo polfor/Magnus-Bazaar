@@ -36,7 +36,7 @@ SocketIo.on('connection', socket => {
 
         rooms[roomname] = { player1: { name: data.name, socket: socket }, player2: {} };
         socket.join(roomname);
-        console.log('le joueur ' + data.name + ' (socket ' + socket.id + ') a rejoit le salon ' + roomname);
+        console.log('le joueur ' + data.name + ' (socket ' + socket.id + ') a rejoint le salon ' + roomname);
         SocketIo.to(roomname).emit("roomjoined", { room: roomname, roomReady: false });
     });
 

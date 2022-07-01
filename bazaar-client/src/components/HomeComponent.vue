@@ -1,7 +1,7 @@
 <template>
     <div>
         <LobbySelection :socket=this.socket :lobby=this.lobby />
-        <BazaarGame :socket=this.socket :lobby=this.lobby />
+        <BazaarGame :socket=this.socket :lobby=this.lobby :room=this.room />
 
         <!-- Notifications -->
         <ul id="alert" class="alert">
@@ -30,6 +30,7 @@ export default {
     data() {
         return {
         lobby: true,
+        room: "",
         socket: {},
         alerts: []
         };
@@ -53,6 +54,7 @@ export default {
       created() {
         this.socket = io("http://localhost:3000");
         this.emitter.on('setLobby', (data) => this.lobby = data)
+        this.emitter.on('setRoom', (data) => this.room = data)
     },
 
     mounted(){

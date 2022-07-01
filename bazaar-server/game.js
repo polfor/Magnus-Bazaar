@@ -120,14 +120,15 @@ class Game {
 
         this.io.to(this.room).emit('game-update', {
             deck: this.deck,
-            players: [{
+            players: [
+                {
                     hand: this.players[0].getHand(),
-                    enclos: this.players[0].getEnclos(),
+                    enclosure: this.players[0].getEnclos(),
                     tokens: this.players[0].getTokens()
                 },
                 {
                     hand: this.players[1].getHand(),
-                    enclos: this.players[1].getEnclos(),
+                    enclosure: this.players[1].getEnclos(),
                     tokens: this.players[1].getTokens()
                 }
             ],

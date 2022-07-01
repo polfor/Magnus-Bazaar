@@ -1,15 +1,10 @@
 <template>
-<div>
+  <div>
     <router-view />
-  
-    <!-- <HomeComponent :socket="this.socket" :lobby="this.lobby" /> -->
-  
-</div>
+  </div>
 </template>
 
 <script>
-// import HomeComponent from "./components/HomeComponent.vue";
-
 export default {
   name: "App",
 };
@@ -18,7 +13,6 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
-/* Base */
 :root {
   --main-color: #272626;
   --secondary-color: 226, 195, 114;
