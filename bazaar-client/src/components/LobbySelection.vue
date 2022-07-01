@@ -2,137 +2,71 @@
   <div v-if="lobby">
     <!-- Navigation -->
     <div class="grille">
-      <div class="colonne1">
-        <h1 class="titre">
-          Magnus <br />
-          Bazaar
-        </h1>
+        <div class="colonne1">
+        <h1 class="titre">Magnus Bazaar</h1>
         <div class="bouton jeu">
-            <a class="lien">Jouer contre une IA</a>
+            <a class="lien" href="/jeu">Jouer contre une IA</a>
         </div>
-        <div class="bouton creer">
-          <a @click="isShow_createRoom = !isShow_createRoom" class="lien">Créer un salon</a>
-        </div>
-
+        <form id="createRoom" action="">
+            <div class="bouton creer">
+                <input type="text" placeholder="Votre pseudo">
+                <input class="lien" type="submit" value="Créer">
+            </div>
+        </form>
         <div class="bouton rejoindre">
-          <a class="lien" @click="isShow_joinRoom = !isShow_joinRoom">
-            Rejoindre un salon
-          </a>
+            <a class="lien" href="">Rejoindre un salon</a>
         </div>
         <div class="bouton regles">
-          <router-link class="lien" to="/regles">Règles du jeu</router-link>
-        </div>
-        <div class="bouton communication">
-          <router-link class="lien" to="/communication"
-            >Communication</router-link
-          >
+            <router-link class="lien" to="/regles">Règles</router-link>
         </div>
         <div class="copyright">
-          ©2022, QUEMERAS Arthur, FORSANS Paul, TRAVERS Nicolas
+            ©2022, QUEMERAS Arthur, FORSANS Paul, TRAVERS Nicolas
         </div>
-      </div>
-      <div class="colonne2">
-        <img class="image_accueil" src="../assets/marchand.png" alt="" />
-      </div>
+        </div>
+        <div class="colonne2">
+            <img class="image_accueil" src="../assets/marchand.png" alt="" />
+        </div>
     </div>
-
+    
     <!-- Popup salon -->
-    <div class="pop_up" v-show="isShow_joinRoom">
-      <div class="container">
-        <h2>Rejoindre un salon</h2>
-        <form id="joinRoom" action="">
-          <input type="text" placeholder="Votre pseudo" />
-          <input type="text" placeholder="Nom du salon" />
-          <input type="submit" class="lien_popup" value="Rejoindre" />
-        </form>
-        <button class="cross" @click="isShow_joinRoom = false">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M20 20L4 4M20 4L4 20"
-              stroke="#272626"
-              stroke-width="2"
-              stroke-linecap="round"
-            />
-          </svg>
-        </button>
-      </div>
-    </div>
-
-    <div class="pop_up" v-show="isShow_createRoom">
-      <div class="container">
-        <form id="createRoom" action="">
-          <div>
-            <input type="text" placeholder="Votre pseudo" />
-            <input
-              @click="isShow_createRoom = !isShow_createRoom"
-              class="lien_popup"
-              type="submit"
-              value="Créer"
-            />
-          </div>
-        </form>
-        <button class="cross" @click="isShow_createRoom = false">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M20 20L4 4M20 4L4 20"
-                  stroke="#272626"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-              </svg>
-            </button>
-      </div>
+    <div>
+      <h2>Rejoindre un salon</h2>
+      <form id="joinRoom" action="">
+        <input type="text" placeholder="Votre pseudo" >
+        <input type="text" placeholder="Nom du salon" >
+        <input type="submit" value="Rejoindre" >
+      </form>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "LobbySelection",
-  data: function () {
-    return {
-      isShow_joinRoom: false,
-      isShow_createRoom: false,
-    };
-  },
-  props: ["socket", "lobby"],
-  mounted() {
-    const roomCreation = document.querySelector("#createRoom");
-    const roomJoin = document.querySelector("#joinRoom");
-    if (roomCreation) {
-      roomCreation.addEventListener("submit", (e) => {
-        e.preventDefault();
-        this.socket.emit("createroom", { name: e.target[0].value });
-      });
-    }
-    roomJoin.addEventListener("submit", (e) => {
-      e.preventDefault();
-      this.socket.emit("joinroom", {
-        name: e.target[0].value,
-        room: e.target[1].value,
-      });
-    });
-    this.socket.on("roomjoined", (data) => {
-      console.log("rejoint la salle " + data.room);
-      this.emitter.emit("setLobby", false);
-    });
-    this.socket.on("noroom", (data) => {
-      console.log("La room " + data.room + " n'existe pas");
-    });
-  },
-};
+    name: "LobbySelection",
+    props: ['socket', 'lobby'],
+    mounted () {
+        const roomCreation = document.querySelector('#createRoom')
+        const roomJoin = document.querySelector('#joinRoom')
+        if (roomCreation) {
+            roomCreation.addEventListener('submit', e => {
+                e.preventDefault()
+                this.socket.emit("createroom", {name : e.target[0].value});
+            })
+        }
+        roomJoin.addEventListener('submit', e => {
+            e.preventDefault()
+            this.socket.emit('joinroom', {name: e.target[0].value, room: e.target[1].value});
+        })
+        this.socket.on('roomjoined', data => {
+            console.log("rejoint la salle "+ data.room);
+            this.emitter.emit('setRoom', data.room);
+            this.emitter.emit('setLobby', false);
+        })
+        this.socket.on('noroom', data => {
+            console.log('La room '+ data.room + ' n\'existe pas');
+        })
+    },
+}
 </script>
 
 <style scoped>
@@ -161,8 +95,6 @@ export default {
   object-fit: cover;
 }
 .lien {
-  width: 10rem;
-  display: inline-block;
   color: white;
   background-color: #272626;
   text-decoration: none;
@@ -175,21 +107,6 @@ export default {
   background-color: #e2c372;
   cursor: pointer;
 }
-.lien_popup {
-  width: 10rem;
-  display: inline-block;
-  color: white;
-  background-color: #272626;
-  text-decoration: none;
-  font-size: large;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  border: solid 2px #e2c372;
-}
-.lien_popup:hover {
-  background-color: #e2c372;
-  cursor: pointer;
-}
 .nom_salon {
   display: none;
 }
@@ -197,33 +114,5 @@ export default {
 .copyright {
   margin: auto;
   color: white;
-}
-.pop_up {
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.4);
-}
-.container {
-  background-color: var(--main-color);
-  color: white;
-  border-radius: 1rem;
-  height: 9rem;
-}
-.cross {
-  border-radius: 1rem;
-  color: inherit;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline: inherit;
-  position: fixed;
-  top: 41%;
 }
 </style>
