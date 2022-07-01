@@ -113,6 +113,8 @@ class Game {
                 this.updateGame();
             })
         })
+
+
     }
 
     updateGame() {
@@ -201,6 +203,10 @@ class Game {
 
     changePlayerSocket(playerNb, socket) {
         this.players[playerNb].setSocket(socket);
+        let i = 0;
+        this.players.forEach(player => {
+            player.socket.emit('game-start', { playerNo: i++, playerNames: [this.players[0].name, this.players[1].name] })
+        })
         socket.emit('game-update', {
             deck: this.deck,
             players: [{

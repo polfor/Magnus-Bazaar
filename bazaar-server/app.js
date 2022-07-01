@@ -65,7 +65,7 @@ SocketIo.on('connection', socket => {
                             socket.join(roomname);
                             games[roomname].changePlayerSocket(1, socket);
                         } else {
-                            socket.emit("alert", { type: "error", message: "Il y a déjà 2 joueurs dans ce salon" })
+                            socket.emit("alert", { type: "error", message: "Il y a déjà 2 joueurs dans ce salon (et tu n'es pas l'un d'eux)" })
                         }
                     }
 
@@ -98,6 +98,12 @@ SocketIo.on('connection', socket => {
 
 SocketIo.of('/').adapter.on('delete-room', (room) => {
     rooms.splice(rooms.indexOf(rooms[room]))
+})
+
+SocketIo.of('/').adapter.on('leave-room', (room, id) => {
+    if (rooms[room]) {
+        SocketIo.to(room).emit('opponent-left');
+    }
 })
 
 

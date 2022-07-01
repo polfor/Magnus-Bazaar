@@ -45,6 +45,9 @@ class Player {
     setSocket(newSocket) {
         this.socket = newSocket;
     }
+    getSocketId() {
+        return this.socket.id
+    }
 }
 
 module.exports = Player;
