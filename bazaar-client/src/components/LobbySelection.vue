@@ -17,7 +17,7 @@
             <a class="lien" href="">Rejoindre un salon</a>
         </div>
         <div class="bouton regles">
-            <a class="lien" href="/regles">Règles du jeu</a>
+            <router-link class="lien" to="/regles">Règles</router-link>
         </div>
         <div class="copyright">
             ©2022, QUEMERAS Arthur, FORSANS Paul, TRAVERS Nicolas
@@ -42,23 +42,24 @@
 
 <script>
 export default {
-    name: "LobbySeletion",
+    name: "LobbySelection",
     props: ['socket', 'lobby'],
     mounted () {
-        console.log(this.socket)
         const roomCreation = document.querySelector('#createRoom')
         const roomJoin = document.querySelector('#joinRoom')
-        roomCreation.addEventListener('submit', e => {
-            e.preventDefault()
-            this.socket.emit("createroom", {name : e.target[0].value});
-        })
+        if (roomCreation) {
+            roomCreation.addEventListener('submit', e => {
+                e.preventDefault()
+                this.socket.emit("createroom", {name : e.target[0].value});
+            })
+        }
         roomJoin.addEventListener('submit', e => {
             e.preventDefault()
-            this.socket.emit('joinroom', {name: e.target[0].value, room: e.target[1].value})
-            this.$emit('lobby', false);
+            this.socket.emit('joinroom', {name: e.target[0].value, room: e.target[1].value});
         })
         this.socket.on('roomjoined', data => {
-            console.log("rejoint la salle "+ data.room)
+            console.log("rejoint la salle "+ data.room);
+            this.emitter.emit('setLobby', false);
         })
         this.socket.on('noroom', data => {
             console.log('La room '+ data.room + ' n\'existe pas');
@@ -88,9 +89,9 @@ export default {
   color: white;
 }
 .image_accueil {
-  max-width: 100%;
-  max-height: 100vh;
-  margin: auto;
+  height: 100vh;
+  width: 100%;
+  object-fit: cover;
 }
 .lien {
   color: white;

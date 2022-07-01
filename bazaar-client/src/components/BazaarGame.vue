@@ -1,5 +1,8 @@
 <template>
   <div v-if="lobby == false" class="bazaarGame">
+    <!-- Leave -->
+    <button @click="this.emitter.emit('setLobby', true);">Quitter le salon</button>
+
     <!-- Hand player one -->
     <div @mouseenter="handOpen = true" @mouseleave="handOpen = false" v-bind:class="{ open: handOpen }" class="player-cards player-cards-one">
       <!-- Hand -->
@@ -126,6 +129,7 @@ export default {
     return {
       handOpen: false,
 
+      hand: [],
       playerOne: {
         playerNo: "",
         hand: [],
@@ -175,10 +179,11 @@ export default {
     })
 
     this.socket.on('game-update', data => {
-      if(this.playerOne.hand != data[this.playerOne.playerNo].hand) this.playerOne.hand = data[this.playerOne.playerNo].hand;
+      if(this.hand != data[this.playerOne.playerNo].hand) this.playerOne.hand = data[this.playerOne.playerNo].hand;
       if(this.board.market != data[this.playerOne.playerNo].market) this.market = data[this.playerOne.playerNo].market;
       if(this.playerTwo.hand != data[this.playerOne.playerNo].oppHand) this.playerTwo.hand = data[this.playerOne.playerNo].oppHand;
     })
+
   }
 
 }

@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory} from 'vue-router';
+import Home from '@/components/HomeComponent.vue'
 import ReglesDuJeu from '@/views/ReglesDuJeu.vue';
-import LobbySelection from '@/components/LobbySelection.vue';
 import Communication from '@/views/Communication.vue';
 
 const routes = [
     {
         name:'Home',
         path:'/',
-        component: LobbySelection,
+        component: Home,
     },
     {
         name:'Communication',

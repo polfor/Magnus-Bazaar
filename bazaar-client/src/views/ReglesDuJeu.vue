@@ -1,5 +1,4 @@
 <template>
-<router-link to="/">Accueil</router-link>
   <span>
     <h1>Règles du jeu</h1>
   </span>
