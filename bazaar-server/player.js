@@ -24,7 +24,7 @@ class Player {
 
     removeFromHand(card) {
         this.hand.splice(this.hand.indexOf(card), 1)
-        return(card);
+        return (card);
     }
 
     getHand() {
@@ -37,6 +37,10 @@ class Player {
 
     getTokens() {
         return this.tokens;
+    }
+
+    getSocketId() {
+        return this.socket.id
     }
 }
 

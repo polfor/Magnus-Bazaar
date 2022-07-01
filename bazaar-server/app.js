@@ -56,12 +56,12 @@ SocketIo.on('connection', socket => {
                     }
                 } else {
 
-                    if (rooms[roomname].player1.name == playername) {
+                    if (rooms[roomname].player1.name == playername && !games[roomname].isPlayerConnected(0)) {
                         socket.join(roomname);
                         games[roomname].changePlayerSocket(0, socket);
 
                     } else {
-                        if (rooms[roomname].player2.name == playername) {
+                        if (rooms[roomname].player2.name == playername && !games[roomname].isPlayerConnected(1)) {
                             socket.join(roomname);
                             games[roomname].changePlayerSocket(1, socket);
                         } else {

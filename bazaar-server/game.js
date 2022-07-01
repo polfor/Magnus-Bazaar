@@ -219,6 +219,15 @@ class Game {
             currentPlayer: this.currentPlayer
         })
     }
+
+    isPlayerConnected(playerNb) {
+        for (let player of this.io.to('/').adapter.rooms.get(this.room)) {
+            if (player == this.players[playerNb].getSocketId()) {
+                return (true)
+            }
+        }
+        return (false)
+    }
 }
 
 module.exports = Game;
