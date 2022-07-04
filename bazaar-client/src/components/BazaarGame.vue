@@ -447,7 +447,7 @@ export default {
       this.player.totalPoints = data.players[this.playerNo].totalPoints
       this.player.camelToken = data.players[this.playerNo].camelToken
       this.opponent.totalPoints = data.players[this.opponentNo].totalPoints
-      this.opponent.camelToken = ata.players[this.opponentNo].camelToken
+      this.opponent.camelToken = data.players[this.opponentNo].camelToken
     })
   }
 
