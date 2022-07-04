@@ -118,6 +118,12 @@ class Game {
     }
 
     updateGame() {
+        if(this.currentPlayer == 0) {
+            this.currentPlayer = 1;
+        }
+        else {
+            this.currentPlayer = 0;
+        }
 
         this.io.to(this.room).emit('game-update', {
             deck: this.deck,
@@ -138,7 +144,6 @@ class Game {
             tokens: this.tokens,
             currentPlayer: this.currentPlayer
         })
-
     }
 
     trade(player, data) {

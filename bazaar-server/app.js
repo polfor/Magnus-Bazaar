@@ -47,12 +47,16 @@ SocketIo.on('connection', socket => {
         if (rooms[roomname] != undefined) {
             if (SocketIo.of("/").adapter.rooms.get(roomname).size < 2) {
                 if (!Object.getOwnPropertyNames(rooms[roomname].player2).length) {
-                    rooms[roomname].player2 = { name: playername, socket: socket };
-                    socket.join(roomname);
-                    console.log('le joueur ' + playername + ' (socket ' + socket.id + ') a rejoint le salon ' + roomname);
-                    SocketIo.to(roomname).emit("roomjoined", { room: roomname });
-                    if (SocketIo.of("/").adapter.rooms.get(roomname).size == 2) {
-                        startGame(roomname);
+                    if (rooms[roomname].player1.name != playername) {
+                        rooms[roomname].player2 = { name: playername, socket: socket };
+                        socket.join(roomname);
+                        console.log('le joueur ' + playername + ' (socket ' + socket.id + ') a rejoint le salon ' + roomname);
+                        SocketIo.to(roomname).emit("roomjoined", { room: roomname });
+                        if (SocketIo.of("/").adapter.rooms.get(roomname).size == 2) {
+                            startGame(roomname);
+                        }
+                    } else {
+                        socket.emit("alert", { type: "error", message: "Ce nom est déjà pris" })
                     }
                 } else {
 
