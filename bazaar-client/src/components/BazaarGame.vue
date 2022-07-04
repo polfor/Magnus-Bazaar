@@ -34,12 +34,12 @@
       <div class="hand-container-one">
         <div class="hand">
           <div v-for="card in player.hand" :key="card.id">
-            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'leather'" class="little-card card-player" src="@/assets/Leather_card.png" alt="">
-            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'spice'" class="little-card card-player" src="@/assets/Spices_card.png" alt="">
-            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'cloth'" class="little-card card-player" src="@/assets/Carpet_card.png" alt="">
-            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'silver'" class="little-card card-player" src="@/assets/Silver_card.png" alt="">
-            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'gold'" class="little-card card-player" src="@/assets/Gold_card.png" alt="">
-            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'diamond'" class="little-card card-player" src="@/assets/Ruby_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'leather'" class="little-card card-player card-selected" src="@/assets/Leather_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'spice'" class="little-card card-player card-selected" src="@/assets/Spices_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'cloth'" class="little-card card-player card-selected" src="@/assets/Carpet_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'silver'" class="little-card card-player card-selected" src="@/assets/Silver_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'gold'" class="little-card card-player card-selected" src="@/assets/Gold_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'diamond'" class="little-card card-player card-selected" src="@/assets/Ruby_card.png" alt="">
           </div>
         </div>
       </div>
@@ -125,14 +125,14 @@
 
         <!-- Market -->
         <div class="market">
-          <div v-for="card in market" :key="card.id">
-            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.type == 'camel'" class="card empty-cards" src="@/assets/Camel_card.png" alt="">
-            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'leather'" class="card empty-cards" src="@/assets/Leather_card.png" alt="">
-            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'spice'" class="card empty-cards" src="@/assets/Spices_card.png" alt="">
-            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'cloth'" class="card empty-cards" src="@/assets/Carpet_card.png" alt="">
-            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'silver'" class="card empty-cards" src="@/assets/Silver_card.png" alt="">
-            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'gold'" class="card empty-cards" src="@/assets/Gold_card.png" alt="">
-            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'diamond'" class="card empty-cards" src="@/assets/Ruby_card.png" alt="">
+          <div v-for="card in market" :key="card">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.type == 'camel'" class="card empty-cards card-selected" src="@/assets/Camel_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'leather'" class="card empty-cards card-selected" src="@/assets/Leather_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'spice'" class="card empty-cards card-selected" src="@/assets/Spices_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'cloth'" class="card empty-cards card-selected" src="@/assets/Carpet_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'silver'" class="card empty-cards card-selected" src="@/assets/Silver_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'gold'" class="card empty-cards card-selected" src="@/assets/Gold_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'diamond'" class="card empty-cards card-selected" src="@/assets/Ruby_card.png" alt="">
           </div>
 
           <!-- Buttons -->
@@ -254,8 +254,7 @@ export default {
         if(ev.target.classList.contains('card-player') || ev.target.classList.contains('camel-card')){
           // Carte dans la main
           card = {
-            "current_position": "hand",
-            "new_position": "",
+            "id": parseInt(ev.target.id),
             "type": ev.target.dataset.value ? "merchandise" : "camel",
             "value": ev.target.dataset.value
           }
@@ -270,8 +269,7 @@ export default {
         else {
           // Carte dans le marché
           card = {
-            "current_position": "market",
-            "new_position": "",
+            "id": parseInt(ev.target.id),
             "type": ev.target.dataset.value ? "merchandise" : "camel",
             "value": ev.target.dataset.value
           }
@@ -284,8 +282,12 @@ export default {
                  this.tradeWant.splice(this.tradeWant.findIndex(card => card.value === ev.target.dataset.value), 1);
               }
   
-              this.market.forEach(el => {
-                el.type == "camel" ? this.tradeWant.push(card) : "";
+              marketCards.forEach(el => {
+                el.dataset.value == "" ? this.tradeWant.push({
+                  "id": parseInt(el.id),
+                  "type": el.dataset.value ? "merchandise" : "camel",
+                  "value": el.dataset.value
+                }) : "";
               });
   
               // Ajout du style pour tous les chamaux
@@ -326,6 +328,8 @@ export default {
           }
         }
   
+        console.log(this.tradeGive)
+        console.log(this.tradeWant)
         this.activeButtons();
       }
     },
@@ -387,10 +391,21 @@ export default {
 
     sell() {
       this.socket.emit('sell', {soldCards: this.tradeGive});
+      this.resetPlayer
     },
 
     trade() {
       this.socket.emit('trade', {takenCards: this.tradeWant, tradedCards: this.tradeGive})
+      this.resetPlayer
+    },
+
+    resetPlayer() {
+      this.tradeWant = []
+      this.tradeGive = []
+      this.buttons = false
+      document.querySelectorAll(".card-selected").forEach(card => {
+        card.classList.remove("active");
+      });
     },
 
     copyText() {
@@ -434,12 +449,18 @@ export default {
         this.opponent.tokens = data.players[this.opponentNo].tokens
         this.tokens = data.tokens
 
-        this.deck = data.deck.length == 0 ? "empty" : data.deck.length >= 27 ? "full" : "half",
-        this.graveyard = data.graveyard.length >= 2 ? [data.graveyard[data.graveyard.length - 1], data.graveyard[data.graveyard.length]] : []
+        this.deck = data.deck.length == 0 ? "empty" : data.deck.length >= 27 ? "full" : "half"
+        this.graveyard = data.graveyard
 
         this.currentPlayer = data.currentPlayer
-
+        console.log("Player");
+        console.log(this.player);
+        console.log("Opponent");
+        console.log(this.opponent);
+        console.log("Market");
         console.log(this.market);
+        console.log("Graveyard");
+        console.log(this.graveyard);
     })
 
     this.socket.on('game-end', data => {
