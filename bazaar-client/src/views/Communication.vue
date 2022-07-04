@@ -155,6 +155,10 @@ p {
   line-height: 1.5;
 }
 
+.section {
+  background-color: #383838;
+}
+
 .section.is-hero {
   position: relative;
 }
@@ -175,7 +179,6 @@ p {
 
 .communication {
   overflow: hidden;
-  background-color: #383838;
   color: #fff;
   font-size: 1vw;
   line-height: 1.4285714285714286;
