@@ -325,9 +325,9 @@ class Game {
                     if(jetonsBonus[1] > jetonsBonus[0]){
                         results.winner = 1
                     }
-                    // else {
+                    else {
                         
-                    // }
+                    }
                 }
             }
         }
