@@ -132,14 +132,20 @@
         les pose devant lui en une seule pile : cette zone est son enclos.
       </li>
       <li>
-        On classe les jetons marchandises par types puis on les étales en
-        cascade (afin que tous le monde puisse voir les valeurs des jetons) de
-        manière croissante de sorte que les plus grandes valeurs soient
-        récupérés en premiers.
+        On classe les jetons marchandises par types puis on les étales en cascade
+        (afin que tous le monde puisse voir les valeurs des jetons) de manière
+        croissante de sorte que les plus grandes valeurs soient récupérés en
+        premiers.
       </li>
       <li>
-        On trie les jetons bonus par type puis on les mélanges entre eux et on
-        les poses sur le côté avec le jeton chameau et les 3 sceaux d'Excellences
+        On trie les jetons bonus par type puis on les mélanges entre eux et on les
+        poses en 3 piles
+      </li>
+      <li>Le jeton chameau est posé à côté des jetons bonus</li>
+      <li>
+        Les 3 sceaux d’excellences sont posés sur le côté, chaque joueur
+        remportant une manche récupère un jeton, le 1er joueur ayant 2 jeton gagne
+        la partie.
       </li>
     </ul>
 
@@ -155,8 +161,8 @@
     </div>
     <ul>
       <li>
-        Prendre des cartes : On peut prendre des cartes situé dans le marché, on
-        a 3 options:
+        Prendre des cartes : On peut prendre des cartes situé dans le marché, on a
+        3 options:
         <ul>
           <li>
             Prendre plusieurs marchandises ( = troc) : On prend les cartes qui
@@ -170,21 +176,20 @@
             pioche,
           </li>
           <li>
-            Prendre tous les chameaux : On prend tous les chameaux du marché et
-            on les pose dans son enclos puis on complète le marché avec les
-            cartes du dessus de la pioche.
+            Prendre tous les chameaux : On prend tous les chameaux du marché et on
+            les pose dans son enclos puis on complète le marché avec les cartes du
+            dessus de la pioche.
           </li>
         </ul>
       </li>
       <h3>Attention:</h3>
       <ul>
         <li>
-          on ne peut prendre que des marchandises ou des chameaux, pas les deux
-          en même temps
+          on ne peut prendre que des marchandises ou des chameaux, pas les deux en
+          même temps
         </li>
         <li>
-          on ne peut pas prendre puis déposé une carte du même type lors d’un
-          troc
+          on ne peut pas prendre puis déposé une carte du même type lors d’un troc
         </li>
         <li>on ne peut pas faire un troc pour une carte ( minimum 2)</li>
         <li>
@@ -199,14 +204,14 @@
         Vendre des cartes : la vente se fait en 3 étapes:
         <ul>
           <li>
-            vendez autant de marchandises du même type que souhaité en les
-            posant face ouverte sur la défausse, ( attention on ne peut vendre
-            qu’un seul type de marchandise par tour de jeu)
+            vendez autant de marchandises du même type que souhaité en les posant
+            face ouverte sur la défausse, ( attention on ne peut vendre qu’un seul
+            type de marchandise par tour de jeu)
             <ul>
               <li>
-                Pour les 3 marchandises les plus chères ( Diamants, Or et
-                Argent), on doit vendre obligatoirement au minimum 2 cartes,
-                même lorsqu’il ne reste plus qu’un seul jeton
+                Pour les 3 marchandises les plus chères ( Diamants, Or et Argent),
+                on doit vendre obligatoirement au minimum 2 cartes, même lorsqu’il
+                ne reste plus qu’un seul jeton
               </li>
             </ul>
           </li>
@@ -292,24 +297,10 @@ export default {
 }
 h1 {
   text-align: center;
-  font-family: sans-serif;
 }
 h2 {
   text-align: center;
   text-decoration: underline;
-  font-family: sans-serif;
-}
-h3 {
-  font-family: sans-serif;
-}
-div {
-  font-family: sans-serif;
-}
-ul {
-  font-family: sans-serif;
-}
-li {
-  font-family: sans-serif;
 }
 body {
   background-color: #408070;

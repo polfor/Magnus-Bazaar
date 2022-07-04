@@ -128,43 +128,41 @@
 
 <script>
 export default {
-  name: "LobbySelection",
-  data: function () {
-    return {
-      isShow_joinRoom: false,
-      isShow_createRoom: false,
-    };
-  },
-  props: ["socket", "lobby"],
-  mounted() {
-    const roomCreation = document.querySelector("#createRoom");
-    const roomJoin = document.querySelector("#joinRoom");
-    if (roomCreation) {
-      roomCreation.addEventListener("submit", (e) => {
-        e.preventDefault();
-        this.socket.emit("createroom", { name: e.target[0].value });
-      });
-    }
-    roomJoin.addEventListener("submit", (e) => {
-      e.preventDefault();
-      this.socket.emit("joinroom", {
-        name: e.target[0].value,
-        room: e.target[1].value,
-      });
-    });
-    this.socket.on("roomjoined", (data) => {
-      this.emitter.emit("addAlert", {
-        type: "enter",
-        message: data.player + " a rejoint la salle " + data.room,
-      });
-      this.emitter.emit("setRoom", data.room);
-      this.emitter.emit("setLobby", false);
-    });
-    this.socket.on("noroom", (data) => {
-      console.log("La room " + data.room + " n'existe pas");
-    });
-  },
-};
+    name: "LobbySelection",
+    data: function () {
+      return {
+        isShow_joinRoom: false,
+        isShow_createRoom: false,
+      };
+    },
+    props: ['socket', 'lobby'],
+    mounted () {
+        const roomCreation = document.querySelector('#createRoom')
+        const roomJoin = document.querySelector('#joinRoom')
+        if (roomCreation) {
+            roomCreation.addEventListener('submit', e => {
+                e.preventDefault()
+                this.socket.emit("createroom", {name : e.target[0].value});
+            })
+        }
+        roomJoin.addEventListener('submit', e => {
+            e.preventDefault()
+            this.socket.emit('joinroom', {name: e.target[0].value, room: e.target[1].value});
+        })
+        this.socket.on('roomjoined', data => {
+            var player = data.player ? data.player : 'Un joueur';
+            this.emitter.emit('addAlert', {
+                type: "enter",
+                message: player + " a rejoint la salle " + data.room,
+            });
+            this.emitter.emit('setRoom', data.room);
+            this.emitter.emit('setLobby', false);
+        })
+        this.socket.on('noroom', data => {
+            console.log('La room '+ data.room + ' n\'existe pas');
+        })
+    },
+}
 </script>
 
 <style scoped>

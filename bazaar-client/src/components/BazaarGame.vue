@@ -34,19 +34,19 @@
       <div class="hand-container-one">
         <div class="hand">
           <div v-for="card in player.hand" :key="card.id">
-            <img @click="active" v-if="card.value == 'leather'" class="little-card card-player" src="@/assets/Leather_card.png" alt="">
-            <img @click="active" v-if="card.value == 'spice'" class="little-card card-player" src="@/assets/Spices_card.png" alt="">
-            <img @click="active" v-if="card.value == 'cloth'" class="little-card card-player" src="@/assets/Carpet_card.png" alt="">
-            <img @click="active" v-if="card.value == 'silver'" class="little-card card-player" src="@/assets/Silver_card.png" alt="">
-            <img @click="active" v-if="card.value == 'gold'" class="little-card card-player" src="@/assets/Gold_card.png" alt="">
-            <img @click="active" v-if="card.value == 'ruby'" class="little-card card-player" src="@/assets/Ruby_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'leather'" class="little-card card-player" src="@/assets/Leather_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'spice'" class="little-card card-player" src="@/assets/Spices_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'cloth'" class="little-card card-player" src="@/assets/Carpet_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'silver'" class="little-card card-player" src="@/assets/Silver_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'gold'" class="little-card card-player" src="@/assets/Gold_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'diamond'" class="little-card card-player" src="@/assets/Ruby_card.png" alt="">
           </div>
         </div>
       </div>
       
       <!-- Enclosure -->
       <div class="enclosure enclosure-one">
-        <img @click="active" v-for="enclosure in player.enclosure" :key="enclosure.index" class="little-card camel-card camel-card-one" src="@/assets/Camel_card.png" alt="">
+        <img @click="active" :id="enclosure.id" :data-value="enclosure.value" v-for="enclosure in player.enclosure" :key="enclosure.index" class="little-card camel-card camel-card-one" src="@/assets/Camel_card.png" alt="">
       </div>
     </div>
 
@@ -114,20 +114,20 @@
         <!-- Market -->
         <div class="market">
           <div v-for="card in market" :key="card.id">
-            <img @click="active" v-if="card.type == 'camel'" class="card empty-cards" src="@/assets/Camel_card.png" alt="">
-            <img @click="active" v-if="card.value == 'leather'" class="card empty-cards" src="@/assets/Leather_card.png" alt="">
-            <img @click="active" v-if="card.value == 'spice'" class="card empty-cards" src="@/assets/Spices_card.png" alt="">
-            <img @click="active" v-if="card.value == 'cloth'" class="card empty-cards" src="@/assets/Carpet_card.png" alt="">
-            <img @click="active" v-if="card.value == 'silver'" class="card empty-cards" src="@/assets/Silver_card.png" alt="">
-            <img @click="active" v-if="card.value == 'gold'" class="card empty-cards" src="@/assets/Gold_card.png" alt="">
-            <img @click="active" v-if="card.value == 'ruby'" class="card empty-cards" src="@/assets/Ruby_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.type == 'camel'" class="card empty-cards" src="@/assets/Camel_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'leather'" class="card empty-cards" src="@/assets/Leather_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'spice'" class="card empty-cards" src="@/assets/Spices_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'cloth'" class="card empty-cards" src="@/assets/Carpet_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'silver'" class="card empty-cards" src="@/assets/Silver_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'gold'" class="card empty-cards" src="@/assets/Gold_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'diamond'" class="card empty-cards" src="@/assets/Ruby_card.png" alt="">
           </div>
 
           <!-- Buttons -->
-          <div class="buttons">
-            <button class="lien">Échanger</button>
-            <button class="lien">Prendre</button>
-            <button class="lien">Vendre</button>
+          <div class="buttons" v-if="buttons">
+            <button id="trade" :class="{ 'disable': !tradeButton }" class="lien">Échanger</button>
+            <button id="take" :class="{ 'disable': !takeButton }" class="lien">Prendre</button>
+            <button id="sell" :class="{ 'disable': !sellButton }" class="lien">Vendre</button>
           </div>
         </div>
 
@@ -168,6 +168,12 @@ export default {
       wait: true,
       copy: false,
 
+      // Boutons
+      buttons: false,
+      tradeButton: false,
+      takeButton: false,
+      sellButton: false,
+
       // hand
       handOpen: false,
 
@@ -197,18 +203,143 @@ export default {
     requeteTest() {
         this.socket.emit('trade', {
           // Carte dans la main
-          tradedCards: [],
+          tradeGive: [],
 
           // Carte dans le marché
-          takenCards: []
+          tradeWant: []
         })
     },
 
     active(ev) {
+      // Ajout du style pour les cartes sélectionnées
       ev.target.classList.toggle("active");
+
+      // Add card to trade
+      var card = {};
+      var marketCards = document.querySelectorAll(".market img");
+      if(ev.target.classList.contains('card-player') || ev.target.classList.contains('camel-card')){
+        // Carte dans la main
+        card = {
+          "current_position": "hand",
+          "new_position": "",
+          "type": ev.target.dataset.value ? "merchandise" : "camel",
+          "value": ev.target.dataset.value
+        }
+
+        if(ev.target.classList.contains('active')){
+          this.tradeGive.push(card);
+        }
+        else{
+          this.tradeGive.splice(this.tradeGive.findIndex(card => card.value === ev.target.dataset.value), 1);
+        }
+      }
+      else {
+        // Carte dans le marché
+        card = {
+          "current_position": "market",
+          "new_position": "",
+          "type": ev.target.dataset.value ? "merchandise" : "camel",
+          "value": ev.target.dataset.value
+        }
+
+        // -- Sélection de tous les chamaux
+        if(ev.target.dataset.value == ""){
+          if(ev.target.classList.contains('active')){
+            // Suppresion des marchandises
+            while(this.tradeWant.filter( card => card.value !== "" ).length != 0){
+               this.tradeWant.splice(this.tradeWant.findIndex(card => card.value === ev.target.dataset.value), 1);
+            }
+
+            this.market.forEach(el => {
+              el.type == "camel" ? this.tradeWant.push(card) : "";
+            });
+
+            // Ajout du style pour tous les chamaux
+            marketCards.forEach(card => {
+              card.dataset.value == "" ? card.classList.add("active") : card.classList.remove("active");
+            });
+          }
+          else {
+            // Suppresion des chamaux
+            while(this.tradeWant.filter( card => card.value === "" ).length != 0){
+               this.tradeWant.splice(this.tradeWant.findIndex(card => card.value === ev.target.dataset.value), 1);
+            }
+
+            // Ajout du style pour tous les chamaux
+            marketCards.forEach(card => {
+              card.dataset.value == "" ? card.classList.remove("active") : "";
+            });
+          }
+        }
+
+        // -- Sélection de toutes les marchandises
+        else {
+          // Suppresion des chamaux
+          while(this.tradeWant.filter( card => card.value === "" ).length != 0){
+            this.tradeWant.splice(this.tradeWant.findIndex(card => card.value === ev.target.dataset.value), 1);
+          }
+
+          marketCards.forEach(card => {
+            card.dataset.value == "" ? card.classList.remove("active") : "";
+          });
+
+          if(ev.target.classList.contains('active')){
+            this.tradeWant.push(card);
+          }
+          else{
+            this.tradeWant.splice(this.tradeWant.findIndex(card => card.value === ev.target.dataset.value), 1);
+          }
+        }
+      }
+
+      console.log("Carte dans le marché");
+      console.log(this.tradeWant);
+
+      console.log("Carte dans la main");
+      console.log(this.tradeGive);
+
+      this.activeButtons();
     },
 
-    sell:  () => {
+    activeButtons() {
+      // Affichage des boutons
+      this.tradeWant.length != 0 || this.tradeGive.length != 0 ? this.buttons = true : this.buttons = false;
+
+      // Activation du bouton take
+      if(this.tradeWant.length == 1 && this.tradeGive.length == 0 && this.player.hand.length < 7 || this.tradeWant.every(card => card.value == "")){
+        this.tradeButton = false;
+        this.takeButton = true;
+        this.sellButton = false;
+      }
+      // Activation du bouton sell
+      else if(this.tradeWant.length == 0 && this.tradeGive.length >= 1){
+        // Check if all card have same values
+        if (this.tradeGive.every(card => card.value == this.tradeGive[0].value && card.value != "")){
+          this.tradeButton = false;
+          this.takeButton = false;
+          this.sellButton = true;
+        }
+        else {
+          this.tradeButton = false;
+          this.takeButton = false;
+          this.sellButton = false;
+        }
+      }
+      // Activation du bouton échanger
+      else if(this.tradeWant.length == this.tradeGive.length){
+        this.tradeButton = true;
+        this.takeButton = false;
+        this.sellButton = false;
+      }
+      // Désactivation des boutons
+      else {
+        this.tradeButton = false;
+        this.takeButton = false;
+        this.sellButton = false;
+      }
+    },
+
+    sell: () => {
       this.socket.emit('sell');
     },
 
@@ -267,6 +398,7 @@ export default {
   font-size: 0.875rem;
   padding: .5rem;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%);
+  width: 9rem;
 }
 
 .bazaarGame .lien:hover {
@@ -324,9 +456,9 @@ export default {
 }
 
 .room-copy {
-  height: 34px;
-  width: 34px;
-  padding: .5rem;
+  height: 39px;
+  width: 39px;
+  padding: .6rem;
   border-radius: 5px;
   border: none;
   background-color: #ddd;
@@ -351,6 +483,17 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   z-index: 20;
+}
+
+.buttons .lien.disable {
+  background: #ddd !important;
+  border-color: #ddd !important;
+  color: black !important;
+  opacity: 0.75 !important;
+}
+
+.buttons .lien.disable:hover {
+  cursor: not-allowed;
 }
 
 /* Cards */

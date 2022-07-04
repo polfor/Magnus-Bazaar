@@ -11,8 +11,6 @@ export default {
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
-
 :root {
   --main-color: #272626;
   --secondary-color: 226, 195, 114;
@@ -55,12 +53,13 @@ body {
 
 /* links */
 .lien {
-  width: 10rem;
+  width: 12rem;
   display: inline-block;
   color: white;
   background-color: #272626;
   text-decoration: none;
   font-size: large;
+  font-family: 'Poppins', sans-serif;
   padding: 1rem;
   border-radius: 0.5rem;
   border: none;
