@@ -258,11 +258,11 @@ class Game {
 
     checkGameEnd() {
         let emptyTokens = 0;
-        for (let tokenType in this.tokens) {
+        this.tokens.forEach(tokenType => {
             if(Array.isArray(tokenType) && !tokenType.length) {
                 emptyTokens++;
             }
-        }
+        })
         if(emptyTokens >= 3) {
             return true;
         }
