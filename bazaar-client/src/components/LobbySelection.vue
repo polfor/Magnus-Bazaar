@@ -62,7 +62,7 @@
               <input type="text" class="input" placeholder="Votre pseudo" />
             </div>
             <div class="item_popup">
-              <input type="text" class="input" placeholder="Nom du salon" />
+              <input type="text" class="input" placeholder="Nom du salon" required />
             </div>
             <div class="item_popup">
               <input type="submit" class="lien_popup" value="Rejoindre" />
@@ -177,7 +177,9 @@ export default {
 .colonne1 {
   gap: .5rem;
   text-align: center;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-self: center;
 }
 .colonne2 {
   display: grid;
@@ -209,6 +211,8 @@ export default {
   padding: 0.5rem;
   border-radius: 0.5rem;
   border: none;
+  margin: auto;
+  transition: all .3s ease-in-out;
 }
 .lien_popup:hover {
   background-color: #e2c372;
@@ -278,6 +282,7 @@ export default {
 }
 .item_popup {
   margin-bottom: 1rem;
+  display: flex;
 }
 
 .input {
@@ -298,8 +303,7 @@ export default {
   }
 
   .image_accueil {
-    min-height: 100vh;
-    height: 100%;
+    height: 100vh;
   }
 
   .divide_home {
