@@ -218,13 +218,17 @@ export default {
           name: "",
           hand: [],
           enclosure: [],
-          tokens: []
+          tokens: [],
+          totalPoints: 0,
+          camelToken: false
       },
       opponent: {
           name: "",
           hand: [],
           enclosure: [],
-          tokens: []
+          tokens: [],
+          totalPoints: 0,
+          camelToken: false
       },
       tokens: [],
       deck: [],
@@ -434,10 +438,16 @@ export default {
         this.graveyard = data.graveyard.length >= 2 ? [data.graveyard[data.graveyard.length - 1], data.graveyard[data.graveyard.length]] : []
 
         this.currentPlayer = data.currentPlayer
+
+        console.log(this.market);
     })
 
     this.socket.on('game-end', data => {
       this.winner = data.winner
+      this.player.totalPoints = data.players[this.playerNo].totalPoints
+      this.player.camelToken = data.players[this.playerNo].camelToken
+      this.opponent.totalPoints = data.players[this.opponentNo].totalPoints
+      this.opponent.camelToken = data.players[this.opponentNo].camelToken
     })
   }
 
