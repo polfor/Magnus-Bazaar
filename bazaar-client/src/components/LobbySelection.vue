@@ -30,7 +30,7 @@
           >
         </div>
         <div class="copyright">
-          ©2022, QUEMERAS Arthur, FORSANS Paul, TRAVERS Nicolas
+          ©2022, FORSANS Paul, QUEMERAS Arthur, TRAVERS Nicolas
         </div>
       </div>
       <div class="colonne2">
