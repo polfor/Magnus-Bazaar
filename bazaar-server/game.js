@@ -74,12 +74,6 @@ class Game {
                     player.addCamel(card)
                 }
             })
-            player.socket.on('sell', data => {
-                sell(player, data);
-            })
-            player.socket.on('buy', data => {
-                buy(player, data);
-            })
             player.socket.emit('game-start', { playerNo: index, playerNames: [this.players[0].name, this.players[1].name] })
         })
 
