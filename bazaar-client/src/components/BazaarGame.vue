@@ -1,7 +1,7 @@
 <template>
   <div v-if="lobby == false" class="bazaarGame">
     <!-- Leave -->
-    <div class="sortir" @click="this.emitter.emit('setLobby', true)">
+    <div class="sortir" @click="quit">
       <svg class="bouton_maison" width="36" height="35" viewBox="0 0 36 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M28.2004 14L31.9498 18.375L28.2004 14ZM28.2004 22.75L31.9498 18.375L28.2004 22.75Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M29.7 18.375H18M7.19995 6.125H23.4M7.19995 30.625H23.4M23.4 6.125V13.125M23.4 23.625V30.625M7.19995 6.125V30.625" stroke="white" stroke-width="2" stroke-linecap="round"></path></svg>
     </div>
 
@@ -138,9 +138,9 @@
           <!-- Buttons -->
           <transition name="fade">
             <div class="buttons" v-if="buttons">
-              <button id="trade" :class="{ 'disable': !tradeButton }" class="lien">Échanger</button>
-              <button id="take" :class="{ 'disable': !takeButton }" class="lien">Prendre</button>
-              <button id="sell" :class="{ 'disable': !sellButton }" class="lien">Vendre</button>
+              <button id="trade" :class="{ 'disable': !tradeButton }" class="lien" @click="trade">Échanger</button>
+              <button id="take" :class="{ 'disable': !takeButton }" class="lien" @click="trade">Prendre</button>
+              <button id="sell" :class="{ 'disable': !sellButton }" class="lien" @click="sell">Vendre</button>
             </div>
           </transition>
         </div>
@@ -148,24 +148,44 @@
         <!-- Interface -->
         <div class="interface">
           <!-- Name player 1 -->
-          <div class="player player-one">
-            <p>{{ opponent.name }}</p>
+          <div v-if="opponent.name" class="player player-one" :class="{ 'active': this.currentPlayer == this.opponentNo }">
+            <div class="player-container">
+              <p>{{ opponent.name }}</p>
+              <div v-if="this.currentPlayer == this.opponentNo" class="player-current">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><circle cx="18" cy="12" r="0" fill="currentColor"><animate attributeName="r" begin=".67" calcMode="spline" dur="1.5s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" repeatCount="indefinite" values="0;2;0;0"/></circle><circle cx="12" cy="12" r="0" fill="currentColor"><animate attributeName="r" begin=".33" calcMode="spline" dur="1.5s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" repeatCount="indefinite" values="0;2;0;0"/></circle><circle cx="6" cy="12" r="0" fill="currentColor"><animate attributeName="r" begin="0" calcMode="spline" dur="1.5s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" repeatCount="indefinite" values="0;2;0;0"/></circle></svg>
+              </div>
+            </div>
           </div>
 
           <!-- Game cards -->
           <div class="game-cards">
             <!-- Deck -->
             <div class="card empty-cards">
-              <img src="@/assets/Deck_full.png" alt="">
+              <img v-if="deck == 'full'" src="@/assets/Deck_full.png" alt="">
+              <img v-if="deck == 'half'" src="@/assets/Deck_half.png" alt="">
             </div>
 
             <!-- Graveyard -->
-            <div class="card empty-cards"></div>
+            <div class="card empty-cards">
+              <div v-for="card in graveyard" :key="card">
+                <img :id="card.id" v-if="card.value == 'leather'" class="card" src="@/assets/Leather_card.png" alt="">
+                <img :id="card.id" v-if="card.value == 'spice'" class="card" src="@/assets/Spices_card.png" alt="">
+                <img :id="card.id" v-if="card.value == 'cloth'" class="card" src="@/assets/Carpet_card.png" alt="">
+                <img :id="card.id" v-if="card.value == 'silver'" class="card" src="@/assets/Silver_card.png" alt="">
+                <img :id="card.id" v-if="card.value == 'gold'" class="card" src="@/assets/Gold_card.png" alt="">
+                <img :id="card.id" v-if="card.value == 'diamond'" class="card" src="@/assets/Ruby_card.png" alt="">
+              </div>
+            </div>
           </div>
 
           <!-- Name player 2 -->
-          <div class="player player-two">
-            <p>{{ player.name }}</p>
+          <div v-if="player.name" class="player player-two" :class="{ 'active': this.currentPlayer == this.playerNo }">
+            <div class="player-container">
+              <p>{{ player.name }}</p>
+              <div v-if="this.currentPlayer == this.playerNo" class="player-current">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><circle cx="18" cy="12" r="0" fill="currentColor"><animate attributeName="r" begin=".67" calcMode="spline" dur="1.5s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" repeatCount="indefinite" values="0;2;0;0"/></circle><circle cx="12" cy="12" r="0" fill="currentColor"><animate attributeName="r" begin=".33" calcMode="spline" dur="1.5s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" repeatCount="indefinite" values="0;2;0;0"/></circle><circle cx="6" cy="12" r="0" fill="currentColor"><animate attributeName="r" begin="0" calcMode="spline" dur="1.5s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" repeatCount="indefinite" values="0;2;0;0"/></circle></svg>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -195,19 +215,23 @@ export default {
       playerNo: 0,
       opponentNo: 1,
       player: {
-          name: "You",
+          name: "",
           hand: [],
           enclosure: [],
           tokens: []
       },
       opponent: {
-          name: "Opponent",
+          name: "",
           hand: [],
           enclosure: [],
           tokens: []
       },
       tokens: [],
+      deck: [],
+      graveyard: [],
       market: [],
+      currentPlayer: 0,
+      winner: "",
 
       // trade
       tradeGive: [],
@@ -215,99 +239,91 @@ export default {
     }
   },
   methods: {
-    requeteTest() {
-        this.socket.emit('trade', {
-          // Carte dans la main
-          tradeGive: [],
-
-          // Carte dans le marché
-          tradeWant: []
-        })
-    },
-
     active(ev) {
-      // Ajout du style pour les cartes sélectionnées
-      ev.target.classList.toggle("active");
-
-      // Add card to trade
-      var card = {};
-      var marketCards = document.querySelectorAll(".market img");
-      if(ev.target.classList.contains('card-player') || ev.target.classList.contains('camel-card')){
-        // Carte dans la main
-        card = {
-          "current_position": "hand",
-          "new_position": "",
-          "type": ev.target.dataset.value ? "merchandise" : "camel",
-          "value": ev.target.dataset.value
-        }
-
-        if(ev.target.classList.contains('active')){
-          this.tradeGive.push(card);
-        }
-        else{
-          this.tradeGive.splice(this.tradeGive.findIndex(card => card.value === ev.target.dataset.value), 1);
-        }
-      }
-      else {
-        // Carte dans le marché
-        card = {
-          "current_position": "market",
-          "new_position": "",
-          "type": ev.target.dataset.value ? "merchandise" : "camel",
-          "value": ev.target.dataset.value
-        }
-
-        // -- Sélection de tous les chamaux
-        if(ev.target.dataset.value == ""){
-          if(ev.target.classList.contains('active')){
-            // Suppresion des marchandises
-            while(this.tradeWant.filter( card => card.value !== "" ).length != 0){
-               this.tradeWant.splice(this.tradeWant.findIndex(card => card.value === ev.target.dataset.value), 1);
-            }
-
-            this.market.forEach(el => {
-              el.type == "camel" ? this.tradeWant.push(card) : "";
-            });
-
-            // Ajout du style pour tous les chamaux
-            marketCards.forEach(card => {
-              card.dataset.value == "" ? card.classList.add("active") : card.classList.remove("active");
-            });
+      if(this.currentPlayer == this.playerNo){
+        // Ajout du style pour les cartes sélectionnées
+        ev.target.classList.toggle("active");
+  
+        // Add card to trade
+        var card = {};
+        var marketCards = document.querySelectorAll(".market img");
+        if(ev.target.classList.contains('card-player') || ev.target.classList.contains('camel-card')){
+          // Carte dans la main
+          card = {
+            "current_position": "hand",
+            "new_position": "",
+            "type": ev.target.dataset.value ? "merchandise" : "camel",
+            "value": ev.target.dataset.value
           }
+  
+          if(ev.target.classList.contains('active')){
+            this.tradeGive.push(card);
+          }
+          else{
+            this.tradeGive.splice(this.tradeGive.findIndex(card => card.value === ev.target.dataset.value), 1);
+          }
+        }
+        else {
+          // Carte dans le marché
+          card = {
+            "current_position": "market",
+            "new_position": "",
+            "type": ev.target.dataset.value ? "merchandise" : "camel",
+            "value": ev.target.dataset.value
+          }
+  
+          // -- Sélection de tous les chamaux
+          if(ev.target.dataset.value == ""){
+            if(ev.target.classList.contains('active')){
+              // Suppresion des marchandises
+              while(this.tradeWant.filter( card => card.value !== "" ).length != 0){
+                 this.tradeWant.splice(this.tradeWant.findIndex(card => card.value === ev.target.dataset.value), 1);
+              }
+  
+              this.market.forEach(el => {
+                el.type == "camel" ? this.tradeWant.push(card) : "";
+              });
+  
+              // Ajout du style pour tous les chamaux
+              marketCards.forEach(card => {
+                card.dataset.value == "" ? card.classList.add("active") : card.classList.remove("active");
+              });
+            }
+            else {
+              // Suppresion des chamaux
+              while(this.tradeWant.filter( card => card.value === "" ).length != 0){
+                 this.tradeWant.splice(this.tradeWant.findIndex(card => card.value === ev.target.dataset.value), 1);
+              }
+  
+              // Ajout du style pour tous les chamaux
+              marketCards.forEach(card => {
+                card.dataset.value == "" ? card.classList.remove("active") : "";
+              });
+            }
+          }
+  
+          // -- Sélection de toutes les marchandises
           else {
             // Suppresion des chamaux
             while(this.tradeWant.filter( card => card.value === "" ).length != 0){
-               this.tradeWant.splice(this.tradeWant.findIndex(card => card.value === ev.target.dataset.value), 1);
+              this.tradeWant.splice(this.tradeWant.findIndex(card => card.value === ev.target.dataset.value), 1);
             }
-
-            // Ajout du style pour tous les chamaux
+  
             marketCards.forEach(card => {
               card.dataset.value == "" ? card.classList.remove("active") : "";
             });
+  
+            if(ev.target.classList.contains('active')){
+              this.tradeWant.push(card);
+            }
+            else{
+              this.tradeWant.splice(this.tradeWant.findIndex(card => card.value === ev.target.dataset.value), 1);
+            }
           }
         }
-
-        // -- Sélection de toutes les marchandises
-        else {
-          // Suppresion des chamaux
-          while(this.tradeWant.filter( card => card.value === "" ).length != 0){
-            this.tradeWant.splice(this.tradeWant.findIndex(card => card.value === ev.target.dataset.value), 1);
-          }
-
-          marketCards.forEach(card => {
-            card.dataset.value == "" ? card.classList.remove("active") : "";
-          });
-
-          if(ev.target.classList.contains('active')){
-            this.tradeWant.push(card);
-          }
-          else{
-            this.tradeWant.splice(this.tradeWant.findIndex(card => card.value === ev.target.dataset.value), 1);
-          }
-        }
+  
+        this.activeButtons();
       }
-
-      this.activeButtons();
     },
 
     activeButtons() {
@@ -346,7 +362,6 @@ export default {
       else if(
         this.tradeWant.length == this.tradeGive.length && 
         this.tradeWant.every(card => card.value != "")
-        // this.tradeGive.every(this.differentValue)
         ){
         this.tradeButton = true;
         this.takeButton = false;
@@ -358,24 +373,20 @@ export default {
         this.takeButton = false;
         this.sellButton = false;
       }
+      // console.log(this.tradeWant.some(card => this.tradeGive.includes(card)));
     },
 
-    differentValue(card) {
-      this.tradeWant.forEach(el => {
-        if (card.value == el.value) {
-          console.log("ok");
-          return false;
-        }
-      })
-      return true;
+    quit() {
+      this.emitter.emit('setLobby', true);
+      this.socket.emit('leave', {room: this.room});
     },
 
-    sell: () => {
-      this.socket.emit('sell');
+    sell() {
+      this.socket.emit('sell', {soldCards: this.tradeGive});
     },
 
-    buy: () => {
-      this.socket.emit('buy')
+    trade() {
+      this.socket.emit('trade', {takenCards: this.tradeWant, tradedCards: this.tradeGive})
     },
 
     copyText() {
@@ -395,13 +406,13 @@ export default {
         this.playerNo = data.playerNo;
         if(!this.playerNo){
             this.opponentNo = 1;
-            data.playerNames[1] ? this.opponent.name = data.playerNames[1] : '';
-            data.playerNames[0] ? this.player.name = data.playerNames[0] : '';
+            data.playerNames[1] ? this.opponent.name = data.playerNames[1] : 'Opponent';
+            data.playerNames[0] ? this.player.name = data.playerNames[0] : 'You';
         }
         else {
             this.opponentNo = 0;
-            data.playerNames[0] ? this.opponent.name = data.playerNames[0] : '';
-            data.playerNames[1] ? this.player.name = data.playerNames[1] : '';
+            data.playerNames[0] ? this.opponent.name = data.playerNames[0] : 'Opponent';
+            data.playerNames[1] ? this.player.name = data.playerNames[1] : 'You';
         }
 
         this.wait = false;
@@ -418,6 +429,15 @@ export default {
         this.opponent.enclosure = data.players[this.opponentNo].enclosure
         this.opponent.tokens = data.players[this.opponentNo].tokens
         this.tokens = data.tokens
+
+        this.deck = data.deck.length == 0 ? "empty" : data.deck.length >= 27 ? "full" : "half",
+        this.graveyard = data.graveyard.length >= 2 ? [data.graveyard[data.graveyard.length - 1], data.graveyard[data.graveyard.length]] : []
+
+        this.currentPlayer = data.currentPlayer
+    })
+
+    this.socket.on('game-end', data => {
+      this.winner = data.winner
     })
   }
 
@@ -612,12 +632,35 @@ export default {
   right: 0;
 }
 
+.player.active{
+  background-color: rgb(var(--secondary-color));
+}
+
+.player-container {
+  position: relative;
+}
+
 .player p{
   margin: 0;
 }
 
 .player-one {
   top: 0;
+}
+
+.player-current{
+  position: absolute;
+  top: -1.5rem;
+  left: -2.5rem;
+  width: 24px;
+  height: 24px;
+  color: var(--main-color);
+  background-color: #fff;
+  border-radius: 100%;
+  padding: .2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .player-two {
