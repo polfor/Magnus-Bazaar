@@ -154,6 +154,7 @@ class Game {
     }
 
     trade(player, data) {
+        console.log(data)
         data.tradedCards.forEach(card => {
             if (card.type != "camel") {
                 player.removeFromHand(card)
@@ -174,7 +175,7 @@ class Game {
 
         while (this.market.length < 5) {
             if(this.deck.length) {
-                this.market.push(this.deck.splice(0, 1));
+                this.market.push(this.deck.splice(0, 1)[0]);
             }
             else {
                 this.io.to(this.room).emit("alert", { type: "notif", message: "Plus assez de cartes dans le deck !" })
@@ -189,22 +190,22 @@ class Game {
             this.graveyard.push(player.removeFromHand(card));
             switch (card.value) {
                 case "diamond":
-                    player.addToTokens(this.tokens.diamond.splice(0, 1))
+                    player.addToTokens(this.tokens.diamond.splice(0, 1)[0])
                     break;
                 case "gold":
-                    player.addToTokens(this.tokens.gold.splice(0, 1))
+                    player.addToTokens(this.tokens.gold.splice(0, 1)[0])
                     break;
                 case "silver":
-                    player.addToTokens(this.tokens.silver.splice(0, 1))
+                    player.addToTokens(this.tokens.silver.splice(0, 1)[0])
                     break;
                 case "cloth":
-                    player.addToTokens(this.tokens.cloth.splice(0, 1))
+                    player.addToTokens(this.tokens.cloth.splice(0, 1)[0])
                     break;
                 case "spice":
-                    player.addToTokens(this.tokens.spice.splice(0, 1))
+                    player.addToTokens(this.tokens.spice.splice(0, 1)[0])
                     break;
                 case "leather":
-                    player.addToTokens(this.tokens.leather.splice(0, 1))
+                    player.addToTokens(this.tokens.leather.splice(0, 1)[0])
                     break;
                 default:
                     player.socket.emit("alert", { type: "error", message: "Essayé de vendre une carte illégale", card: card })
@@ -216,7 +217,7 @@ class Game {
             if (nbSoldCards >= 5) {
                 player.addToTokens(this.tokens.bonus[5].splice(0, 1));
             } else {
-                player.addToTokens(this.tokens.bonus[nbSoldCards].splice(0, 1));
+                player.addToTokens(this.tokens.bonus[nbSoldCards].splice(0, 1)[0]);
             }
         }
 
