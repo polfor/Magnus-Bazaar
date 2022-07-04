@@ -118,10 +118,10 @@ class Game {
 
     updateGame() {
        
-        if(this.checkGameEnd()) {
-            this.endGame();
-        }
-        else {
+        // if(this.checkGameEnd()) {
+        //     this.endGame();
+        // }
+        // else {
             if(this.currentPlayer == 0) {
                 this.currentPlayer = 1;
             }
@@ -148,7 +148,7 @@ class Game {
                 tokens: this.tokens,
                 currentPlayer: this.currentPlayer
             })
-        }
+        // }
 
         
     }

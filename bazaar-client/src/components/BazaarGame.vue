@@ -76,38 +76,50 @@
         <div class="tokens">
           <!-- Ruby -->
           <div class="token-list">
-            <img v-for="index in 3" :key="index" class="token" src="@/assets/Ruby_coin-5.png" alt="">
-            <img v-for="index in 2" :key="index" class="token" src="@/assets/Ruby_coin-7.png" alt="">
+            <template v-for="diamond in this.tokens.diamond">
+              <img v-if="diamond.value == 5" :key="diamond.id" class="token" src="@/assets/Ruby_coin-5.png" alt="">
+              <img v-if="diamond.value == 7" :key="diamond.id" class="token" src="@/assets/Ruby_coin-7.png" alt="">
+            </template>
           </div>
           <!-- Gold -->
           <div class="token-list">
-            <img v-for="index in 3" :key="index" class="token" src="@/assets/Gold_coin-5.png" alt="">
-            <img v-for="index in 2" :key="index" class="token" src="@/assets/Gold_coin-6.png" alt="">
+            <template v-for="gold in this.tokens.gold">
+              <img v-if="gold.value == 5" :key="gold.id" class="token" src="@/assets/Gold_coin-5.png" alt="">
+              <img v-if="gold.value == 6" :key="gold.id" class="token" src="@/assets/Gold_coin-6.png" alt="">
+            </template>
           </div>
           <!-- Silver -->
           <div class="token-list">
-            <img v-for="index in 5" :key="index" class="token" src="@/assets/Silver_coin.png" alt="">
+            <template v-for="silver in this.tokens.silver">
+              <img v-if="silver.value == 5" :key="silver.id" class="token" src="@/assets/Silver_coin.png" alt="">
+            </template>
           </div>
           <!-- Carpet -->
           <div class="token-list">
-            <img v-for="index in 2" :key="index" class="token" src="@/assets/Carpet_coin-1.png" alt="">
-            <img v-for="index in 2" :key="index" class="token" src="@/assets/Carpet_coin-2.png" alt="">
-            <img v-for="index in 2" :key="index" class="token" src="@/assets/Carpet_coin-3.png" alt="">
-            <img class="token" src="@/assets/Carpet_coin-5.png" alt="">
+            <template v-for="cloth in this.tokens.cloth">
+              <img v-if="cloth.value == 1" :key="cloth.id" class="token" src="@/assets/Carpet_coin-1.png" alt="">
+              <img v-if="cloth.value == 2" :key="cloth.id" class="token" src="@/assets/Carpet_coin-2.png" alt="">
+              <img v-if="cloth.value == 3" :key="cloth.id" class="token" src="@/assets/Carpet_coin-3.png" alt="">
+              <img v-if="cloth.value == 5" :key="cloth.id" class="token" src="@/assets/Carpet_coin-5.png" alt="">
+            </template>
           </div>
           <!-- Spice -->
           <div class="token-list">
-            <img v-for="index in 2" :key="index" class="token" src="@/assets/Spice_coin-1.png" alt="">
-            <img v-for="index in 2" :key="index" class="token" src="@/assets/Spice_coin-2.png" alt="">
-            <img v-for="index in 2" :key="index" class="token" src="@/assets/Spice_coin-3.png" alt="">
-            <img class="token" src="@/assets/Spice_coin-5.png" alt="">
+            <template v-for="spice in this.tokens.spice">
+              <img v-if="spice.value == 1" :key="spice.id" class="token" src="@/assets/Spice_coin-1.png" alt="">
+              <img v-if="spice.value == 2" :key="spice.id" class="token" src="@/assets/Spice_coin-2.png" alt="">
+              <img v-if="spice.value == 3" :key="spice.id" class="token" src="@/assets/Spice_coin-3.png" alt="">
+              <img v-if="spice.value == 5" :key="spice.id" class="token" src="@/assets/Spice_coin-5.png" alt="">
+            </template>
           </div>
           <!-- Leather -->
           <div class="token-list">
-            <img v-for="index in 6" :key="index" class="token" src="@/assets/Leather_coin-1.png" alt="">
-            <img class="token" src="@/assets/Leather_coin-2.png" alt="">
-            <img class="token" src="@/assets/Leather_coin-3.png" alt="">
-            <img class="token" src="@/assets/Leather_coin-4.png" alt="">
+            <template v-for="leather in this.tokens.leather">
+              <img v-if="leather.value == 1" :key="leather.id" class="token" src="@/assets/Leather_coin-1.png" alt="">
+              <img v-if="leather.value == 2" :key="leather.id" class="token" src="@/assets/Leather_coin-2.png" alt="">
+              <img v-if="leather.value == 3" :key="leather.id" class="token" src="@/assets/Leather_coin-3.png" alt="">
+              <img v-if="leather.value == 4" :key="leather.id" class="token" src="@/assets/Leather_coin-4.png" alt="">
+            </template>
           </div>
         </div>
 
@@ -124,11 +136,13 @@
           </div>
 
           <!-- Buttons -->
-          <div class="buttons" v-if="buttons">
-            <button id="trade" :class="{ 'disable': !tradeButton }" class="lien">Échanger</button>
-            <button id="take" :class="{ 'disable': !takeButton }" class="lien">Prendre</button>
-            <button id="sell" :class="{ 'disable': !sellButton }" class="lien">Vendre</button>
-          </div>
+          <transition name="fade">
+            <div class="buttons" v-if="buttons">
+              <button id="trade" :class="{ 'disable': !tradeButton }" class="lien">Échanger</button>
+              <button id="take" :class="{ 'disable': !takeButton }" class="lien">Prendre</button>
+              <button id="sell" :class="{ 'disable': !sellButton }" class="lien">Vendre</button>
+            </div>
+          </transition>
         </div>
 
         <!-- Interface -->
@@ -192,6 +206,7 @@ export default {
           enclosure: [],
           tokens: []
       },
+      tokens: [],
       market: [],
 
       // trade
@@ -292,12 +307,6 @@ export default {
         }
       }
 
-      console.log("Carte dans le marché");
-      console.log(this.tradeWant);
-
-      console.log("Carte dans la main");
-      console.log(this.tradeGive);
-
       this.activeButtons();
     },
 
@@ -306,27 +315,39 @@ export default {
       this.tradeWant.length != 0 || this.tradeGive.length != 0 ? this.buttons = true : this.buttons = false;
 
       // Activation du bouton take
-      if(this.tradeWant.length == 1 && this.tradeGive.length == 0 && this.player.hand.length < 7 || this.tradeWant.every(card => card.value == "")){
+      if(
+        this.tradeWant.length == 1 && 
+        this.tradeGive.length == 0 && 
+        this.player.hand.length < 7 || 
+        this.tradeWant.every(card => card.value == "") && 
+        this.tradeGive.length == 0 && 
+        this.tradeWant.length >= 1
+        ){
         this.tradeButton = false;
         this.takeButton = true;
         this.sellButton = false;
       }
       // Activation du bouton sell
-      else if(this.tradeWant.length == 0 && this.tradeGive.length >= 1){
-        // Check if all card have same values
-        if (this.tradeGive.every(card => card.value == this.tradeGive[0].value && card.value != "")){
-          this.tradeButton = false;
-          this.takeButton = false;
-          this.sellButton = true;
-        }
-        else {
-          this.tradeButton = false;
-          this.takeButton = false;
-          this.sellButton = false;
-        }
+      else if(
+        // leather, cloth, spice
+        this.tradeWant.length == 0 && 
+        this.tradeGive.length >= 1 && 
+        this.tradeGive.every(card => card.value == this.tradeGive[0].value && (card.value == "cloth" || card.value == "leather" || card.value == "spice")) ||
+        // ruby, gold, silver
+        this.tradeWant.length == 0 && 
+        this.tradeGive.length >= 2 && 
+        this.tradeGive.every(card => card.value == this.tradeGive[0].value && (card.value == "diamond" || card.value == "gold" || card.value == "silver"))
+        ){
+        this.tradeButton = false;
+        this.takeButton = false;
+        this.sellButton = true;
       }
       // Activation du bouton échanger
-      else if(this.tradeWant.length == this.tradeGive.length){
+      else if(
+        this.tradeWant.length == this.tradeGive.length && 
+        this.tradeWant.every(card => card.value != "")
+        // this.tradeGive.every(this.differentValue)
+        ){
         this.tradeButton = true;
         this.takeButton = false;
         this.sellButton = false;
@@ -337,6 +358,16 @@ export default {
         this.takeButton = false;
         this.sellButton = false;
       }
+    },
+
+    differentValue(card) {
+      this.tradeWant.forEach(el => {
+        if (card.value == el.value) {
+          console.log("ok");
+          return false;
+        }
+      })
+      return true;
     },
 
     sell: () => {
@@ -351,7 +382,12 @@ export default {
       var copyText = document.getElementById("room");
       navigator.clipboard.writeText(copyText.innerHTML);
 
-      this.copy = true
+      this.copy = true;
+
+      this.emitter.emit('addAlert', {
+          type: "check",
+          message: "Le nom de la salle a bien été copier",
+      });
     }
   },
   mounted () {
@@ -381,6 +417,7 @@ export default {
         this.opponent.hand = data.players[this.opponentNo].hand
         this.opponent.enclosure = data.players[this.opponentNo].enclosure
         this.opponent.tokens = data.players[this.opponentNo].tokens
+        this.tokens = data.tokens
     })
   }
 
@@ -553,7 +590,7 @@ export default {
 .token-list {
   display: flex;
   justify-content: flex-end;
-  margin-right: 19%;
+  margin-right: 20%;
 }
 
 .token {
@@ -690,7 +727,7 @@ export default {
 /* Hand */
 .player-cards-one:hover .little-card{
   width: 14vw;
-  max-width: 11rem;
+  max-width: 8rem;
 }
 
 .player-cards-one:hover .enclosure{
@@ -722,7 +759,7 @@ export default {
 @media (min-width: 1280px) { 
   .player-cards-one:hover .little-card{
     width: 11vw;
-    max-width: 16rem;
+    max-width: 14rem;
   }
 
   .player-cards-one:hover .enclosure{
