@@ -136,11 +136,13 @@
           </div>
 
           <!-- Buttons -->
-          <div class="buttons" v-if="buttons">
-            <button id="trade" :class="{ 'disable': !tradeButton }" class="lien">Échanger</button>
-            <button id="take" :class="{ 'disable': !takeButton }" class="lien">Prendre</button>
-            <button id="sell" :class="{ 'disable': !sellButton }" class="lien">Vendre</button>
-          </div>
+          <transition name="fade">
+            <div class="buttons" v-if="buttons">
+              <button id="trade" :class="{ 'disable': !tradeButton }" class="lien">Échanger</button>
+              <button id="take" :class="{ 'disable': !takeButton }" class="lien">Prendre</button>
+              <button id="sell" :class="{ 'disable': !sellButton }" class="lien">Vendre</button>
+            </div>
+          </transition>
         </div>
 
         <!-- Interface -->
@@ -341,7 +343,11 @@ export default {
         this.sellButton = true;
       }
       // Activation du bouton échanger
-      else if(this.tradeWant.length == this.tradeGive.length){
+      else if(
+        this.tradeWant.length == this.tradeGive.length && 
+        this.tradeWant.every(card => card.value != "")
+        // this.tradeGive.every(this.differentValue)
+        ){
         this.tradeButton = true;
         this.takeButton = false;
         this.sellButton = false;
@@ -352,6 +358,16 @@ export default {
         this.takeButton = false;
         this.sellButton = false;
       }
+    },
+
+    differentValue(card) {
+      this.tradeWant.forEach(el => {
+        if (card.value == el.value) {
+          console.log("ok");
+          return false;
+        }
+      })
+      return true;
     },
 
     sell: () => {
@@ -402,8 +418,6 @@ export default {
         this.opponent.enclosure = data.players[this.opponentNo].enclosure
         this.opponent.tokens = data.players[this.opponentNo].tokens
         this.tokens = data.tokens
-
-        console.log(this.tokens)
     })
   }
 
@@ -713,7 +727,7 @@ export default {
 /* Hand */
 .player-cards-one:hover .little-card{
   width: 14vw;
-  max-width: 11rem;
+  max-width: 8rem;
 }
 
 .player-cards-one:hover .enclosure{
@@ -745,7 +759,7 @@ export default {
 @media (min-width: 1280px) { 
   .player-cards-one:hover .little-card{
     width: 11vw;
-    max-width: 16rem;
+    max-width: 14rem;
   }
 
   .player-cards-one:hover .enclosure{

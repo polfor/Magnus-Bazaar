@@ -118,10 +118,10 @@ class Game {
 
     updateGame() {
        
-        if(this.checkGameEnd()) {
-            this.endGame();
-        }
-        else {
+        // if(this.checkGameEnd()) {
+        //     this.endGame();
+        // }
+        // else {
             if(this.currentPlayer == 0) {
                 this.currentPlayer = 1;
             }
@@ -148,7 +148,7 @@ class Game {
                 tokens: this.tokens,
                 currentPlayer: this.currentPlayer
             })
-        }
+        // }
 
         
     }
@@ -254,84 +254,84 @@ class Game {
         return (false)
     }
 
-    // checkGameEnd() {
-    //     let emptyTokens = 0;
-    //     this.tokens.forEach(tokenType => {
-    //         if(Array.isArray(tokenType) && !tokenType.length) {
-    //             emptyTokens++;
-    //         }
-    //     })
-    //     if(emptyTokens >= 3) {
-    //         return true;
-    //     }
-    //     return false;
-    // }
+    checkGameEnd() {
+        let emptyTokens = 0;
+        this.tokens.forEach(tokenType => {
+            if(Array.isArray(tokenType) && !tokenType.length) {
+                emptyTokens++;
+            }
+        })
+        if(emptyTokens >= 3) {
+            return true;
+        }
+        return false;
+    }
 
-    // endGame() {
-    //     let results = {
-    //         players: [
-    //             {
-    //                 totalPoints: 0,
-    //                 camelToken : false
-    //             },
-    //             {
-    //                 totalPoints: 0,
-    //                 camelToken : false
-    //             }
-    //         ],
-    //         winner
-    //     }
-    //     this.players.forEach( (player, index) => {
-    //         player.getTokens().forEach( token => {
-    //             results.players[index].totalPoints += token.value;
-    //         })
-    //     })
+    endGame() {
+        let results = {
+            players: [
+                {
+                    totalPoints: 0,
+                    camelToken : false
+                },
+                {
+                    totalPoints: 0,
+                    camelToken : false
+                }
+            ],
+            winner
+        }
+        this.players.forEach( (player, index) => {
+            player.getTokens().forEach( token => {
+                results.players[index].totalPoints += token.value;
+            })
+        })
 
-    //     if(this.players[0].getEnclos().length > this.players[1].getEnclos().length) {
-    //         results.players[0].camelToken = true;
-    //         results.players[0].totalPoints += 5;
-    //     }
-    //     else {
-    //         if(this.players[1].getEnclos().length > this.players[0].getEnclos().length) {
-    //             results.players[1].camelToken = true;
-    //             results.players[1].totalPoints += 5;
-    //         }
-    //     }
+        if(this.players[0].getEnclos().length > this.players[1].getEnclos().length) {
+            results.players[0].camelToken = true;
+            results.players[0].totalPoints += 5;
+        }
+        else {
+            if(this.players[1].getEnclos().length > this.players[0].getEnclos().length) {
+                results.players[1].camelToken = true;
+                results.players[1].totalPoints += 5;
+            }
+        }
 
-    //     if(results.players[0].totalPoints > results.players[1].totalPoints){
-    //         results.winner = 0;
-    //     }
-    //     else {
-    //         if(results.players[1].totalPoints > results.players[0].totalPoints) {
-    //             results.winner = 1;
-    //         }
-    //         else {
-    //             let jetonsBonus = [ 
-    //                 this.players[0].getTokens().map(token =>{
-    //                     if(token.type.includes('bonus')) {
-    //                         return token;
-    //                     }
-    //                 }).length,
-    //                 this.players[1].getTokens().map(token =>{
-    //                     if(token.type.includes('bonus')) {
-    //                         return token;
-    //                     }
-    //                 }).length
-    //             ]
-    //             if(jetonsBonus[0] > jetonsBonus[1]) {
-    //                 results.winner = 0
-    //             }
-    //             else {
-    //                 if(jetonsBonus[1] > jetonsBonus[0]){
-    //                     results.winner = 1
-    //                 }
-    //                 else {
+        if(results.players[0].totalPoints > results.players[1].totalPoints){
+            results.winner = 0;
+        }
+        else {
+            if(results.players[1].totalPoints > results.players[0].totalPoints) {
+                results.winner = 1;
+            }
+            else {
+                let jetonsBonus = [ 
+                    this.players[0].getTokens().map(token =>{
+                        if(token.type.includes('bonus')) {
+                            return token;
+                        }
+                    }).length,
+                    this.players[1].getTokens().map(token =>{
+                        if(token.type.includes('bonus')) {
+                            return token;
+                        }
+                    }).length
+                ]
+                if(jetonsBonus[0] > jetonsBonus[1]) {
+                    results.winner = 0
+                }
+                else {
+                    if(jetonsBonus[1] > jetonsBonus[0]){
+                        results.winner = 1
+                    }
+                    else {
                         
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
+                    }
+                }
+            }
+        }
+    }
 }
 
 module.exports = Game;
