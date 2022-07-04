@@ -59,7 +59,7 @@
           <h2>Rejoindre un salon</h2>
           <form id="joinRoom" class="join_room" action="">
             <div class="item_popup">
-              <input type="text" class="input" placeholder="Votre pseudo" />
+              <input type="text" class="input" placeholder="Votre pseudo" required />
             </div>
             <div class="item_popup">
               <input type="text" class="input" placeholder="Nom du salon" required />
@@ -96,7 +96,7 @@
           <form id="createRoom" class="create_room" action="">
             <div>
               <div class="item_popup">
-                <input type="text" class="input" placeholder="Votre pseudo" />
+                <input type="text" class="input" placeholder="Votre pseudo" required />
               </div>
               <div class="item_popup">
                 <input
@@ -207,6 +207,7 @@ export default {
   color: var(--main-color);
   background-color: #ddd;
   text-decoration: none;
+  font-family: 'Poppins', sans-serif;
   font-size: large;
   padding: 0.5rem;
   border-radius: 0.5rem;
