@@ -234,18 +234,4 @@ export default {
   text-decoration: underline;
   color: #272626;
 }
-.lien {
-  color: white;
-  background-color: #272626;
-  text-decoration: none;
-  font-size: large;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  border: solid #272626 2px;  
-}
-.lien:hover {
-  color: black;
-  background-color: #e2c372;
-  cursor: pointer;
-}
 </style>
