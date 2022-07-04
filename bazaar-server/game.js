@@ -66,8 +66,7 @@ class Game {
         this.tokens.bonus[4] = this.shuffle(baseTokens.bonus[4]);
         this.tokens.bonus[5] = this.shuffle(baseTokens.bonus[5]);
 
-        let i = 0
-        this.players.forEach(player => {
+        this.players.forEach((player, index) => {
             this.deck.splice(0, 5).forEach(card => {
                 if (card.type != "camel") {
                     player.addToHand(card)
@@ -81,7 +80,7 @@ class Game {
             player.socket.on('buy', data => {
                 buy(player, data);
             })
-            player.socket.emit('game-start', { playerNo: i++, playerNames: [this.players[0].name, this.players[1].name] })
+            player.socket.emit('game-start', { playerNo: index, playerNames: [this.players[0].name, this.players[1].name] })
         })
 
         this.buildEvents();
@@ -118,27 +117,40 @@ class Game {
     }
 
     updateGame() {
+       
+        if(this.checkGameEnd()) {
+            this.endGame();
+        }
+        else {
+            if(this.currentPlayer == 0) {
+                this.currentPlayer = 1;
+            }
+            else {
+                this.currentPlayer = 0;
+            }
+    
+            this.io.to(this.room).emit('game-update', {
+                deck: this.deck,
+                players: [
+                    {
+                        hand: this.players[0].getHand(),
+                        enclosure: this.players[0].getEnclos(),
+                        tokens: this.players[0].getTokens()
+                    },
+                    {
+                        hand: this.players[1].getHand(),
+                        enclosure: this.players[1].getEnclos(),
+                        tokens: this.players[1].getTokens()
+                    }
+                ],
+                market: this.market,
+                graveyard: this.graveyard,
+                tokens: this.tokens,
+                currentPlayer: this.currentPlayer
+            })
+        }
 
-        this.io.to(this.room).emit('game-update', {
-            deck: this.deck,
-            players: [
-                {
-                    hand: this.players[0].getHand(),
-                    enclosure: this.players[0].getEnclos(),
-                    tokens: this.players[0].getTokens()
-                },
-                {
-                    hand: this.players[1].getHand(),
-                    enclosure: this.players[1].getEnclos(),
-                    tokens: this.players[1].getTokens()
-                }
-            ],
-            market: this.market,
-            graveyard: this.graveyard,
-            tokens: this.tokens,
-            currentPlayer: this.currentPlayer
-        })
-
+        
     }
 
     trade(player, data) {
@@ -159,7 +171,14 @@ class Game {
         })
 
         while (this.market.length < 5) {
-            this.market.push(this.deck.splice(0, 1));
+            if(this.deck.length) {
+                this.market.push(this.deck.splice(0, 1));
+            }
+            else {
+                this.io.to(this.room).emit("alert", { type: "notif", message: "Plus assez de cartes dans le deck !" })
+                this.endGame();
+                return;
+            }
         }
     }
 
@@ -203,9 +222,8 @@ class Game {
 
     changePlayerSocket(playerNb, socket) {
         this.players[playerNb].setSocket(socket);
-        let i = 0;
-        this.players.forEach(player => {
-            player.socket.emit('game-start', { playerNo: i++, playerNames: [this.players[0].name, this.players[1].name] })
+        this.players.forEach((player, index) => {
+            player.socket.emit('game-start', { playerNo: index, playerNames: [this.players[0].name, this.players[1].name] })
         })
         socket.emit('game-update', {
             deck: this.deck,
@@ -234,6 +252,85 @@ class Game {
             }
         }
         return (false)
+    }
+
+    checkGameEnd() {
+        let emptyTokens = 0;
+        this.tokens.forEach(tokenType => {
+            if(Array.isArray(tokenType) && !tokenType.length) {
+                emptyTokens++;
+            }
+        })
+        if(emptyTokens >= 3) {
+            return true;
+        }
+        return false;
+    }
+
+    endGame() {
+        let results = {
+            players: [
+                {
+                    totalPoints: 0,
+                    camelToken : false
+                },
+                {
+                    totalPoints: 0,
+                    camelToken : false
+                }
+            ],
+            winner
+        }
+        this.players.forEach( (player, index) => {
+            player.getTokens().forEach( token => {
+                results.players[index].totalPoints += token.value;
+            })
+        })
+
+        if(this.players[0].getEnclos().length > this.players[1].getEnclos().length) {
+            results.players[0].camelToken = true;
+            results.players[0].totalPoints += 5;
+        }
+        else {
+            if(this.players[1].getEnclos().length > this.players[0].getEnclos().length) {
+                results.players[1].camelToken = true;
+                results.players[1].totalPoints += 5;
+            }
+        }
+
+        if(results.players[0].totalPoints > results.players[1].totalPoints){
+            results.winner = 0;
+        }
+        else {
+            if(results.players[1].totalPoints > results.players[0].totalPoints) {
+                results.winner = 1;
+            }
+            else {
+                let jetonsBonus = [ 
+                    this.players[0].getTokens().map(token =>{
+                        if(token.type.includes('bonus')) {
+                            return token;
+                        }
+                    }).length,
+                    this.players[1].getTokens().map(token =>{
+                        if(token.type.includes('bonus')) {
+                            return token;
+                        }
+                    }).length
+                ]
+                if(jetonsBonus[0] > jetonsBonus[1]) {
+                    results.winner = 0
+                }
+                else {
+                    if(jetonsBonus[1] > jetonsBonus[0]){
+                        results.winner = 1
+                    }
+                    // else {
+                        
+                    // }
+                }
+            }
+        }
     }
 }
 
