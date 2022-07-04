@@ -125,9 +125,10 @@ export default {
             this.socket.emit('joinroom', {name: e.target[0].value, room: e.target[1].value});
         })
         this.socket.on('roomjoined', data => {
+            var player = data.player ? data.player : 'Un joueur';
             this.emitter.emit('addAlert', {
                 type: "enter",
-                message: data.player + " a rejoint la salle " + data.room,
+                message: player + " a rejoint la salle " + data.room,
             });
             this.emitter.emit('setRoom', data.room);
             this.emitter.emit('setLobby', false);

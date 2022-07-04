@@ -213,8 +213,6 @@ export default {
 }
 .grid_2{
   max-width: 768px;
-  margin: 7rem auto;
-  padding: 1rem;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2,1fr);
