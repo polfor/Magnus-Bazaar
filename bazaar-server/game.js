@@ -148,8 +148,6 @@ class Game {
                 tokens: this.tokens,
                 currentPlayer: this.currentPlayer
             })
-
-            
         }
 
         
@@ -260,11 +258,11 @@ class Game {
 
     checkGameEnd() {
         let emptyTokens = 0;
-        this.tokens.forEach(tokenType => {
+        for (let tokenType in this.tokens) {
             if(Array.isArray(tokenType) && !tokenType.length) {
                 emptyTokens++;
             }
-        })
+        }
         if(emptyTokens >= 3) {
             return true;
         }
