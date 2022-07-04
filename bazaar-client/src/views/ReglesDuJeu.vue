@@ -106,141 +106,148 @@
       </ul>
       <div class="excellence">
         <li class="text_excellence">3 sceaux d’Excellence</li>
-      <img  class="jeton_excellence" src="../assets/Merchant-coin.png" alt="" />
+        <img
+          class="jeton_excellence"
+          src="../assets/Merchant-coin.png"
+          alt=""
+        />
       </div>
-      
     </ul>
 
     <h2>Au lancement de la partie</h2>
     <img class="board" src="../assets/board.png" alt="" />
     <ul>
-      <li>
+      <li class="regles">
         On pose 3 cartes chameau face visible, entre les deux joueurs, c’est la
-        zone de marché
+        zone de marché.
       </li>
-      <li>On mélange les cartes restantes</li>
-      <li>On distribue 5 cartes à chaque joueur</li>
-      <li>
-        Les cartes restantes sont posées face cachée et constituent une pioche
+      <li class="regles">
+        On mélange les cartes restantes puis on distribue 5 cartes à chaque
+        joueur, les cartes restantes sont posées face cachée et constituent une
+        pioche.
       </li>
-      <li>
-        On complète le marché avec les deux cartes du dessus de la pioche; Le
-        marché doit toujours être constitué de 5 cartes.
+      <li class="regles">
+        On complète le marché avec les deux cartes du dessus de la pioche puis
+        on complète le marché à chaque que c'est nécessaire de telle manière que
+        le marché soit toujours constitué de 5 cartes.
       </li>
-      <li>
+      <li class="regles">
         Chaque joueur regarde ses cartes, sort les cartes chameaux de sa main et
         les pose devant lui en une seule pile : cette zone est son enclos.
       </li>
-      <li>
-        On classe les jetons marchandises par types puis on les étales en cascade
-        (afin que tous le monde puisse voir les valeurs des jetons) de manière
-        croissante de sorte que les plus grandes valeurs soient récupérés en
-        premiers.
+      <li class="regles">
+        On classe les jetons marchandises par types puis on les étales de
+        manière croissante de sorte que les plus grandes valeurs soient
+        récupérés en premiers.
       </li>
-      <li>
-        On trie les jetons bonus par type puis on les mélanges entre eux et on les
-        poses en 3 piles
-      </li>
-      <li>Le jeton chameau est posé à côté des jetons bonus</li>
-      <li>
-        Les 3 sceaux d’excellences sont posés sur le côté, chaque joueur
-        remportant une manche récupère un jeton, le 1er joueur ayant 2 jeton gagne
-        la partie.
+      <li class="regles">
+        On trie les jetons bonus par type puis on les mélanges entre eux et on
+        les poses sur le côté avec le jeton chameau et les 3 sceaux
+        d'Excellences.
       </li>
     </ul>
 
-    <div>Le jeu peut débuter.</div>
+    <div>La manche peut alors débuter.</div>
     <br />
-    <div>Le joueur qui jouera le premier est déterminé au hasard.</div>
+    <div>
+      Pour la première manche, le joueur qui jouera le premier est déterminé au
+      hasard.
+    </div>
 
     <h2>Tour de jeu</h2>
 
-    <div>
-      Pendant son tour de jeu, on a le choix entre une des deux actions (pas les
-      deux en même temps):
-    </div>
+    <div>Pendant son tour de jeu, on a le choix entre deux actions :</div>
     <ul>
       <li>
-        Prendre des cartes : On peut prendre des cartes situé dans le marché, on a
-        3 options:
+        <strong>Prendre des cartes</strong> : On peut prendre des cartes situé
+        dans le marché, on a 3 options:
         <ul>
-          <li>
-            Prendre plusieurs marchandises ( = troc) : On prend les cartes qui
-            nous intéresses (elles peuvent être de type différents), puis on
-            complète le marché avec des cartes de notre main ou des chameaux de
-            notre enclos ( ou les deux),
+          <li class="regles">
+            <u>Prendre tous les chameaux</u>: On prend tous les chameaux du
+            marché et on les pose dans son enclos.
           </li>
-          <li>
-            Prendre une seule marchandise : On prend la carte du marché qu’on
-            rajoute dans sa main puis on complète avec la première carte de la
-            pioche,
+          <li class="regles">
+            <u>Prendre une seule marchandise</u>: On prend une carte du marché
+            qu’on ajoute à sa main.
           </li>
-          <li>
-            Prendre tous les chameaux : On prend tous les chameaux du marché et on
-            les pose dans son enclos puis on complète le marché avec les cartes du
-            dessus de la pioche.
+          Dans les deux premiers cas, on complète le marché avec les cartes du
+          dessus de la pioche.
+          <br />
+          <li class="regles">
+            <u>Prendre plusieurs marchandises</u>: Aussi appelé troc, on prend
+            les cartes qui nous intéressent (elles peuvent être de type
+            différents), puis on complète le marché avec des cartes de notre
+            main ou des chameaux de notre enclos (une combinaison des deux est
+            possible).
           </li>
+          <h3><u>Attention</u>:</h3>
+          <ul>
+            <li class="regles">
+              On ne peut prendre que des marchandises ou des chameaux, pas les
+              deux en même temps
+            </li>
+            <li class="regles">
+              On ne peut pas prendre puis déposé une carte du même type lors
+              d’un troc
+            </li>
+            <li class="regles">
+              On ne peut pas faire un troc pour une seul carte
+            </li>
+            <li class="regles">
+              À la fin de son tour un joueur ne peut pas avoir plus de 7 cartes
+              dans sa main
+            </li>
+          </ul>
         </ul>
       </li>
-      <h3>Attention:</h3>
-      <ul>
-        <li>
-          on ne peut prendre que des marchandises ou des chameaux, pas les deux en
-          même temps
-        </li>
-        <li>
-          on ne peut pas prendre puis déposé une carte du même type lors d’un troc
-        </li>
-        <li>on ne peut pas faire un troc pour une carte ( minimum 2)</li>
-        <li>
-          à la fin de son tour un joueur ne peut pas avoir plus de 7 cartes dans
-          sa main
-        </li>
-      </ul>
     </ul>
 
     <ul>
-      <li>
-        Vendre des cartes : la vente se fait en 3 étapes:
+      <li class="regles">
+        <strong>Vendre des cartes</strong> : La vente se fait en 3 étapes:
         <ul>
+          <li class="regles">
+            On vend autant de marchandise du même type que l'on souhaite en les
+            posant face ouverte sur la défausse. <br />
+            <u>Attention</u> : on ne peut vendre qu’un seul type de marchandise
+            par tour et pour les 3 marchandises les plus chères (Diamants, Or et
+            Argent), on doit obligatoirement vendre au minimum 2 cartes, même
+            lorsqu’il ne reste plus qu’un seul jeton.
+          </li>
           <li>
-            vendez autant de marchandises du même type que souhaité en les posant
-            face ouverte sur la défausse, ( attention on ne peut vendre qu’un seul
-            type de marchandise par tour de jeu)
+            On prend le même nombre de jetons du type de carte vendue que le
+            nombre de carte défaussés.
+          </li>
+          <li class="regles">
+            Selon le nombre de cartes vendues, on récupère éventuellement un
+            jeton bonus:
             <ul>
               <li>
-                Pour les 3 marchandises les plus chères ( Diamants, Or et Argent),
-                on doit vendre obligatoirement au minimum 2 cartes, même lorsqu’il
-                ne reste plus qu’un seul jeton
+                Si 3 cartes vendues, on récupère un jeton bonus 3 carte vendues
+              </li>
+              <li>
+                Si 4 cartes vendues, on récupère un jeton bonus 4 carte vendues
+              </li>
+              <li>
+                Si 5 cartes vendues, on récupère un jeton bonus 5 carte vendues
               </li>
             </ul>
           </li>
-          <li>
-            Prenez le même nombre de jetons du même type que le nombre de carte
-            défaussés (en commençant par le haut de la rangé, c'est à dire les
-            jetons de plus grandes valeurs)
-          </li>
-          <li>
-            En plus selon le nombre de carte vendues, on récupère éventuellement
-            un jeton bonus:
-            <ul>
-              <li>Si 3 cartes vendues, on récupère un jeton 3 carte vendues</li>
-              <li>Si 4 cartes vendues, on récupère un jeton 4 carte vendues</li>
-              <li>Si 5 cartes vendues, on récupère un jeton 5 carte vendues</li>
-            </ul>
-          </li>
         </ul>
       </li>
     </ul>
-
-    <div>Puis c’est au tour de votre adversaire de jouer.</div>
+    <div>
+      Une fois votre action terminé, c'est au tour de votre adversaire de jouer.
+    </div>
 
     <h2>Fin d’une manche</h2>
 
     <div>Une manche se termine dans deux cas :</div>
     <ul>
-      <li>Soit quand 3 types de jetons de marchandises sont épuisés</li>
-      <li>
+      <li class="regles">
+        Soit quand 3 types de jetons de marchandises sont épuisés
+      </li>
+      <li class="regles">
         Soit quand la pioche est épuisée et qu’il manque des cartes pour
         compléter le marché
       </li>
@@ -250,13 +257,11 @@
       le joueur possède ( la valeur de chaque jeton correspond à sa valeur en
       roupie).
     </div>
-    <ul>
-      <li>
-        Le joueur ayant le plus de chameau dans son enclos gagne le jeton
-        chameau d’une valeur de 5 roupies.
-      </li>
-    </ul>
-    <div>
+    <div class="regles">
+      Le joueur ayant le plus de chameau dans son enclos gagne le jeton chameau
+    d’une valeur de 5 roupies. En cas d'égalité, aucun des joueurs ne remporte le jeton.
+    </div>
+    <div class="regles">
       Le joueur ayant le plus de roupies est déclaré vainqueur. Si il y a
       égalité, alors le joueur possédant le nombre le plus élevé de jeton bonus
       est déclaré vainqueur. Si il y a encore égalité, alors le joueur possédant
@@ -269,7 +274,7 @@
     <div>
       Si aucun des joueurs ne possède deux sceaux d’Excellence, alors on
       recommence une manche et le joueur ayant perdu la manche précédente
-      commence.
+      commence la nouvelle manche en premier.
     </div>
     <h2>Fin de partie</h2>
     <div>
@@ -347,19 +352,22 @@ body {
   align-content: center;
   flex-wrap: wrap;
 }
-.excellence{
+.excellence {
   display: flex;
 }
-.jeton_excellence{
+.jeton_excellence {
   width: 8%;
   margin: 0 0 0 4.5rem;
 }
-.text_excellence{
+.text_excellence {
   display: flex;
   align-content: center;
   flex-wrap: wrap;
 }
-.board{
+.regles {
+  padding: 0.5rem 0;
+}
+.board {
   width: 100%;
 }
 </style>
