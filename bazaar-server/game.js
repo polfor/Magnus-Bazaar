@@ -184,22 +184,22 @@ class Game {
             this.graveyard.push(player.removeFromHand(card));
             switch (card.value) {
                 case "diamond":
-                    player.addToTokens(this.tokens.diamond.splice(0, 1)[0])
+                    player.addToTokens(this.tokens.diamond.splice(this.tokens.diamond.length - 1, 1)[0])
                     break;
                 case "gold":
-                    player.addToTokens(this.tokens.gold.splice(0, 1)[0])
+                    player.addToTokens(this.tokens.gold.splice(this.tokens.gold.length - 1, 1)[0])
                     break;
                 case "silver":
-                    player.addToTokens(this.tokens.silver.splice(0, 1)[0])
+                    player.addToTokens(this.tokens.silver.splice(this.tokens.silver.length - 1, 1)[0])
                     break;
                 case "cloth":
-                    player.addToTokens(this.tokens.cloth.splice(0, 1)[0])
+                    player.addToTokens(this.tokens.cloth.splice(this.tokens.cloth.length - 1, 1)[0])
                     break;
                 case "spice":
-                    player.addToTokens(this.tokens.spice.splice(0, 1)[0])
+                    player.addToTokens(this.tokens.spice.splice(this.tokens.spice.length - 1, 1)[0])
                     break;
                 case "leather":
-                    player.addToTokens(this.tokens.leather.splice(0, 1)[0])
+                    player.addToTokens(this.tokens.leather.splice(this.tokens.leather.length - 1, 1)[0])
                     break;
                 default:
                     player.socket.emit("alert", { type: "error", message: "Essayé de vendre une carte illégale", card: card })
