@@ -366,7 +366,12 @@ export default {
       var copyText = document.getElementById("room");
       navigator.clipboard.writeText(copyText.innerHTML);
 
-      this.copy = true
+      this.copy = true;
+
+      this.emitter.emit('addAlert', {
+          type: "check",
+          message: "Le nom de la salle a bien été copier",
+      });
     }
   },
   mounted () {
@@ -571,7 +576,7 @@ export default {
 .token-list {
   display: flex;
   justify-content: flex-end;
-  margin-right: 19%;
+  margin-right: 20%;
 }
 
 .token {

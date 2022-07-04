@@ -58,7 +58,7 @@ body {
   color: white;
   background-color: #272626;
   text-decoration: none;
-  font-size: large;
+  font-size: .875rem;
   font-family: 'Poppins', sans-serif;
   padding: 1rem;
   border-radius: 0.5rem;
@@ -68,5 +68,11 @@ body {
 .lien:hover {
   background-color: #e2c372;
   cursor: pointer;
+}
+
+@media (min-width: 640px) { 
+  .lien {
+    font-size: 1rem;
+  }
 }
 </style>

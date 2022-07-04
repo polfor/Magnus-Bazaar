@@ -53,76 +53,80 @@
     </div>
 
     <!-- Popup salon rejoindre une partie -->
-    <div class="pop_up" v-show="isShow_joinRoom">
-      <div class="container_join">
-        <h2>Rejoindre un salon</h2>
-        <form id="joinRoom" class="join_room" action="">
-          <div class="item_popup">
-            <input type="text" class="input" placeholder="Votre pseudo" />
-          </div>
-          <div class="item_popup">
-            <input type="text" class="input" placeholder="Nom du salon" />
-          </div>
-          <div class="item_popup">
-            <input type="submit" class="lien_popup" value="Rejoindre" />
-          </div>
-        </form>
-        <button class="button_cross" @click="isShow_joinRoom = false">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M20 20L4 4M20 4L4 20"
-              stroke="white"
-              stroke-width="2"
-              stroke-linecap="round"
-            />
-          </svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- Popup salon créer une partie -->
-    <div class="pop_up" v-show="isShow_createRoom">
-      <div class="container_create">
-        <h2>Créer un salon</h2>
-        <form id="createRoom" class="create_room" action="">
-          <div>
+    <transition name="fade">
+      <div class="pop_up" v-show="isShow_joinRoom">
+        <div class="container_join">
+          <h2>Rejoindre un salon</h2>
+          <form id="joinRoom" class="join_room" action="">
             <div class="item_popup">
               <input type="text" class="input" placeholder="Votre pseudo" />
             </div>
             <div class="item_popup">
-              <input
-                @click="isShow_createRoom = !isShow_createRoom"
-                class="lien_popup"
-                type="submit"
-                value="Créer"
-              />
+              <input type="text" class="input" placeholder="Nom du salon" />
             </div>
-          </div>
-        </form>
-        <button class="button_cross" @click="isShow_createRoom = false">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M20 20L4 4M20 4L4 20"
-              stroke="white"
-              stroke-width="2"
-              stroke-linecap="round"
-            />
-          </svg>
-        </button>
+            <div class="item_popup">
+              <input type="submit" class="lien_popup" value="Rejoindre" />
+            </div>
+          </form>
+          <button class="button_cross" @click="isShow_joinRoom = false">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M20 20L4 4M20 4L4 20"
+                stroke="white"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
-    </div>
+    </transition>
+
+    <!-- Popup salon créer une partie -->
+    <transition name="fade">
+      <div class="pop_up" v-show="isShow_createRoom">
+        <div class="container_create">
+          <h2>Créer un salon</h2>
+          <form id="createRoom" class="create_room" action="">
+            <div>
+              <div class="item_popup">
+                <input type="text" class="input" placeholder="Votre pseudo" />
+              </div>
+              <div class="item_popup">
+                <input
+                  @click="isShow_createRoom = !isShow_createRoom"
+                  class="lien_popup"
+                  type="submit"
+                  value="Créer"
+                />
+              </div>
+            </div>
+          </form>
+          <button class="button_cross" @click="isShow_createRoom = false">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M20 20L4 4M20 4L4 20"
+                stroke="white"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -168,31 +172,29 @@ export default {
 <style scoped>
 .grille {
   display: flex;
+  flex-direction: column-reverse;
 }
 .colonne1 {
+  gap: .5rem;
   text-align: center;
-  width: 50%;
   display: grid;
 }
 .colonne2 {
-  width: 50%;
   display: grid;
   position: relative;
 }
 
 .titre {
-  margin-top: 5rem;
+  margin-top: 4rem;
   color: white;
 }
 .image_accueil {
-  height: 100vh;
+  height: 40vh;
   width: 100%;
   object-fit: cover;
 }
 .divide_home {
-  position: absolute;
-  left: -2px;
-  top: 0;
+  display: none;
 }
 .lobby .lien:hover {
   border-color: rgb(var(--secondary-color));
@@ -218,7 +220,9 @@ export default {
 
 .copyright {
   margin: auto;
+  margin-top: 2rem;
   color: white;
+  font-size: .75rem;
 }
 .pop_up {
   position: fixed;
@@ -280,5 +284,29 @@ export default {
   border-radius: 0.5rem;
   height: 1.5rem;
   text-align: center;
+}
+
+@media (min-width: 640px) { 
+  .grille {
+    flex-direction: row;
+  }
+  .colonne1 {
+    width: 50%;
+  }
+  .colonne2 {
+    width: 50%;
+  }
+
+  .image_accueil {
+    min-height: 100vh;
+    height: 100%;
+  }
+
+  .divide_home {
+    display: block;
+    position: absolute;
+    left: -2px;
+    top: 0;
+  }
 }
 </style>
