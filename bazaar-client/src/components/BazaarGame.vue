@@ -52,6 +52,40 @@
       </div>
     </div>
 
+    <!-- Hand tokens -->
+    <div class="hand-tokens">
+      <div class="hand-tokens-list token-list">
+        <img class="token token-hidden" src="@/assets/Merchant-coin.png" alt="">
+        <template v-for="token in this.player.tokens">
+          <!-- Ruby -->
+          <img v-if="token.type == 'diamond' && token.value == 5" :key="token.id" class="token" src="@/assets/Ruby_coin-5.png" alt="">
+          <img v-if="token.type == 'diamond' && token.value == 7" :key="token.id" class="token" src="@/assets/Ruby_coin-7.png" alt="">
+          <!-- Gold -->
+          <img v-if="token.type == 'gold' && token.value == 5" :key="token.id" class="token" src="@/assets/Gold_coin-5.png" alt="">
+          <img v-if="token.type == 'gold' && token.value == 6" :key="token.id" class="token" src="@/assets/Gold_coin-6.png" alt="">
+          <!-- Silver -->
+          <img v-if="token.type == 'silver' && token.value == 5" :key="token.id" class="token" src="@/assets/Silver_coin.png" alt="">
+          <!-- Cloth -->
+          <img v-if="token.type == 'cloth' && token.value == 1" :key="token.id" class="token" src="@/assets/Carpet_coin-1.png" alt="">
+          <img v-if="token.type == 'cloth' && token.value == 2" :key="token.id" class="token" src="@/assets/Carpet_coin-2.png" alt="">
+          <img v-if="token.type == 'cloth' && token.value == 3" :key="token.id" class="token" src="@/assets/Carpet_coin-3.png" alt="">
+          <img v-if="token.type == 'cloth' && token.value == 5" :key="token.id" class="token" src="@/assets/Carpet_coin-5.png" alt="">
+          <!-- Spice -->
+          <img v-if="token.type == 'spice' && token.value == 1" :key="token.id" class="token" src="@/assets/Spice_coin-1.png" alt="">
+          <img v-if="token.type == 'spice' && token.value == 2" :key="token.id" class="token" src="@/assets/Spice_coin-2.png" alt="">
+          <img v-if="token.type == 'spice' && token.value == 3" :key="token.id" class="token" src="@/assets/Spice_coin-3.png" alt="">
+          <img v-if="token.type == 'spice' && token.value == 5" :key="token.id" class="token" src="@/assets/Spice_coin-5.png" alt="">
+          <!-- Leather -->
+          <img v-if="token.type == 'leather' && token.value == 1" :key="token.id" class="token" src="@/assets/Leather_coin-1.png" alt="">
+          <img v-if="token.type == 'leather' && token.value == 2" :key="token.id" class="token" src="@/assets/Leather_coin-2.png" alt="">
+          <img v-if="token.type == 'leather' && token.value == 3" :key="token.id" class="token" src="@/assets/Leather_coin-3.png" alt="">
+          <img v-if="token.type == 'leather' && token.value == 4" :key="token.id" class="token" src="@/assets/Leather_coin-4.png" alt="">
+        </template>
+
+        <span class="hand-tokens-points">{{ player.totalPoints }}</span>
+      </div>
+    </div>
+
     <!------------------------>
 
     <!-- Hand player two -->
@@ -503,7 +537,7 @@ export default {
 
         this.player.hand = data.players[this.playerNo].hand
         this.player.enclosure = data.players[this.playerNo].enclosure
-        this.player.tokens = data.players[this.playerNo].tokens
+        this.player.tokens = data.players[this.playerNo].tokens.reverse()
 
         this.opponent.hand = data.players[this.opponentNo].hand
         this.opponent.enclosure = data.players[this.opponentNo].enclosure
@@ -514,18 +548,11 @@ export default {
         this.graveyard = data.graveyard
 
         this.currentPlayer = data.currentPlayer
-        // console.log("Player");
-        // console.log(this.player);
-        // console.log("Opponent");
-        // console.log(this.opponent);
-        // console.log("Market");
-        // console.log(this.market);
-        // console.log("Graveyard");
-        // console.log(this.graveyard);
 
-        console.log(this.tokens);
-        console.log(this.player.tokens);
-        console.log(this.opponent.tokens);
+        // Calcul du nombre de point du joueur
+        this.player.tokens.forEach(token => {
+          this.player.totalPoints += token.value;
+        })
     })
 
     this.socket.on('game-end', data => {
@@ -802,23 +829,53 @@ export default {
   position: fixed;
   bottom: 0;
   left: 0;
-  right: 0;
+  padding: 1rem;
 }
 
-.hand-tokens-inventory {
-  background: rgba(0, 0, 0, 0.2);
+.hand-tokens-list {
+  position: relative;
+  /* background: rgba(0, 0, 0, 0.2); */
   /* z-index: -1;
   opacity: 0; */
-  padding: 1rem;
   transition: all .3s ease-in-out;
 }
 
-.hand-tokens-inventory .token-list {
-  margin-right: 3%;
+.hand-tokens-points {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  background: rgba(255,255,255, .5);
+  color: var(--main-color);
+  border-radius: 100%;
 }
 
-.hand-tokens-inventory .token {
-  margin-right: -3%;
+.hand-tokens-list.token-list {
+  justify-content: center;
+  margin-right: 0;
+  /* margin-right: 3%; */
+}
+
+.hand-tokens-list .token {
+  margin-right: 0;
+}
+
+.hand-tokens-list .token:not(.token-hidden) {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  /* margin-right: -3%; */
+}
+
+.hand-tokens-list .token-hidden {
+  position: relative;
 }
 
 /* Players */
