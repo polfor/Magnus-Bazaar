@@ -475,6 +475,7 @@ export default {
         // console.log(this.market);
         // console.log("Graveyard");
         // console.log(this.graveyard);
+        console.log(data.currentPlayer);
     })
 
     this.socket.on('game-end', data => {
