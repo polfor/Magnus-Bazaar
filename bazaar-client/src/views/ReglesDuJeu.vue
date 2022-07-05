@@ -292,10 +292,10 @@ export default {
 </script>
 
 <style>
-.rules ul {
+/*.rules ul {
   padding-left: 0;
   list-style: none;
-}
+}*/
 
 .container {
   padding: 1rem;
