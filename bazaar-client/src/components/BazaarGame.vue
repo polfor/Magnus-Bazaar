@@ -679,7 +679,7 @@ export default {
 
 /* Tokens */
 .tokens {
-  min-width: 24.5vw;
+  min-width: 21vw;
   position: relative;
 }
 
@@ -711,7 +711,6 @@ export default {
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: all .3s ease-in-out;
 }
 
 .tokens-container {
@@ -790,6 +789,7 @@ export default {
   display: flex;
   gap: 4rem;
   position: absolute;
+  z-index: 10;
 }
 
 .player-cards-one {
@@ -981,7 +981,25 @@ export default {
   cursor: pointer;
 }
 
+@media (min-width: 1024px) { 
+  .tokens {
+    width: 27vw;
+  }
+
+  .token-list {
+    margin-right: 10%;
+  }
+
+  .token {
+    margin-right: -10%;
+  }
+}
+
 @media (min-width: 1280px) { 
+  .tokens {
+    width: 17vw;
+  }
+
   .player-cards-one:hover .little-card{
     width: 11vw;
     max-width: 14rem;
