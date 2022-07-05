@@ -178,9 +178,10 @@
           <!-- Game cards -->
           <div class="game-cards">
             <!-- Deck -->
-            <div class="card empty-cards">
-              <img v-if="deck == 'full'" src="@/assets/Deck_full.png" alt="">
-              <img v-if="deck == 'half'" src="@/assets/Deck_half.png" alt="">
+            <div class="deck card empty-cards">
+              <span v-if="deck != 0" class="deck-number">{{ deck }}</span>
+              <img v-if="deck >= 27" src="@/assets/Deck_full.png" alt="">
+              <img v-if="deck <= 26" src="@/assets/Deck_half.png" alt="">
             </div>
 
             <!-- Graveyard -->
@@ -252,7 +253,7 @@ export default {
           camelToken: false
       },
       tokens: [],
-      deck: [],
+      deck: 0,
       graveyard: [],
       market: [],
       currentPlayer: 0,
@@ -348,9 +349,7 @@ export default {
             }
           }
         }
-  
-        console.log(this.tradeGive);
-        console.log(this.tradeWant);
+
         this.activeButtons();
       }
     },
@@ -470,7 +469,7 @@ export default {
         this.opponent.tokens = data.players[this.opponentNo].tokens
         this.tokens = data.tokens
 
-        this.deck = data.deck.length == 0 ? "empty" : data.deck.length >= 27 ? "full" : "half"
+        this.deck = data.deck.length
         this.graveyard = data.graveyard
 
         this.currentPlayer = data.currentPlayer
@@ -753,7 +752,7 @@ export default {
   background-color: rgb(var(--secondary-color));
 }
 
-.player-container {
+.player-container, .deck {
   position: relative;
 }
 
@@ -826,10 +825,10 @@ export default {
   max-width: 6.5rem;
 }
 
-.enclosure-number {
+.enclosure-number, .deck-number {
   position: absolute;
   top: -.5rem;
-  right: -.5rem;
+  left: -.5rem;
   width: 24px;
   height: 24px;
   color: var(--main-color);
