@@ -317,12 +317,12 @@ h2 {
 body {
   background-color: #408070;
 }
-.card {
+.rules .card {
   justify-self: self-end;
   width: 40%;
   margin-bottom: 0.5rem;
 }
-.cards {
+.rules .cards {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   margin-bottom: 2rem;
@@ -388,11 +388,11 @@ body {
     right: 10%;
   }
 
-  .card {
+  .rules .card {
     justify-self: self-start;
   }
 
-  .cards {
+  .rules .cards {
     grid-template-columns: repeat(4, 1fr);
   }
 

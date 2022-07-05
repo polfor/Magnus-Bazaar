@@ -138,9 +138,9 @@
           <!-- Buttons -->
           <transition name="fade">
             <div class="buttons" v-if="buttons">
-              <button id="trade" :class="{ 'disable': !tradeButton }" class="lien" @click="trade">Échanger</button>
-              <button id="take" :class="{ 'disable': !takeButton }" class="lien" @click="trade">Prendre</button>
-              <button id="sell" :class="{ 'disable': !sellButton }" class="lien" @click="sell">Vendre</button>
+              <button id="trade" :class="{ 'disable': !tradeButton }" class="lien" @click="tradeButton ? trade() : ''">Échanger</button>
+              <button id="take" :class="{ 'disable': !takeButton }" class="lien" @click="takeButton ? trade(): ''">Prendre</button>
+              <button id="sell" :class="{ 'disable': !sellButton }" class="lien" @click="sellButton ? sell() : ''">Vendre</button>
             </div>
           </transition>
         </div>
@@ -166,14 +166,15 @@
             </div>
 
             <!-- Graveyard -->
-            <div class="card empty-cards">
+            <div class="graveyard card empty-cards">
+              <img class="card card-hidden" src="@/assets/Back_card.png" alt="">
               <div v-for="card in graveyard" :key="card">
-                <img :id="card.id" v-if="card.value == 'leather'" class="card" src="@/assets/Leather_card.png" alt="">
-                <img :id="card.id" v-if="card.value == 'spice'" class="card" src="@/assets/Spices_card.png" alt="">
-                <img :id="card.id" v-if="card.value == 'cloth'" class="card" src="@/assets/Carpet_card.png" alt="">
-                <img :id="card.id" v-if="card.value == 'silver'" class="card" src="@/assets/Silver_card.png" alt="">
-                <img :id="card.id" v-if="card.value == 'gold'" class="card" src="@/assets/Gold_card.png" alt="">
-                <img :id="card.id" v-if="card.value == 'diamond'" class="card" src="@/assets/Ruby_card.png" alt="">
+                <img :id="card.id" v-if="card.value == 'leather'" class="card card-graveyard" src="@/assets/Leather_card.png" alt="">
+                <img :id="card.id" v-if="card.value == 'spice'" class="card card-graveyard" src="@/assets/Spices_card.png" alt="">
+                <img :id="card.id" v-if="card.value == 'cloth'" class="card card-graveyard" src="@/assets/Carpet_card.png" alt="">
+                <img :id="card.id" v-if="card.value == 'silver'" class="card card-graveyard" src="@/assets/Silver_card.png" alt="">
+                <img :id="card.id" v-if="card.value == 'gold'" class="card card-graveyard" src="@/assets/Gold_card.png" alt="">
+                <img :id="card.id" v-if="card.value == 'diamond'" class="card card-graveyard" src="@/assets/Ruby_card.png" alt="">
               </div>
             </div>
           </div>
@@ -328,8 +329,8 @@ export default {
           }
         }
   
-        console.log(this.tradeGive)
-        console.log(this.tradeWant)
+        console.log(this.tradeGive);
+        console.log(this.tradeWant);
         this.activeButtons();
       }
     },
@@ -391,12 +392,12 @@ export default {
 
     sell() {
       this.socket.emit('sell', {soldCards: this.tradeGive});
-      this.resetPlayer
+      this.resetPlayer();
     },
 
     trade() {
       this.socket.emit('trade', {takenCards: this.tradeWant, tradedCards: this.tradeGive})
-      this.resetPlayer
+      this.resetPlayer();
     },
 
     resetPlayer() {
@@ -453,14 +454,14 @@ export default {
         this.graveyard = data.graveyard
 
         this.currentPlayer = data.currentPlayer
-        console.log("Player");
-        console.log(this.player);
-        console.log("Opponent");
-        console.log(this.opponent);
-        console.log("Market");
-        console.log(this.market);
-        console.log("Graveyard");
-        console.log(this.graveyard);
+        // console.log("Player");
+        // console.log(this.player);
+        // console.log("Opponent");
+        // console.log(this.opponent);
+        // console.log("Market");
+        // console.log(this.market);
+        // console.log("Graveyard");
+        // console.log(this.graveyard);
     })
 
     this.socket.on('game-end', data => {
@@ -607,6 +608,18 @@ export default {
   bottom: 0;
   right: 1rem;
   transform: rotate(-12deg);
+}
+
+.card-hidden {
+  opacity: 0;
+}
+
+.card-graveyard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .little-card {
@@ -789,9 +802,14 @@ export default {
 
 .game-cards {
   margin-right: 3rem;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   grid-template-rows: repeat(2, 1fr);
   gap: .5rem;
+}
+
+.graveyard {
+  position: relative;
 }
 
 /* ----------------------- */
