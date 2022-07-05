@@ -383,7 +383,10 @@ export default {
       // Activation du bouton échanger
       else if(
         this.tradeWant.length == this.tradeGive.length && 
-        this.tradeWant.every(card => card.value != "")
+        this.tradeWant.length >= 2 && 
+        this.tradeGive.length >= 2 &&
+        this.tradeWant.every(card => card.value != "") &&
+        this.differentValue()
         ){
         this.tradeButton = true;
         this.takeButton = false;
@@ -395,7 +398,11 @@ export default {
         this.takeButton = false;
         this.sellButton = false;
       }
-      // console.log(this.tradeWant.some(card => this.tradeGive.includes(card)));
+    },
+
+    differentValue() {
+      let result = this.tradeWant.filter(cardWant => this.tradeGive.some(cardGive => cardWant.value === cardGive.value));
+      return result.length != 0 ? false : true;
     },
 
     quit() {
@@ -475,7 +482,6 @@ export default {
         // console.log(this.market);
         // console.log("Graveyard");
         // console.log(this.graveyard);
-        console.log(data.currentPlayer);
     })
 
     this.socket.on('game-end', data => {
