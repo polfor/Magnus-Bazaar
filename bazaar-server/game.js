@@ -9,10 +9,10 @@ const cardsTemplate = {
     }],
     "deck": ""
 }
-const baseCards = require('./cards.json').cards;
-const baseTokens = require('./tokens.json').tokens;
+const jsonCards = require('./cards.json').cards;
+const jsonTokens = require('./tokens.json').tokens;
 
-class Game {
+class Game { 
 
     io;
     room;
@@ -37,6 +37,9 @@ class Game {
     currentPlayer;
 
     constructor(io, roomName, player1, player2) {
+
+        let baseCards = JSON.parse(JSON.stringify((jsonCards)));
+        let baseTokens = JSON.parse(JSON.stringify((jsonTokens)));
         this.io = io;
         this.room = roomName;
         this.seed = seedrandom(roomName)
@@ -76,6 +79,12 @@ class Game {
             })
             player.socket.emit('game-start', { playerNo: index, playerNames: [this.players[0].name, this.players[1].name] })
         })
+
+        console.log('this')
+        console.log(this.tokens.leather)
+        
+        console.log('base')
+        console.log(baseTokens.leather)
 
         this.buildEvents();
 
