@@ -106,9 +106,40 @@ class Game {
                 this.updateGame();
             })
         })
+
+
     }
 
     updateGame() {
+
+        if (this.checkGameEnd()) {
+            this.endGame();
+        } else {
+            if (this.currentPlayer == 0) {
+                this.currentPlayer = 1;
+            } else {
+                this.currentPlayer = 0;
+            }
+
+            this.io.to(this.room).emit('game-update', {
+                deck: this.deck,
+                players: [{
+                        hand: this.players[0].getHand(),
+                        enclosure: this.players[0].getEnclos(),
+                        tokens: this.players[0].getTokens()
+                    },
+                    {
+                        hand: this.players[1].getHand(),
+                        enclosure: this.players[1].getEnclos(),
+                        tokens: this.players[1].getTokens()
+                    }
+                ],
+                market: this.market,
+                graveyard: this.graveyard,
+                tokens: this.tokens,
+                currentPlayer: this.currentPlayer
+            })
+        }
 
         if (this.checkGameEnd()) {
             this.endGame();
