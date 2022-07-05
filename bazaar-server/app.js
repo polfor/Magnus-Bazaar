@@ -47,12 +47,16 @@ SocketIo.on('connection', socket => {
         if (rooms[roomname] != undefined) {
             if (SocketIo.of("/").adapter.rooms.get(roomname).size < 2) {
                 if (!Object.getOwnPropertyNames(rooms[roomname].player2).length) {
-                    rooms[roomname].player2 = { name: playername, socket: socket };
-                    socket.join(roomname);
-                    console.log('le joueur ' + playername + ' (socket ' + socket.id + ') a rejoint le salon ' + roomname);
-                    SocketIo.to(roomname).emit("roomjoined", { room: roomname });
-                    if (SocketIo.of("/").adapter.rooms.get(roomname).size == 2) {
-                        startGame(roomname);
+                    if (rooms[roomname].player1.name != playername) {
+                        rooms[roomname].player2 = { name: playername, socket: socket };
+                        socket.join(roomname);
+                        console.log('le joueur ' + playername + ' (socket ' + socket.id + ') a rejoint le salon ' + roomname);
+                        SocketIo.to(roomname).emit("roomjoined", { room: roomname });
+                        if (SocketIo.of("/").adapter.rooms.get(roomname).size == 2) {
+                            startGame(roomname);
+                        }
+                    } else {
+                        socket.emit("alert", { type: "error", message: "Ce nom est déjà pris" })
                     }
                 } else {
 
@@ -65,7 +69,7 @@ SocketIo.on('connection', socket => {
                             socket.join(roomname);
                             games[roomname].changePlayerSocket(1, socket);
                         } else {
-                            socket.emit("alert", { type: "error", message: "Il y a déjà 2 joueurs dans ce salon" })
+                            socket.emit("alert", { type: "error", message: "Il y a déjà 2 joueurs dans ce salon (et tu n'es pas l'un d'eux)" })
                         }
                     }
 
@@ -81,23 +85,22 @@ SocketIo.on('connection', socket => {
         }
     })
 
-    // socket.on('disconnecting', () => {
-    //     for (let [roomName, room] of rooms) {
-    //         console.log('tableau rooms : ' + roomName)
-    //         for (let name of socket.rooms) {
-    //             console.log('rooms du socket : ' + name)
-    //             if (name == roomName && SocketIo.to('/').adapter.rooms.get(name).length == 1) {
-    //                 console.log('dernier à quitter la salle ' + name)
-    //             }
-    //         }
-    //     }
-    // })
+    socket.on('leave', data => {
+        socket.leave(data.room);
+    })
+
 
 })
 
 
 SocketIo.of('/').adapter.on('delete-room', (room) => {
     rooms.splice(rooms.indexOf(rooms[room]))
+})
+
+SocketIo.of('/').adapter.on('leave-room', (room, id) => {
+    if (rooms[room]) {
+        SocketIo.to(room).emit('opponent-left');
+    }
 })
 
 

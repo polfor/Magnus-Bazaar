@@ -23,7 +23,12 @@ class Player {
     }
 
     removeFromHand(card) {
-        this.hand.splice(this.hand.indexOf(card), 1)
+        this.hand.splice(this.hand.findIndex(handCard => handCard.id === card.id), 1)
+        return (card);
+    }
+
+    removeCamel(card) {
+        this.enclos.splice(this.enclos.findIndex(handCard => handCard.id === card.id), 1)
         return (card);
     }
 
@@ -44,6 +49,9 @@ class Player {
     }
     setSocket(newSocket) {
         this.socket = newSocket;
+    }
+    getSocketId() {
+        return this.socket.id
     }
 }
 
