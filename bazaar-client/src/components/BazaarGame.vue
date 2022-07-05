@@ -1,7 +1,9 @@
 <template>
   <div v-if="lobby == false" class="bazaarGame">
     <!-- Leave -->
-    <button @click="this.emitter.emit('setLobby', true)">Quitter le salon</button>
+    <div class="sortir" @click="quit">
+      <svg class="bouton_maison" width="36" height="35" viewBox="0 0 36 35" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M28.2004 14L31.9498 18.375L28.2004 14ZM28.2004 22.75L31.9498 18.375L28.2004 22.75Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path><path d="M29.7 18.375H18M7.19995 6.125H23.4M7.19995 30.625H23.4M23.4 6.125V13.125M23.4 23.625V30.625M7.19995 6.125V30.625" stroke="white" stroke-width="2" stroke-linecap="round"></path></svg>
+    </div>
 
     <!-- Loaded -->
     <div class="loaded" v-if="wait">
@@ -32,19 +34,20 @@
       <div class="hand-container-one">
         <div class="hand">
           <div v-for="card in player.hand" :key="card.id">
-            <img @click="active" v-if="card.value == 'leather'" class="little-card card-player" src="@/assets/Leather_card.png" alt="">
-            <img @click="active" v-if="card.value == 'spice'" class="little-card card-player" src="@/assets/Spices_card.png" alt="">
-            <img @click="active" v-if="card.value == 'cloth'" class="little-card card-player" src="@/assets/Carpet_card.png" alt="">
-            <img @click="active" v-if="card.value == 'silver'" class="little-card card-player" src="@/assets/Silver_card.png" alt="">
-            <img @click="active" v-if="card.value == 'gold'" class="little-card card-player" src="@/assets/Gold_card.png" alt="">
-            <img @click="active" v-if="card.value == 'ruby'" class="little-card card-player" src="@/assets/Ruby_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'leather'" class="little-card card-player card-selected" src="@/assets/Leather_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'spice'" class="little-card card-player card-selected" src="@/assets/Spices_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'cloth'" class="little-card card-player card-selected" src="@/assets/Carpet_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'silver'" class="little-card card-player card-selected" src="@/assets/Silver_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'gold'" class="little-card card-player card-selected" src="@/assets/Gold_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'diamond'" class="little-card card-player card-selected" src="@/assets/Ruby_card.png" alt="">
           </div>
         </div>
       </div>
       
       <!-- Enclosure -->
       <div class="enclosure enclosure-one">
-        <img @click="active" v-for="enclosure in player.enclosure" :key="enclosure.index" class="little-card camel-card camel-card-one" src="@/assets/Camel_card.png" alt="">
+        <span v-if="player.enclosure.length != 0" class="enclosure-number">{{ player.enclosure.length }}</span>
+        <img @click="active" :id="enclosure.id" :data-value="enclosure.value" v-for="enclosure in player.enclosure" :key="enclosure.index" class="little-card camel-card camel-card-one" src="@/assets/Camel_card.png" alt="">
       </div>
     </div>
 
@@ -71,85 +74,132 @@
       <!-- Board -->
       <div class="board">
         <!-- Tokens -->
-        <div class="tokens">
-          <!-- Ruby -->
-          <div class="token-list">
-            <img v-for="index in 3" :key="index" class="token" src="@/assets/Ruby_coin-5.png" alt="">
-            <img v-for="index in 2" :key="index" class="token" src="@/assets/Ruby_coin-7.png" alt="">
+        <div class="tokens" :class="{ 'active': tokensOverlay, 'zoom': tokensZoom }">
+          <div class="tokens-hover" @click="tokensOverlay = false"></div>
+          <div class="tokens-zoom" v-if="tokensZoom">
+            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
+              <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                <circle cx="7.5" cy="7.5" r="4.75"/>
+                <path d="M9.25 7.5h-3.5M7.5 5.75v3.5m3.75 2l3 3"/>
+              </g>
+            </svg>
           </div>
-          <!-- Gold -->
-          <div class="token-list">
-            <img v-for="index in 3" :key="index" class="token" src="@/assets/Gold_coin-5.png" alt="">
-            <img v-for="index in 2" :key="index" class="token" src="@/assets/Gold_coin-6.png" alt="">
-          </div>
-          <!-- Silver -->
-          <div class="token-list">
-            <img v-for="index in 5" :key="index" class="token" src="@/assets/Silver_coin.png" alt="">
-          </div>
-          <!-- Carpet -->
-          <div class="token-list">
-            <img v-for="index in 2" :key="index" class="token" src="@/assets/Carpet_coin-1.png" alt="">
-            <img v-for="index in 2" :key="index" class="token" src="@/assets/Carpet_coin-2.png" alt="">
-            <img v-for="index in 2" :key="index" class="token" src="@/assets/Carpet_coin-3.png" alt="">
-            <img class="token" src="@/assets/Carpet_coin-5.png" alt="">
-          </div>
-          <!-- Spice -->
-          <div class="token-list">
-            <img v-for="index in 2" :key="index" class="token" src="@/assets/Spice_coin-1.png" alt="">
-            <img v-for="index in 2" :key="index" class="token" src="@/assets/Spice_coin-2.png" alt="">
-            <img v-for="index in 2" :key="index" class="token" src="@/assets/Spice_coin-3.png" alt="">
-            <img class="token" src="@/assets/Spice_coin-5.png" alt="">
-          </div>
-          <!-- Leather -->
-          <div class="token-list">
-            <img v-for="index in 6" :key="index" class="token" src="@/assets/Leather_coin-1.png" alt="">
-            <img class="token" src="@/assets/Leather_coin-2.png" alt="">
-            <img class="token" src="@/assets/Leather_coin-3.png" alt="">
-            <img class="token" src="@/assets/Leather_coin-4.png" alt="">
+          <div class="tokens-container" @click="tokensOverlay = true" @mouseenter="tokensZoom = true" @mouseleave="tokensZoom = false">
+            <!-- Ruby -->
+            <div class="token-list">
+              <template v-for="diamond in this.tokens.diamond">
+                <img v-if="diamond.value == 5" :key="diamond.id" class="token" src="@/assets/Ruby_coin-5.png" alt="">
+                <img v-if="diamond.value == 7" :key="diamond.id" class="token" src="@/assets/Ruby_coin-7.png" alt="">
+              </template>
+            </div>
+            <!-- Gold -->
+            <div class="token-list">
+              <template v-for="gold in this.tokens.gold">
+                <img v-if="gold.value == 5" :key="gold.id" class="token" src="@/assets/Gold_coin-5.png" alt="">
+                <img v-if="gold.value == 6" :key="gold.id" class="token" src="@/assets/Gold_coin-6.png" alt="">
+              </template>
+            </div>
+            <!-- Silver -->
+            <div class="token-list">
+              <template v-for="silver in this.tokens.silver">
+                <img v-if="silver.value == 5" :key="silver.id" class="token" src="@/assets/Silver_coin.png" alt="">
+              </template>
+            </div>
+            <!-- Carpet -->
+            <div class="token-list">
+              <template v-for="cloth in this.tokens.cloth">
+                <img v-if="cloth.value == 1" :key="cloth.id" class="token" src="@/assets/Carpet_coin-1.png" alt="">
+                <img v-if="cloth.value == 2" :key="cloth.id" class="token" src="@/assets/Carpet_coin-2.png" alt="">
+                <img v-if="cloth.value == 3" :key="cloth.id" class="token" src="@/assets/Carpet_coin-3.png" alt="">
+                <img v-if="cloth.value == 5" :key="cloth.id" class="token" src="@/assets/Carpet_coin-5.png" alt="">
+              </template>
+            </div>
+            <!-- Spice -->
+            <div class="token-list">
+              <template v-for="spice in this.tokens.spice">
+                <img v-if="spice.value == 1" :key="spice.id" class="token" src="@/assets/Spice_coin-1.png" alt="">
+                <img v-if="spice.value == 2" :key="spice.id" class="token" src="@/assets/Spice_coin-2.png" alt="">
+                <img v-if="spice.value == 3" :key="spice.id" class="token" src="@/assets/Spice_coin-3.png" alt="">
+                <img v-if="spice.value == 5" :key="spice.id" class="token" src="@/assets/Spice_coin-5.png" alt="">
+              </template>
+            </div>
+            <!-- Leather -->
+            <div class="token-list">
+              <template v-for="leather in this.tokens.leather">
+                <img v-if="leather.value == 1" :key="leather.id" class="token" src="@/assets/Leather_coin-1.png" alt="">
+                <img v-if="leather.value == 2" :key="leather.id" class="token" src="@/assets/Leather_coin-2.png" alt="">
+                <img v-if="leather.value == 3" :key="leather.id" class="token" src="@/assets/Leather_coin-3.png" alt="">
+                <img v-if="leather.value == 4" :key="leather.id" class="token" src="@/assets/Leather_coin-4.png" alt="">
+              </template>
+            </div>
           </div>
         </div>
 
         <!-- Market -->
         <div class="market">
-          <div v-for="card in market" :key="card.id">
-            <img @click="active" v-if="card.type == 'camel'" class="card empty-cards" src="@/assets/Camel_card.png" alt="">
-            <img @click="active" v-if="card.value == 'leather'" class="card empty-cards" src="@/assets/Leather_card.png" alt="">
-            <img @click="active" v-if="card.value == 'spice'" class="card empty-cards" src="@/assets/Spices_card.png" alt="">
-            <img @click="active" v-if="card.value == 'cloth'" class="card empty-cards" src="@/assets/Carpet_card.png" alt="">
-            <img @click="active" v-if="card.value == 'silver'" class="card empty-cards" src="@/assets/Silver_card.png" alt="">
-            <img @click="active" v-if="card.value == 'gold'" class="card empty-cards" src="@/assets/Gold_card.png" alt="">
-            <img @click="active" v-if="card.value == 'ruby'" class="card empty-cards" src="@/assets/Ruby_card.png" alt="">
+          <div v-for="card in market" :key="card">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.type == 'camel'" class="card empty-cards card-selected" src="@/assets/Camel_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'leather'" class="card empty-cards card-selected" src="@/assets/Leather_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'spice'" class="card empty-cards card-selected" src="@/assets/Spices_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'cloth'" class="card empty-cards card-selected" src="@/assets/Carpet_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'silver'" class="card empty-cards card-selected" src="@/assets/Silver_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'gold'" class="card empty-cards card-selected" src="@/assets/Gold_card.png" alt="">
+            <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'diamond'" class="card empty-cards card-selected" src="@/assets/Ruby_card.png" alt="">
           </div>
 
           <!-- Buttons -->
-          <div class="buttons">
-            <button class="lien">Échanger</button>
-            <button class="lien">Prendre</button>
-            <button class="lien">Vendre</button>
-          </div>
+          <transition name="fade">
+            <div class="buttons" v-if="buttons">
+              <button id="trade" :class="{ 'disable': !tradeButton }" class="lien" @click="tradeButton ? trade() : ''">Échanger</button>
+              <button id="take" :class="{ 'disable': !takeButton }" class="lien" @click="takeButton ? trade(): ''">Prendre</button>
+              <button id="sell" :class="{ 'disable': !sellButton }" class="lien" @click="sellButton ? sell() : ''">Vendre</button>
+            </div>
+          </transition>
         </div>
 
         <!-- Interface -->
         <div class="interface">
           <!-- Name player 1 -->
-          <div class="player player-one">
-            <p>{{ player.name }}</p>
+          <div v-if="opponent.name" class="player player-one" :class="{ 'active': this.currentPlayer == this.opponentNo }">
+            <div class="player-container">
+              <p>{{ opponent.name }}</p>
+              <div v-if="this.currentPlayer == this.opponentNo" class="player-current">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><circle cx="18" cy="12" r="0" fill="currentColor"><animate attributeName="r" begin=".67" calcMode="spline" dur="1.5s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" repeatCount="indefinite" values="0;2;0;0"/></circle><circle cx="12" cy="12" r="0" fill="currentColor"><animate attributeName="r" begin=".33" calcMode="spline" dur="1.5s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" repeatCount="indefinite" values="0;2;0;0"/></circle><circle cx="6" cy="12" r="0" fill="currentColor"><animate attributeName="r" begin="0" calcMode="spline" dur="1.5s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" repeatCount="indefinite" values="0;2;0;0"/></circle></svg>
+              </div>
+            </div>
           </div>
 
           <!-- Game cards -->
           <div class="game-cards">
             <!-- Deck -->
-            <div class="card empty-cards">
-              <img src="@/assets/Deck_full.png" alt="">
+            <div class="deck card empty-cards">
+              <span v-if="deck != 0" class="deck-number">{{ deck }}</span>
+              <img v-if="deck >= 27" src="@/assets/Deck_full.png" alt="">
+              <img v-if="deck <= 26" src="@/assets/Deck_half.png" alt="">
             </div>
 
             <!-- Graveyard -->
-            <div class="card empty-cards"></div>
+            <div class="graveyard card empty-cards">
+              <img class="card card-hidden" src="@/assets/Back_card.png" alt="">
+              <div v-for="card in graveyard" :key="card">
+                <img :id="card.id" v-if="card.value == 'leather'" class="card card-graveyard" src="@/assets/Leather_card.png" alt="">
+                <img :id="card.id" v-if="card.value == 'spice'" class="card card-graveyard" src="@/assets/Spices_card.png" alt="">
+                <img :id="card.id" v-if="card.value == 'cloth'" class="card card-graveyard" src="@/assets/Carpet_card.png" alt="">
+                <img :id="card.id" v-if="card.value == 'silver'" class="card card-graveyard" src="@/assets/Silver_card.png" alt="">
+                <img :id="card.id" v-if="card.value == 'gold'" class="card card-graveyard" src="@/assets/Gold_card.png" alt="">
+                <img :id="card.id" v-if="card.value == 'diamond'" class="card card-graveyard" src="@/assets/Ruby_card.png" alt="">
+              </div>
+            </div>
           </div>
 
           <!-- Name player 2 -->
-          <div class="player player-two">
-            <p>{{ opponent.name }}</p>
+          <div v-if="player.name" class="player player-two" :class="{ 'active': this.currentPlayer == this.playerNo }">
+            <div class="player-container">
+              <p>{{ player.name }}</p>
+              <div v-if="this.currentPlayer == this.playerNo" class="player-current">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><circle cx="18" cy="12" r="0" fill="currentColor"><animate attributeName="r" begin=".67" calcMode="spline" dur="1.5s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" repeatCount="indefinite" values="0;2;0;0"/></circle><circle cx="12" cy="12" r="0" fill="currentColor"><animate attributeName="r" begin=".33" calcMode="spline" dur="1.5s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" repeatCount="indefinite" values="0;2;0;0"/></circle><circle cx="6" cy="12" r="0" fill="currentColor"><animate attributeName="r" begin="0" calcMode="spline" dur="1.5s" keySplines="0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8;0.2 0.2 0.4 0.8" repeatCount="indefinite" values="0;2;0;0"/></circle></svg>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -165,6 +215,14 @@ export default {
     return {
       wait: true,
       copy: false,
+      tokensOverlay: false,
+      tokensZoom: false,
+
+      // Boutons
+      buttons: false,
+      tradeButton: false,
+      takeButton: false,
+      sellButton: false,
 
       // hand
       handOpen: false,
@@ -173,18 +231,27 @@ export default {
       playerNo: 0,
       opponentNo: 1,
       player: {
-          name: "You",
+          name: "",
           hand: [],
           enclosure: [],
-          tokens: []
+          tokens: [],
+          totalPoints: 0,
+          camelToken: false
       },
       opponent: {
-          name: "Opponent",
+          name: "",
           hand: [],
           enclosure: [],
-          tokens: []
+          tokens: [],
+          totalPoints: 0,
+          camelToken: false
       },
+      tokens: [],
+      deck: 0,
+      graveyard: [],
       market: [],
+      currentPlayer: 0,
+      winner: "",
 
       // trade
       tradeGive: [],
@@ -192,33 +259,179 @@ export default {
     }
   },
   methods: {
-    requeteTest() {
-        this.socket.emit('trade', {
-          // Carte dans la main
-          tradedCards: [],
-
-          // Carte dans le marché
-          takenCards: []
-        })
-    },
-
     active(ev) {
-      ev.target.classList.toggle("active");
+      if(this.currentPlayer == this.playerNo){
+        // Ajout du style pour les cartes sélectionnées
+        ev.target.classList.toggle("active");
+  
+        // Add card to trade
+        var card = {};
+        var marketCards = document.querySelectorAll(".market img");
+        if(ev.target.classList.contains('card-player') || ev.target.classList.contains('camel-card')){
+          // Carte dans la main
+          card = {
+            "id": parseInt(ev.target.id),
+            "type": ev.target.dataset.value ? "merchandise" : "camel",
+            "value": ev.target.dataset.value
+          }
+  
+          if(ev.target.classList.contains('active')){
+            this.tradeGive.push(card);
+          }
+          else{
+            this.tradeGive.splice(this.tradeGive.findIndex(card => card.value === ev.target.dataset.value), 1);
+          }
+        }
+        else {
+          // Carte dans le marché
+          card = {
+            "id": parseInt(ev.target.id),
+            "type": ev.target.dataset.value ? "merchandise" : "camel",
+            "value": ev.target.dataset.value
+          }
+  
+          // -- Sélection de tous les chamaux
+          if(ev.target.dataset.value == ""){
+            if(ev.target.classList.contains('active')){
+              // Suppresion des marchandises
+              while(this.tradeWant.filter( card => card.value !== "" ).length != 0){
+                 this.tradeWant.splice(this.tradeWant.findIndex(card => card.value === ev.target.dataset.value), 1);
+              }
+  
+              marketCards.forEach(el => {
+                el.dataset.value == "" ? this.tradeWant.push({
+                  "id": parseInt(el.id),
+                  "type": el.dataset.value ? "merchandise" : "camel",
+                  "value": el.dataset.value
+                }) : "";
+              });
+  
+              // Ajout du style pour tous les chamaux
+              marketCards.forEach(card => {
+                card.dataset.value == "" ? card.classList.add("active") : card.classList.remove("active");
+              });
+            }
+            else {
+              // Suppresion des chamaux
+              while(this.tradeWant.filter( card => card.value === "" ).length != 0){
+                 this.tradeWant.splice(this.tradeWant.findIndex(card => card.value === ev.target.dataset.value), 1);
+              }
+  
+              // Ajout du style pour tous les chamaux
+              marketCards.forEach(card => {
+                card.dataset.value == "" ? card.classList.remove("active") : "";
+              });
+            }
+          }
+  
+          // -- Sélection de toutes les marchandises
+          else {
+            // Suppresion des chamaux
+            while(this.tradeWant.filter( card => card.value === "" ).length != 0){
+              this.tradeWant.splice(this.tradeWant.findIndex(card => card.value === ev.target.dataset.value), 1);
+            }
+  
+            marketCards.forEach(card => {
+              card.dataset.value == "" ? card.classList.remove("active") : "";
+            });
+  
+            if(ev.target.classList.contains('active')){
+              this.tradeWant.push(card);
+            }
+            else{
+              this.tradeWant.splice(this.tradeWant.findIndex(card => card.value === ev.target.dataset.value), 1);
+            }
+          }
+        }
+
+        this.activeButtons();
+      }
     },
 
-    sell:  () => {
-      this.socket.emit('sell');
+    activeButtons() {
+      // Affichage des boutons
+      this.tradeWant.length != 0 || this.tradeGive.length != 0 ? this.buttons = true : this.buttons = false;
+
+      // Activation du bouton take
+      if(
+        this.tradeWant.length == 1 && 
+        this.tradeGive.length == 0 && 
+        this.player.hand.length < 7 || 
+        this.tradeWant.every(card => card.value == "") && 
+        this.tradeGive.length == 0 && 
+        this.tradeWant.length >= 1
+        ){
+        this.tradeButton = false;
+        this.takeButton = true;
+        this.sellButton = false;
+      }
+      // Activation du bouton sell
+      else if(
+        // leather, cloth, spice
+        this.tradeWant.length == 0 && 
+        this.tradeGive.length >= 1 && 
+        this.tradeGive.every(card => card.value == this.tradeGive[0].value && (card.value == "cloth" || card.value == "leather" || card.value == "spice")) ||
+        // ruby, gold, silver
+        this.tradeWant.length == 0 && 
+        this.tradeGive.length >= 2 && 
+        this.tradeGive.every(card => card.value == this.tradeGive[0].value && (card.value == "diamond" || card.value == "gold" || card.value == "silver"))
+        ){
+        this.tradeButton = false;
+        this.takeButton = false;
+        this.sellButton = true;
+      }
+      // Activation du bouton échanger
+      else if(
+        this.tradeWant.length == this.tradeGive.length && 
+        this.tradeWant.every(card => card.value != "")
+        ){
+        this.tradeButton = true;
+        this.takeButton = false;
+        this.sellButton = false;
+      }
+      // Désactivation des boutons
+      else {
+        this.tradeButton = false;
+        this.takeButton = false;
+        this.sellButton = false;
+      }
+      // console.log(this.tradeWant.some(card => this.tradeGive.includes(card)));
     },
 
-    buy: () => {
-      this.socket.emit('buy')
+    quit() {
+      this.emitter.emit('setLobby', true);
+      this.socket.emit('leave', {room: this.room});
+    },
+
+    sell() {
+      this.socket.emit('sell', {soldCards: this.tradeGive});
+      this.resetPlayer();
+    },
+
+    trade() {
+      this.socket.emit('trade', {takenCards: this.tradeWant, tradedCards: this.tradeGive})
+      this.resetPlayer();
+    },
+
+    resetPlayer() {
+      this.tradeWant = []
+      this.tradeGive = []
+      this.buttons = false
+      document.querySelectorAll(".card-selected").forEach(card => {
+        card.classList.remove("active");
+      });
     },
 
     copyText() {
       var copyText = document.getElementById("room");
       navigator.clipboard.writeText(copyText.innerHTML);
 
-      this.copy = true
+      this.copy = true;
+
+      this.emitter.emit('addAlert', {
+          type: "check",
+          message: "Le nom de la salle a bien été copier",
+      });
     }
   },
   mounted () {
@@ -226,13 +439,13 @@ export default {
         this.playerNo = data.playerNo;
         if(!this.playerNo){
             this.opponentNo = 1;
-            data.playerNames[1] ? this.opponent.name = data.playerNames[1] : '';
-            data.playerNames[0] ? this.player.name = data.playerNames[0] : '';
+            data.playerNames[1] ? this.opponent.name = data.playerNames[1] : 'Opponent';
+            data.playerNames[0] ? this.player.name = data.playerNames[0] : 'You';
         }
         else {
             this.opponentNo = 0;
-            data.playerNames[0] ? this.opponent.name = data.playerNames[0] : '';
-            data.playerNames[1] ? this.player.name = data.playerNames[1] : '';
+            data.playerNames[0] ? this.opponent.name = data.playerNames[0] : 'Opponent';
+            data.playerNames[1] ? this.player.name = data.playerNames[1] : 'You';
         }
 
         this.wait = false;
@@ -248,6 +461,28 @@ export default {
         this.opponent.hand = data.players[this.opponentNo].hand
         this.opponent.enclosure = data.players[this.opponentNo].enclosure
         this.opponent.tokens = data.players[this.opponentNo].tokens
+        this.tokens = data.tokens
+
+        this.deck = data.deck.length
+        this.graveyard = data.graveyard
+
+        this.currentPlayer = data.currentPlayer
+        // console.log("Player");
+        // console.log(this.player);
+        // console.log("Opponent");
+        // console.log(this.opponent);
+        // console.log("Market");
+        // console.log(this.market);
+        // console.log("Graveyard");
+        // console.log(this.graveyard);
+    })
+
+    this.socket.on('game-end', data => {
+      this.winner = data.winner
+      this.player.totalPoints = data.players[this.playerNo].totalPoints
+      this.player.camelToken = data.players[this.playerNo].camelToken
+      this.opponent.totalPoints = data.players[this.opponentNo].totalPoints
+      this.opponent.camelToken = data.players[this.opponentNo].camelToken
     })
   }
 
@@ -259,6 +494,31 @@ export default {
   height: 100vh;
   overflow: hidden;
   position: relative;
+}
+
+.bazaarGame .lien {
+  font-size: 0.875rem;
+  padding: .5rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 10%);
+  width: 9rem;
+}
+
+.bazaarGame .lien:hover {
+  border-color: rgb(var(--secondary-color));
+}
+
+.bazaarGame .button_cross {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  position: absolute;
+  z-index: 40;
+  top: 1rem;
+  right: 1rem;
 }
 
 /* Loader */
@@ -312,9 +572,9 @@ export default {
 }
 
 .room-copy {
-  height: 34px;
-  width: 34px;
-  padding: .5rem;
+  height: 46px;
+  width: 46px;
+  padding: .7rem;
   border-radius: 5px;
   border: none;
   background-color: #ddd;
@@ -335,15 +595,27 @@ export default {
   display: flex;
   gap: 1rem;
   position: absolute;
-  top: 110%;
+  bottom: 110%;
   left: 50%;
   transform: translateX(-50%);
   z-index: 20;
 }
 
+.buttons .lien.disable {
+  background: #ddd !important;
+  border-color: #ddd !important;
+  color: black !important;
+  opacity: 0.75 !important;
+}
+
+.buttons .lien.disable:hover {
+  cursor: not-allowed;
+}
+
 /* Cards */
 .card, .little-card {
   width: 10vw;
+  max-width: 9.5rem;
   height: auto;
   border-radius: .7vw;
 }
@@ -365,6 +637,18 @@ export default {
   transform: rotate(-12deg);
 }
 
+.card-hidden {
+  opacity: 0;
+}
+
+.card-graveyard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
 .little-card {
   width: 10vw;
   max-width: 100px;
@@ -373,7 +657,7 @@ export default {
 }
 
 .empty-cards {
-  border-radius: 10px;
+  border-radius: .7vw;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -388,21 +672,61 @@ export default {
 
 /* Tokens */
 .tokens {
-  max-width: 20vw;
+  min-width: 21vw;
+  position: relative;
+}
+
+.tokens-hover {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: -1;
+  opacity: 0;
+  padding: 1rem;
+  transition: all .3s ease-in-out;
+}
+
+.tokens-zoom {
+  position: absolute;
+  top: 0;
+  z-index: -1;
+  left: 1rem;
+  border: 1px var(--main-color) solid;
+  width: 24px;
+  height: 24px;
+  color: var(--main-color);
+  background-color: #fff;
+  border-radius: 100%;
+  padding: .2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+}
+
+.tokens-container {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding-left: 1rem;
+  transition: all .3s ease-in-out;
+}
+
+.tokens-container:hover {
+  cursor: pointer;
 }
 
 .token-list {
   display: flex;
   justify-content: flex-end;
-  margin-right: 17%;
+  margin-right: 20%;
 }
 
 .token {
   width: 5vw;
+  max-width: 3.5rem;
   height: auto;
   margin-right: -20%;
 }
@@ -419,12 +743,35 @@ export default {
   right: 0;
 }
 
+.player.active{
+  background-color: rgb(var(--secondary-color));
+}
+
+.player-container, .deck {
+  position: relative;
+}
+
 .player p{
   margin: 0;
 }
 
 .player-one {
   top: 0;
+}
+
+.player-current{
+  position: absolute;
+  top: -1.5rem;
+  left: -2.5rem;
+  width: 24px;
+  height: 24px;
+  color: var(--main-color);
+  background-color: #fff;
+  border-radius: 100%;
+  padding: .2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .player-two {
@@ -436,6 +783,7 @@ export default {
   display: flex;
   gap: 4rem;
   position: absolute;
+  z-index: 10;
 }
 
 .player-cards-one {
@@ -469,7 +817,23 @@ export default {
   display: flex;
   flex-direction: column;
   min-width: 10vw;
-  max-width: 100px;
+  max-width: 6.5rem;
+}
+
+.enclosure-number, .deck-number {
+  position: absolute;
+  top: -.5rem;
+  left: -.5rem;
+  width: 24px;
+  height: 24px;
+  color: var(--main-color);
+  background-color: #fff;
+  border-radius: 100%;
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
 }
 
 .camel-card {
@@ -522,27 +886,75 @@ export default {
 
 .game-cards {
   margin-right: 3rem;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   grid-template-rows: repeat(2, 1fr);
   gap: .5rem;
+}
+
+.graveyard {
+  position: relative;
 }
 
 /* ----------------------- */
 /* ------ Animation ------ */
 /* ----------------------- */
 
+/* Tokens */
+.tokens.active .tokens-container {
+  max-width: 35rem;
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  z-index: 50;
+}
+
+.tokens.active .tokens-container:hover {
+  cursor: auto;
+}
+
+.tokens.active .tokens-hover {
+  z-index: 40;
+  opacity: 1;
+}
+
+.tokens.active .tokens-zoom {
+  opacity: 0 !important;
+}
+
+.tokens.zoom .tokens-zoom {
+  opacity: 1;
+}
+
+.tokens.active .token-list{
+  margin-right: 5%;
+}
+
+.tokens.active .token{
+  width: 8vw;
+  max-width: 5rem;
+  height: auto;
+  margin-right: -5%;
+}
+
 /* Hand */
 .player-cards-one:hover .little-card{
   width: 14vw;
-  max-width: none;
+  max-width: 8rem;
 }
 
 .player-cards-one:hover .enclosure{
-  margin-top: 16vw;
+  margin-top: 9rem;
+}
+
+.player-cards-one:hover .enclosure-number{
+  z-index: -1;
+  opacity: 0;
 }
 
 .player-cards-one:hover .camel-card{
-  margin-top: -16vw;
+  margin-top: -9rem;
   position: relative;
 }
 
@@ -563,10 +975,28 @@ export default {
   cursor: pointer;
 }
 
+@media (min-width: 1024px) { 
+  .tokens {
+    width: 27vw;
+  }
+
+  .token-list {
+    margin-right: 10%;
+  }
+
+  .token {
+    margin-right: -10%;
+  }
+}
+
 @media (min-width: 1280px) { 
+  .tokens {
+    width: 17vw;
+  }
+
   .player-cards-one:hover .little-card{
     width: 11vw;
-    max-width: none;
+    max-width: 14rem;
   }
 
   .player-cards-one:hover .enclosure{
