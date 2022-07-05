@@ -9,10 +9,13 @@ const SocketIo = require("socket.io")(Http, {
     }
 })
 var randomWords = require('random-words');
+const IAGame = require("./ia-game");
 
 var rooms = []
 
 var games = []
+
+var iaIndex = []
 
 SocketIo.on('connection', socket => {
     socket.on('createroom', data => {
@@ -85,10 +88,13 @@ SocketIo.on('connection', socket => {
         }
     })
 
+    socket.on('ia-create', () => {
+        games['ia-'+ iaIndex++] = new IAGame(SocketIo, new Player(socket, "Vous"));
+    })
+
     socket.on('leave', data => {
         socket.leave(data.room);
     })
-
 
 })
 

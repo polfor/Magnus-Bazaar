@@ -8,7 +8,7 @@
           Bazaar
         </h1>
         <div class="bouton jeu">
-          <a class="lien">Jouer contre une IA</a>
+          <a @click="this.socket.emit('ia-create')" class="lien">Jouer contre une IA</a>
         </div>
         <div class="bouton creer">
           <a @click="isShow_createRoom = !isShow_createRoom" class="lien"
@@ -164,6 +164,14 @@ export default {
         })
         this.socket.on('noroom', data => {
             console.log('La room '+ data.room + ' n\'existe pas');
+        })
+
+        this.socket.on('ia-start', () => {
+          this.emitter.emit('addAlert', {
+                type: "enter",
+                message: "Vous avez rejoint une partie contre l'IA",
+            });
+          this.emitter.emit('setLobby', false);
         })
     },
 }

@@ -1,5 +1,5 @@
-const Player = require('./player');
-seedrandom = require('seedrandom');
+const seedrandom = require('seedrandom');
+const IAPlayer = require('./ia-player');
 const cardsTemplate = {
     "cards": [{
         "current_position": "",
@@ -77,7 +77,9 @@ class Game {
                     player.addCamel(card)
                 }
             })
-            player.socket.emit('game-start', { playerNo: index, playerNames: [this.players[0].name, this.players[1].name] })
+            if(!player instanceof IAPlayer){
+                player.socket.emit('game-start', { playerNo: index, playerNames: [this.players[0].name, this.players[1].name] })
+            }
         })
 
         console.log('this')

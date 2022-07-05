@@ -574,6 +574,10 @@ export default {
         });
       });
     })
+
+    this.socket.on('ia-start', () => {
+      this.wait = false;
+    })
   }
 
 }
