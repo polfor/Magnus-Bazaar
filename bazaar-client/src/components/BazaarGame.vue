@@ -33,6 +33,7 @@
       <!-- Hand -->
       <div class="hand-container-one">
         <div class="hand">
+          <img v-if="player.hand.length == 0" class="little-card card-player card-hidden" src="@/assets/Back_card.png" alt="">
           <div v-for="card in player.hand" :key="card.id">
             <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'leather'" class="little-card card-player card-selected" src="@/assets/Leather_card.png" alt="">
             <img @click="active" :id="card.id" :data-value="card.value" v-if="card.value == 'spice'" class="little-card card-player card-selected" src="@/assets/Spices_card.png" alt="">
@@ -87,6 +88,7 @@
           <div class="tokens-container" @click="tokensOverlay = true" @mouseenter="tokensZoom = true" @mouseleave="tokensZoom = false">
             <!-- Ruby -->
             <div class="token-list">
+              <img v-if="this.tokens.diamond && this.tokens.diamond.length == 0" class="token token-hidden" src="@/assets/Merchant-coin.png" alt="">
               <template v-for="diamond in this.tokens.diamond">
                 <img v-if="diamond.value == 5" :key="diamond.id" class="token" src="@/assets/Ruby_coin-5.png" alt="">
                 <img v-if="diamond.value == 7" :key="diamond.id" class="token" src="@/assets/Ruby_coin-7.png" alt="">
@@ -94,6 +96,7 @@
             </div>
             <!-- Gold -->
             <div class="token-list">
+              <img v-if="this.tokens.gold && this.tokens.gold.length == 0" class="token token-hidden" src="@/assets/Merchant-coin.png" alt="">
               <template v-for="gold in this.tokens.gold">
                 <img v-if="gold.value == 5" :key="gold.id" class="token" src="@/assets/Gold_coin-5.png" alt="">
                 <img v-if="gold.value == 6" :key="gold.id" class="token" src="@/assets/Gold_coin-6.png" alt="">
@@ -101,12 +104,14 @@
             </div>
             <!-- Silver -->
             <div class="token-list">
+              <img v-if="this.tokens.silver && this.tokens.silver.length == 0" class="token token-hidden" src="@/assets/Merchant-coin.png" alt="">
               <template v-for="silver in this.tokens.silver">
                 <img v-if="silver.value == 5" :key="silver.id" class="token" src="@/assets/Silver_coin.png" alt="">
               </template>
             </div>
             <!-- Carpet -->
             <div class="token-list">
+              <img v-if="this.tokens.cloth && this.tokens.cloth.length == 0" class="token token-hidden" src="@/assets/Merchant-coin.png" alt="">
               <template v-for="cloth in this.tokens.cloth">
                 <img v-if="cloth.value == 1" :key="cloth.id" class="token" src="@/assets/Carpet_coin-1.png" alt="">
                 <img v-if="cloth.value == 2" :key="cloth.id" class="token" src="@/assets/Carpet_coin-2.png" alt="">
@@ -116,6 +121,7 @@
             </div>
             <!-- Spice -->
             <div class="token-list">
+              <img v-if="this.tokens.spice && this.tokens.spice.length == 0" class="token token-hidden" src="@/assets/Merchant-coin.png" alt="">
               <template v-for="spice in this.tokens.spice">
                 <img v-if="spice.value == 1" :key="spice.id" class="token" src="@/assets/Spice_coin-1.png" alt="">
                 <img v-if="spice.value == 2" :key="spice.id" class="token" src="@/assets/Spice_coin-2.png" alt="">
@@ -125,6 +131,7 @@
             </div>
             <!-- Leather -->
             <div class="token-list">
+              <img v-if="this.tokens.leather && this.tokens.leather.length == 0" class="token token-hidden" src="@/assets/Merchant-coin.png" alt="">
               <template v-for="leather in this.tokens.leather">
                 <img v-if="leather.value == 1" :key="leather.id" class="token" src="@/assets/Leather_coin-1.png" alt="">
                 <img v-if="leather.value == 2" :key="leather.id" class="token" src="@/assets/Leather_coin-2.png" alt="">
@@ -175,12 +182,12 @@
             <div class="deck card empty-cards">
               <span v-if="deck != 0" class="deck-number">{{ deck }}</span>
               <img v-if="deck >= 27" src="@/assets/Deck_full.png" alt="">
-              <img v-if="deck <= 26" src="@/assets/Deck_half.png" alt="">
+              <img v-if="deck <= 26 && deck != 0" src="@/assets/Deck_half.png" alt="">
             </div>
 
             <!-- Graveyard -->
             <div class="graveyard card empty-cards">
-              <img class="card card-hidden" src="@/assets/Back_card.png" alt="">
+              <img v-if="wait == false" class="card card-hidden" src="@/assets/Back_card.png" alt="">
               <div v-for="card in graveyard" :key="card">
                 <img :id="card.id" v-if="card.value == 'leather'" class="card card-graveyard" src="@/assets/Leather_card.png" alt="">
                 <img :id="card.id" v-if="card.value == 'spice'" class="card card-graveyard" src="@/assets/Spices_card.png" alt="">
@@ -386,6 +393,7 @@ export default {
         this.tradeWant.length >= 2 && 
         this.tradeGive.length >= 2 &&
         this.tradeWant.every(card => card.value != "") &&
+        this.tradeGive.length + this.player.hand.length <= 7 &&
         this.differentValue()
         ){
         this.tradeButton = true;
@@ -406,8 +414,39 @@ export default {
     },
 
     quit() {
-      this.emitter.emit('setLobby', true);
       this.socket.emit('leave', {room: this.room});
+      this.emitter.emit('setLobby', true);
+      
+      // Boutons
+      this.buttons = false
+      this.tradeButton = false
+      this.takeButton = false
+      this.sellButton = false
+
+      this.player.name = ""
+      this.player.hand = []
+      this.player.enclosure = []
+      this.player.tokens = []
+      this.player.totalPoints = 0
+      this.player.camelToken = false
+
+      this.opponent.name = ""
+      this.opponent.hand = []
+      this.opponent.enclosure = []
+      this.opponent.tokens = []
+      this.opponent.totalPoints = 0
+      this.opponent.camelToken = false
+
+      this.tokens = []
+      this.deck = 0
+      this.graveyard = []
+      this.market = []
+      this.currentPlayer = 0
+      this.winner = ""
+
+      // trade
+      this.tradeGive = []
+      this.tradeWant = []   
     },
 
     sell() {
@@ -455,6 +494,7 @@ export default {
             data.playerNames[1] ? this.player.name = data.playerNames[1] : 'You';
         }
 
+        this.copy = false,
         this.wait = false;
     })
 
@@ -482,6 +522,10 @@ export default {
         // console.log(this.market);
         // console.log("Graveyard");
         // console.log(this.graveyard);
+
+        console.log(this.tokens);
+        console.log(this.player.tokens);
+        console.log(this.opponent.tokens);
     })
 
     this.socket.on('game-end', data => {
@@ -490,6 +534,18 @@ export default {
       this.player.camelToken = data.players[this.playerNo].camelToken
       this.opponent.totalPoints = data.players[this.opponentNo].totalPoints
       this.opponent.camelToken = data.players[this.opponentNo].camelToken
+    })
+
+    this.socket.on('opponent-left', () => {
+      this.copy = false,
+      this.wait = true;
+      var player = this.player.name ? this.player.name : "Un joueur";
+      this.emitter.on('leave', () => {
+        this.emitter.emit('addAlert', {
+            type: "leave",
+            message: player + " a quitté la salle " + this.room,
+        });
+      });
     })
   }
 
@@ -679,8 +735,8 @@ export default {
 
 /* Tokens */
 .tokens {
-  min-width: 21vw;
   position: relative;
+  width: 21vw;
 }
 
 .tokens-hover {
@@ -736,6 +792,33 @@ export default {
   max-width: 3.5rem;
   height: auto;
   margin-right: -20%;
+}
+
+.token-hidden {
+  opacity: 0;
+}
+
+.hand-tokens {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.hand-tokens-inventory {
+  background: rgba(0, 0, 0, 0.2);
+  /* z-index: -1;
+  opacity: 0; */
+  padding: 1rem;
+  transition: all .3s ease-in-out;
+}
+
+.hand-tokens-inventory .token-list {
+  margin-right: 3%;
+}
+
+.hand-tokens-inventory .token {
+  margin-right: -3%;
 }
 
 /* Players */
@@ -994,11 +1077,19 @@ export default {
   .token {
     margin-right: -10%;
   }
+
+  .hand {
+    margin-right: 4vw;
+  }
+
+  .card-player {
+    margin-right: -4vw;
+  }
 }
 
 @media (min-width: 1280px) { 
   .tokens {
-    width: 17vw;
+    width: 24vw;
   }
 
   .player-cards-one:hover .little-card{
@@ -1013,6 +1104,70 @@ export default {
   .player-cards-one:hover .camel-card{
     margin-top: -12vw;
     position: relative;
+  }
+}
+
+@media (min-width: 1536px) {
+  /* Buttons */
+  .bazaarGame .lien {
+    font-size: 1.5rem;
+  }
+
+  /* Interface */
+  .player {
+    font-size: 1rem;
+  }
+
+  .interface {
+    padding: 6rem 0;
+  }
+
+  .enclosure-number, .deck-number {
+    top: -1rem;
+    left: -1rem;
+    width: 46px;
+    height: 46px;
+    font-size: 1.5rem;
+  }
+
+  .player-current {
+    top: -2rem;
+    left: -3rem;
+    width: 42px;
+    height: 42px;
+  }
+
+  /* Token */
+  .tokens {
+    width: 23vw;
+  }
+
+  .token {
+    max-width: 4.25rem;
+  }
+
+  .tokens.active .tokens-container {
+    max-width: 56rem;
+  }
+
+  .tokens.active .token{
+    max-width: 7.5rem;
+  }
+
+  /* Hand */
+  .card, .little-card {
+    width: 13vw;
+    max-width: 11.5rem;
+  }
+
+  .little-card {
+    width: 13vw;
+    max-width: 160px;
+  }
+
+  .player-cards-one:hover .little-card{
+    width: 13vw;
+    max-width: 16rem;
   }
 }
 </style>

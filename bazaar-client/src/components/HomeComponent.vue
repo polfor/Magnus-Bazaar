@@ -67,10 +67,8 @@ export default {
     },
 
     mounted(){
-        console.log(this.alerts);
         this.socket.on("alert", data => {
             this.createAlert(data);
-            console.log(data);
         });
     }
 }
