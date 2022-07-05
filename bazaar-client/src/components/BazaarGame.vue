@@ -46,6 +46,7 @@
       
       <!-- Enclosure -->
       <div class="enclosure enclosure-one">
+        <span v-if="player.enclosure.length != 0" class="enclosure-number">{{ player.enclosure.length }}</span>
         <img @click="active" :id="enclosure.id" :data-value="enclosure.value" v-for="enclosure in player.enclosure" :key="enclosure.index" class="little-card camel-card camel-card-one" src="@/assets/Camel_card.png" alt="">
       </div>
     </div>
@@ -73,53 +74,70 @@
       <!-- Board -->
       <div class="board">
         <!-- Tokens -->
-        <div class="tokens">
-          <!-- Ruby -->
-          <div class="token-list">
-            <template v-for="diamond in this.tokens.diamond">
-              <img v-if="diamond.value == 5" :key="diamond.id" class="token" src="@/assets/Ruby_coin-5.png" alt="">
-              <img v-if="diamond.value == 7" :key="diamond.id" class="token" src="@/assets/Ruby_coin-7.png" alt="">
-            </template>
+        <div class="tokens" :class="{ 'active': tokensOverlay, 'zoom': tokensZoom }">
+          <div class="tokens-hover">
+            <button class="button_cross" @click="tokensOverlay = false">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 20L4 4M20 4L4 20" stroke="white" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
           </div>
-          <!-- Gold -->
-          <div class="token-list">
-            <template v-for="gold in this.tokens.gold">
-              <img v-if="gold.value == 5" :key="gold.id" class="token" src="@/assets/Gold_coin-5.png" alt="">
-              <img v-if="gold.value == 6" :key="gold.id" class="token" src="@/assets/Gold_coin-6.png" alt="">
-            </template>
+          <div class="tokens-zoom" v-if="tokensZoom">
+            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
+              <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                <circle cx="7.5" cy="7.5" r="4.75"/>
+                <path d="M9.25 7.5h-3.5M7.5 5.75v3.5m3.75 2l3 3"/>
+              </g>
+            </svg>
           </div>
-          <!-- Silver -->
-          <div class="token-list">
-            <template v-for="silver in this.tokens.silver">
-              <img v-if="silver.value == 5" :key="silver.id" class="token" src="@/assets/Silver_coin.png" alt="">
-            </template>
-          </div>
-          <!-- Carpet -->
-          <div class="token-list">
-            <template v-for="cloth in this.tokens.cloth">
-              <img v-if="cloth.value == 1" :key="cloth.id" class="token" src="@/assets/Carpet_coin-1.png" alt="">
-              <img v-if="cloth.value == 2" :key="cloth.id" class="token" src="@/assets/Carpet_coin-2.png" alt="">
-              <img v-if="cloth.value == 3" :key="cloth.id" class="token" src="@/assets/Carpet_coin-3.png" alt="">
-              <img v-if="cloth.value == 5" :key="cloth.id" class="token" src="@/assets/Carpet_coin-5.png" alt="">
-            </template>
-          </div>
-          <!-- Spice -->
-          <div class="token-list">
-            <template v-for="spice in this.tokens.spice">
-              <img v-if="spice.value == 1" :key="spice.id" class="token" src="@/assets/Spice_coin-1.png" alt="">
-              <img v-if="spice.value == 2" :key="spice.id" class="token" src="@/assets/Spice_coin-2.png" alt="">
-              <img v-if="spice.value == 3" :key="spice.id" class="token" src="@/assets/Spice_coin-3.png" alt="">
-              <img v-if="spice.value == 5" :key="spice.id" class="token" src="@/assets/Spice_coin-5.png" alt="">
-            </template>
-          </div>
-          <!-- Leather -->
-          <div class="token-list">
-            <template v-for="leather in this.tokens.leather">
-              <img v-if="leather.value == 1" :key="leather.id" class="token" src="@/assets/Leather_coin-1.png" alt="">
-              <img v-if="leather.value == 2" :key="leather.id" class="token" src="@/assets/Leather_coin-2.png" alt="">
-              <img v-if="leather.value == 3" :key="leather.id" class="token" src="@/assets/Leather_coin-3.png" alt="">
-              <img v-if="leather.value == 4" :key="leather.id" class="token" src="@/assets/Leather_coin-4.png" alt="">
-            </template>
+          <div class="tokens-container" @click="tokensOverlay = true" @mouseenter="tokensZoom = true" @mouseleave="tokensZoom = false">
+            <!-- Ruby -->
+            <div class="token-list">
+              <template v-for="diamond in this.tokens.diamond">
+                <img v-if="diamond.value == 5" :key="diamond.id" class="token" src="@/assets/Ruby_coin-5.png" alt="">
+                <img v-if="diamond.value == 7" :key="diamond.id" class="token" src="@/assets/Ruby_coin-7.png" alt="">
+              </template>
+            </div>
+            <!-- Gold -->
+            <div class="token-list">
+              <template v-for="gold in this.tokens.gold">
+                <img v-if="gold.value == 5" :key="gold.id" class="token" src="@/assets/Gold_coin-5.png" alt="">
+                <img v-if="gold.value == 6" :key="gold.id" class="token" src="@/assets/Gold_coin-6.png" alt="">
+              </template>
+            </div>
+            <!-- Silver -->
+            <div class="token-list">
+              <template v-for="silver in this.tokens.silver">
+                <img v-if="silver.value == 5" :key="silver.id" class="token" src="@/assets/Silver_coin.png" alt="">
+              </template>
+            </div>
+            <!-- Carpet -->
+            <div class="token-list">
+              <template v-for="cloth in this.tokens.cloth">
+                <img v-if="cloth.value == 1" :key="cloth.id" class="token" src="@/assets/Carpet_coin-1.png" alt="">
+                <img v-if="cloth.value == 2" :key="cloth.id" class="token" src="@/assets/Carpet_coin-2.png" alt="">
+                <img v-if="cloth.value == 3" :key="cloth.id" class="token" src="@/assets/Carpet_coin-3.png" alt="">
+                <img v-if="cloth.value == 5" :key="cloth.id" class="token" src="@/assets/Carpet_coin-5.png" alt="">
+              </template>
+            </div>
+            <!-- Spice -->
+            <div class="token-list">
+              <template v-for="spice in this.tokens.spice">
+                <img v-if="spice.value == 1" :key="spice.id" class="token" src="@/assets/Spice_coin-1.png" alt="">
+                <img v-if="spice.value == 2" :key="spice.id" class="token" src="@/assets/Spice_coin-2.png" alt="">
+                <img v-if="spice.value == 3" :key="spice.id" class="token" src="@/assets/Spice_coin-3.png" alt="">
+                <img v-if="spice.value == 5" :key="spice.id" class="token" src="@/assets/Spice_coin-5.png" alt="">
+              </template>
+            </div>
+            <!-- Leather -->
+            <div class="token-list">
+              <template v-for="leather in this.tokens.leather">
+                <img v-if="leather.value == 1" :key="leather.id" class="token" src="@/assets/Leather_coin-1.png" alt="">
+                <img v-if="leather.value == 2" :key="leather.id" class="token" src="@/assets/Leather_coin-2.png" alt="">
+                <img v-if="leather.value == 3" :key="leather.id" class="token" src="@/assets/Leather_coin-3.png" alt="">
+                <img v-if="leather.value == 4" :key="leather.id" class="token" src="@/assets/Leather_coin-4.png" alt="">
+              </template>
+            </div>
           </div>
         </div>
 
@@ -202,6 +220,8 @@ export default {
     return {
       wait: true,
       copy: false,
+      tokensOverlay: false,
+      tokensZoom: false,
 
       // Boutons
       buttons: false,
@@ -494,6 +514,20 @@ export default {
   border-color: rgb(var(--secondary-color));
 }
 
+.bazaarGame .button_cross {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  position: absolute;
+  z-index: 40;
+  top: 1rem;
+  right: 1rem;
+}
+
 /* Loader */
 .loaded {
   position: fixed;
@@ -545,9 +579,9 @@ export default {
 }
 
 .room-copy {
-  height: 39px;
-  width: 39px;
-  padding: .6rem;
+  height: 46px;
+  width: 46px;
+  padding: .7rem;
   border-radius: 5px;
   border: none;
   background-color: #ddd;
@@ -645,10 +679,50 @@ export default {
 
 /* Tokens */
 .tokens {
-  max-width: 20vw;
+  min-width: 24.5vw;
+  position: relative;
+}
+
+.tokens-hover {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: -1;
+  opacity: 0;
+  padding: 1rem;
+  transition: all .3s ease-in-out;
+}
+
+.tokens-zoom {
+  position: absolute;
+  top: 0;
+  left: 1rem;
+  border: 1px var(--main-color) solid;
+  width: 24px;
+  height: 24px;
+  color: var(--main-color);
+  background-color: #fff;
+  border-radius: 100%;
+  padding: .2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all .3s ease-in-out;
+}
+
+.tokens-container {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  transition: all .3s ease-in-out;
+}
+
+.tokens-container:hover {
+  cursor: pointer;
 }
 
 .token-list {
@@ -752,6 +826,22 @@ export default {
   max-width: 6.5rem;
 }
 
+.enclosure-number {
+  position: absolute;
+  top: -.5rem;
+  right: -.5rem;
+  width: 24px;
+  height: 24px;
+  color: var(--main-color);
+  background-color: #fff;
+  border-radius: 100%;
+  padding: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
 .camel-card {
   position: absolute;
   width: 100%;
@@ -816,6 +906,44 @@ export default {
 /* ------ Animation ------ */
 /* ----------------------- */
 
+/* Tokens */
+.tokens.active .tokens-container {
+  max-width: 35rem;
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  z-index: 50;
+}
+
+.tokens.active .tokens-container:hover {
+  cursor: auto;
+}
+
+.tokens.active .tokens-hover {
+  z-index: 40;
+  opacity: 1;
+}
+
+.tokens.active .tokens-zoom {
+  opacity: 0 !important;
+}
+
+.tokens.zoom .tokens-zoom {
+  opacity: 1;
+}
+
+.tokens.active .token-list{
+  margin-right: 5%;
+}
+
+.tokens.active .token{
+  width: 8vw;
+  max-width: 5rem;
+  height: auto;
+  margin-right: -5%;
+}
+
 /* Hand */
 .player-cards-one:hover .little-card{
   width: 14vw;
@@ -823,11 +951,16 @@ export default {
 }
 
 .player-cards-one:hover .enclosure{
-  margin-top: 16vw;
+  margin-top: 9rem;
+}
+
+.player-cards-one:hover .enclosure-number{
+  z-index: -1;
+  opacity: 0;
 }
 
 .player-cards-one:hover .camel-card{
-  margin-top: -16vw;
+  margin-top: -9rem;
   position: relative;
 }
 
