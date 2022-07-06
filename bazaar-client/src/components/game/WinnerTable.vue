@@ -39,7 +39,7 @@
             </tr>
         </table>
         <p><strong>{{ winner }}</strong> a su avoir le sens des négociations et deviens un marchant reconnu au sein du Magnus Bazaar</p>
-        <button class="lien">Rejouer</button>
+        <button class="lien" @click="this.socket.emit('restart');">Rejouer</button>
       </div>
     </div>
 </template>
@@ -47,7 +47,7 @@
 <script>
 export default {
     name: "WinnerTable",
-    props : ['winnerOverlay', 'player', 'opponent', 'winner']
+    props : ['socket', 'winnerOverlay', 'player', 'opponent', 'winner']
 }
 </script>
 
