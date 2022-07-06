@@ -57,14 +57,6 @@ SocketIo.on('connection', socket => {
                         SocketIo.to(roomname).emit("roomjoined", { room: roomname });
                         if (SocketIo.of("/").adapter.rooms.get(roomname).size == 2) {
                             startGame(roomname);
-                            player.socket.on('restart', () => {
-                                if (this.waitingRestart == 0) {
-                                    this.io.to(this.room).emit('waiting-restart');
-                                    this.waitingRestart = 1;
-                                } else {
-
-                                }
-                            })
                         }
                     } else {
                         socket.emit("alert", { type: "error", message: "Ce nom est déjà pris" })

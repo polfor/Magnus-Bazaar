@@ -54,7 +54,6 @@ class Game {
         this.deck.splice(0, 2).forEach(card => {
             this.market.push(card)
         });
-        console.log(baseTokens.leather.length)
 
         this.merchandises.diamond = baseTokens.diamond;
         this.merchandises.gold = baseTokens.gold;
@@ -265,12 +264,10 @@ class Game {
     checkGameEnd() {
         let emptyTokens = 0;
         for (let tokenType in this.merchandises) {
-            console.log(this.merchandises[tokenType].length)
             if (!this.merchandises[tokenType].length) {
                 emptyTokens++;
             }
         }
-        console.log(emptyTokens)
         if (emptyTokens >= 3) {
             return true;
         }
@@ -365,7 +362,6 @@ class Game {
         }
 
         this.io.to(this.room).emit('game-end', results);
-        console.log('end envoyée');
     }
 }
 
