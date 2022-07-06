@@ -211,7 +211,7 @@ class Game {
         let nbSoldCards = data.soldCards.length
         if (nbSoldCards >= 3) {
             if (nbSoldCards >= 5) {
-                player.addToTokens(this.tokens.bonus[5].splice(0, 1));
+                player.addToTokens(this.tokens.bonus[5].splice(0, 1)[0]);
             } else {
                 player.addToTokens(this.tokens.bonus[nbSoldCards].splice(0, 1)[0]);
             }
