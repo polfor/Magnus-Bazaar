@@ -9,9 +9,9 @@ const jsonTokens = require('./tokens.json').tokens;
 
 class IAGame extends Game {
 
-    constructor (io, player1) {
+    constructor(io, player1) {
         player1.socket.emit('ia-start');
-        super(io, "", player1, new IAPlayer())
+        super(io, player1.socket.id, player1, new IAPlayer())
     }
 
     buildEvents() {
@@ -28,9 +28,18 @@ class IAGame extends Game {
         })
     }
 
-    updateGame() {
-        
+    iaPlay() {
+        /*
+        Choix possibles :
+        *   Vendre toutes les cartes d'un type
+        *   Prendre tous les chameaux du marché
+        *   Prendre une carte non chameau au hasard
+        *   Echanger 
+        *
+        */
     }
+
+
 }
 
 module.exports = IAGame;

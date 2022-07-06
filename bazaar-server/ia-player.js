@@ -1,9 +1,8 @@
 const Player = require('./player');
 
 class IAPlayer extends Player {
-    constructor () {
+    constructor() {
         super("", "Le Marchand")
-        console.log(this.addToHand)
     }
 }
 
