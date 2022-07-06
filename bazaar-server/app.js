@@ -89,7 +89,7 @@ SocketIo.on('connection', socket => {
     })
 
     socket.on('ia-create', () => {
-        games['ia-'+ iaIndex++] = new IAGame(SocketIo, new Player(socket, "Vous"));
+        games['ia-' + iaIndex++] = new IAGame(SocketIo, new Player(socket, "Vous"));
     })
 
     socket.on('leave', data => {
