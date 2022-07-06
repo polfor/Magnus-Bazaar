@@ -75,6 +75,7 @@ export default {
       // json send
       playerNo: 0,
       opponentNo: 1,
+      ia: false,
       player: {
           name: "",
           hand: [],
@@ -262,7 +263,14 @@ export default {
     quit() {
       this.socket.emit('leave', {room: this.room});
       this.emitter.emit('setLobby', true);
-      
+      this.resetValue();
+    },
+
+    resetValue() {
+      this.wait = true
+      this.winnerOverlay = false
+      this.copy = false
+            
       // Boutons
       this.buttons = false
       this.tradeButton = false
@@ -326,6 +334,15 @@ export default {
   },
   mounted () {
     this.socket.on('game-start', data => {
+        // Réinitialiation pour le restart 
+        this.winnerOverlay = false;
+        this.copy = false
+        this.buttons = false
+        this.tradeButton = false
+        this.takeButton = false
+        this.sellButton = false
+
+        // Setup
         this.playerNo = data.playerNo;
         if(!this.playerNo){
             this.opponentNo = 1;
@@ -357,7 +374,7 @@ export default {
         this.deck = data.deck.length
         this.graveyard = data.graveyard
 
-        this.currentPlayer = data.currentPlayer
+        this.ia && data.currentPlayer == 0 ? setTimeout(this.currentPlayer = data.currentPlayer, 3000) : this.currentPlayer = data.currentPlayer
 
         // Calcul du nombre de point du joueur
         this.player.merchandisesPoints = 0
@@ -412,7 +429,10 @@ export default {
       });
     })
 
-    this.socket.on('ia-start', () => { this.wait = false })
+    this.socket.on('ia-start', () => { 
+      this.wait = false 
+      this.ia = true
+    })
     this.emitter.on('activeCards', (ev) => this.active(ev))
     this.emitter.on('setCards', () => this.activeButtons())
     this.emitter.on('sell', () => this.sell())

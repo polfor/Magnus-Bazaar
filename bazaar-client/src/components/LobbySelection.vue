@@ -162,9 +162,7 @@ export default {
             this.emitter.emit('setRoom', data.room);
             this.emitter.emit('setLobby', false);
         })
-        this.socket.on('noroom', data => {
-            console.log('La room '+ data.room + ' n\'existe pas');
-        })
+        this.socket.on('noroom')
 
         this.socket.on('ia-start', () => {
           this.emitter.emit('addAlert', {
