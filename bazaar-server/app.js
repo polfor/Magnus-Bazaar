@@ -57,6 +57,14 @@ SocketIo.on('connection', socket => {
                         SocketIo.to(roomname).emit("roomjoined", { room: roomname });
                         if (SocketIo.of("/").adapter.rooms.get(roomname).size == 2) {
                             startGame(roomname);
+                            player.socket.on('restart', () => {
+                                if (this.waitingRestart == 0) {
+                                    this.io.to(this.room).emit('waiting-restart');
+                                    this.waitingRestart = 1;
+                                } else {
+
+                                }
+                            })
                         }
                     } else {
                         socket.emit("alert", { type: "error", message: "Ce nom est déjà pris" })
@@ -117,5 +125,16 @@ Http.listen(3000, () => {
 
 
 function startGame(roomName) {
-    games[roomName] = (new Game(SocketIo, roomName, new Player(rooms[roomName].player1.socket, rooms[roomName].player1.name), new Player(rooms[roomName].player2.socket, rooms[roomName].player2.name)));
+    games[roomName] = new Game(SocketIo, roomName, new Player(rooms[roomName].player1.socket, rooms[roomName].player1.name), new Player(rooms[roomName].player2.socket, rooms[roomName].player2.name));
+    let waitingRestart = 0;
+    let restarts = 1;
+    rooms[roomName].player1.socket.on('restart', () => {
+        if (waitingRestart == 0) {
+            SocketIo.to(roomName).emit('waiting-restart');
+            waitingRestart = 1;
+        } else {
+            games[roomName + restarts++] = new Game(SocketIo, roomName, new Player(rooms[roomName].player1.socket, rooms[roomName].player1.name), new Player(rooms[roomName].player2.socket, rooms[roomName].player2.name))
+            waitingRestart = 0;
+        }
+    })
 }
