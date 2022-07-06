@@ -2,7 +2,7 @@
     <!-- Winner -->
     <div class="winner" v-if="winnerOverlay">
       <div class="winner-container">
-          <table>
+        <table>
             <tr class="winner-table-title">
                 <td></td>
                 <td>Points des jetons</td>
@@ -20,7 +20,7 @@
                 <td><strong>{{ player.totalPoints }}</strong></td>
             </tr>
         </table>
-            <table>
+        <table>
             <tr class="winner-table-title">
                 <td></td>
                 <td>Points des jetons</td>
@@ -39,7 +39,15 @@
             </tr>
         </table>
         <p><strong>{{ winner }}</strong> a su avoir le sens des négociations et devient un marchant reconnu au sein du Magnus Bazaar</p>
-        <button class="lien" @click="this.socket.emit('restart');">Rejouer</button>
+        <div class="winner-restart">
+            <div>
+                <div class="winner-restart-wait" v-if="restart">
+                    <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-dasharray="15" stroke-dashoffset="15" stroke-linecap="round" stroke-width="2" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></svg>
+                    <p>En attente de l'adversaire ...</p>
+                </div>
+            </div>
+            <button class="lien" @click="restartGame" :class="{'disable': restart}">Rejouer</button>
+        </div>
       </div>
     </div>
 </template>
@@ -47,7 +55,18 @@
 <script>
 export default {
     name: "WinnerTable",
-    props : ['socket', 'winnerOverlay', 'player', 'opponent', 'winner']
+    props : ['socket', 'winnerOverlay', 'player', 'opponent', 'winner'],
+    data(){
+        return {
+            restart: false
+        }
+    },
+    methods: {
+        restartGame() {
+            this.socket.emit('restart')
+            this.restart = true
+        }
+    }
 }
 </script>
 
@@ -87,6 +106,17 @@ export default {
     background-color: rgb(var(--secondary-color));
 }
 
+.winner .lien.disable {
+  background: #ddd !important;
+  border-color: #ddd !important;
+  color: black !important;
+  opacity: 0.75 !important;
+}
+
+.winner .lien.disable:hover {
+  cursor: not-allowed;
+}
+
 .winner-container {
   border-radius: 20px;
   background: var(--main-color);
@@ -111,5 +141,22 @@ export default {
 
 .winner-table-name {
   width: 30%;
+}
+
+.winner-restart {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.winner-restart-wait {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.winner-restart-wait p {
+    font-size: .875rem;
 }
 </style>
