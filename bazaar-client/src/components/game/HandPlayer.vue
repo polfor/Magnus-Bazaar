@@ -27,6 +27,7 @@
 
       <!-- Hand tokens -->
       <div class="hand-tokens" v-if="wait == false" :class="{ 'active': tokensOpen && this.player.tokens != 0 }" @mouseenter="tokensOpen = true" @mouseleave="tokensOpen = false">
+        <p class="hand-tokens-info">Le nombre de points affichés sont le cumul des points des jetons marchands et ne prend pas en compte les jetons bonus qui seront affichés seulement en fin de partie</p>
         <div class="hand-tokens-list token-list">
           <img class="token token-hidden" src="@/assets/Merchant-coin.png" alt="">
           <template v-for="token in this.player.tokens">
@@ -92,11 +93,19 @@ export default {
   padding: 1rem;
 }
 
+.hand-tokens-info {
+  font-size: .875rem;
+  font-style: italic;
+  margin: 0;
+  margin-bottom: 0.5rem;
+  display: none;
+  opacity: 0;
+  max-width: 768px;
+  transition: all .3s ease-in-out;
+}
+
 .hand-tokens-list {
   position: relative;
-  /* background: rgba(0, 0, 0, 0.2); */
-  /* z-index: -1;
-  opacity: 0; */
   transition: all .3s ease-in-out;
 }
 
@@ -140,9 +149,14 @@ export default {
 .hand-tokens.active{
   background: rgba(0,0,0,0.5);
   overflow-x: auto;
-  width: 100%;
+  width: calc(100% - 2rem);
   z-index: 40;
   transition: all .3s ease-in-out;
+}
+
+.hand-tokens.active .hand-tokens-info {
+  display: block;
+  opacity: 1;
 }
 
 .hand-tokens.active .hand-tokens-list {
@@ -163,6 +177,10 @@ export default {
 @media (min-width: 1536px){
   .hand-tokens.active .token:not(.token-hidden){
     left: max(-5vw, -4.25rem);
+  }
+
+  .hand-tokens-info {
+    font-size: 1rem;
   }
 }
 </style>
