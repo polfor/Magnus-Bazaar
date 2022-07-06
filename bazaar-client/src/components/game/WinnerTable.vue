@@ -9,7 +9,7 @@
                 <td></td>
                 <td>Points des jetons bonus</td>
                 <td></td>
-                <td>Points totals</td>
+                <td>Points totaux</td>
             </tr>
             <tr class="winner-table-value">
                 <td class="winner-table-name">{{ player.name }}:</td>
@@ -27,7 +27,7 @@
                 <td></td>
                 <td>Points des jetons bonus</td>
                 <td></td>
-                <td>Points totals</td>
+                <td>Points totaux</td>
             </tr>
             <tr class="winner-table-value">
                 <td class="winner-table-name">{{ opponent.name }}:</td>
@@ -38,7 +38,7 @@
                 <td><strong>{{ opponent.totalPoints }}</strong></td>
             </tr>
         </table>
-        <p><strong>{{ winner }}</strong> a su avoir le sens des négociations et deviens un marchant reconnu au sein du Magnus Bazaar</p>
+        <p><strong>{{ winner }}</strong> a su avoir le sens des négociations et devient un marchant reconnu au sein du Magnus Bazaar</p>
         <button class="lien" @click="this.socket.emit('restart');">Rejouer</button>
       </div>
     </div>
