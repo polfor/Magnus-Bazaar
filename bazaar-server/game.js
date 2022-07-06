@@ -289,7 +289,7 @@ class Game {
                     camelToken: false
                 }
             ],
-            winner
+            winner: 0
         }
         this.players.forEach((player, index) => {
             player.getTokens().forEach(token => {

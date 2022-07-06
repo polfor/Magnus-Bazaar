@@ -1,27 +1,30 @@
 <template>
-    <!-- Hand player one -->
-    <div @mouseenter="handOpen = true" @mouseleave="handOpen = false" v-bind:class="{ open: handOpen }" class="player-cards player-cards-one">
-      <!-- Hand -->
-      <div class="hand-container-one">
-        <div class="hand">
-          <img v-if="player.hand.length == 0" class="little-card card-player card-hidden" src="@/assets/Back_card.png" alt="">
-          <div v-for="card in player.hand" :key="card.id">
-            <img @click="activeHand" :id="card.id" :data-value="card.value" v-if="card.value == 'leather'" class="little-card card-player card-selected" src="@/assets/Leather_card.png" alt="">
-            <img @click="activeHand" :id="card.id" :data-value="card.value" v-if="card.value == 'spice'" class="little-card card-player card-selected" src="@/assets/Spices_card.png" alt="">
-            <img @click="activeHand" :id="card.id" :data-value="card.value" v-if="card.value == 'cloth'" class="little-card card-player card-selected" src="@/assets/Carpet_card.png" alt="">
-            <img @click="activeHand" :id="card.id" :data-value="card.value" v-if="card.value == 'silver'" class="little-card card-player card-selected" src="@/assets/Silver_card.png" alt="">
-            <img @click="activeHand" :id="card.id" :data-value="card.value" v-if="card.value == 'gold'" class="little-card card-player card-selected" src="@/assets/Gold_card.png" alt="">
-            <img @click="activeHand" :id="card.id" :data-value="card.value" v-if="card.value == 'diamond'" class="little-card card-player card-selected" src="@/assets/Ruby_card.png" alt="">
+    <!-- Hand player -->
+    <div>
+
+      <div @mouseenter="handOpen = true" @mouseleave="handOpen = false" v-bind:class="{ open: handOpen }" class="player-cards player-cards-one">
+        <!-- Hand -->
+        <div class="hand-container-one">
+          <div class="hand">
+            <img v-if="player.hand.length == 0" class="little-card card-player card-hidden" src="@/assets/Back_card.png" alt="">
+            <div v-for="card in player.hand" :key="card.id">
+              <img @click="activeHand" :id="card.id" :data-value="card.value" v-if="card.value == 'leather'" class="little-card card-player card-selected" src="@/assets/Leather_card.png" alt="">
+              <img @click="activeHand" :id="card.id" :data-value="card.value" v-if="card.value == 'spice'" class="little-card card-player card-selected" src="@/assets/Spices_card.png" alt="">
+              <img @click="activeHand" :id="card.id" :data-value="card.value" v-if="card.value == 'cloth'" class="little-card card-player card-selected" src="@/assets/Carpet_card.png" alt="">
+              <img @click="activeHand" :id="card.id" :data-value="card.value" v-if="card.value == 'silver'" class="little-card card-player card-selected" src="@/assets/Silver_card.png" alt="">
+              <img @click="activeHand" :id="card.id" :data-value="card.value" v-if="card.value == 'gold'" class="little-card card-player card-selected" src="@/assets/Gold_card.png" alt="">
+              <img @click="activeHand" :id="card.id" :data-value="card.value" v-if="card.value == 'diamond'" class="little-card card-player card-selected" src="@/assets/Ruby_card.png" alt="">
+            </div>
           </div>
+        </div>
+        
+        <!-- Enclosure -->
+        <div class="enclosure enclosure-one">
+          <span v-if="player.enclosure.length != 0" class="enclosure-number">{{ player.enclosure.length }}</span>
+          <img @click="activeHand" :id="enclosure.id" :data-value="enclosure.value" v-for="enclosure in player.enclosure" :key="enclosure.index" class="little-card camel-card camel-card-one card-selected" src="@/assets/Camel_card.png" alt="">
         </div>
       </div>
       
-      <!-- Enclosure -->
-      <div class="enclosure enclosure-one">
-        <span v-if="player.enclosure.length != 0" class="enclosure-number">{{ player.enclosure.length }}</span>
-        <img @click="activeHand" :id="enclosure.id" :data-value="enclosure.value" v-for="enclosure in player.enclosure" :key="enclosure.index" class="little-card camel-card camel-card-one card-selected" src="@/assets/Camel_card.png" alt="">
-      </div>
-
       <!-- Hand tokens -->
       <div class="hand-tokens" v-if="wait == false" :class="{ 'active': tokensOpen && this.player.tokens != 0 }" @mouseenter="tokensOpen = true" @mouseleave="tokensOpen = false">
         <div class="hand-tokens-list token-list">

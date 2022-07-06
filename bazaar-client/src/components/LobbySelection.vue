@@ -213,7 +213,7 @@ export default {
   width: 10rem;
   display: inline-block;
   color: var(--main-color);
-  background-color: #ddd;
+  background-color: var(--main-color-light);
   text-decoration: none;
   font-family: 'Poppins', sans-serif;
   font-size: large;
@@ -221,10 +221,11 @@ export default {
   border-radius: 0.5rem;
   border: none;
   margin: auto;
+  color: #fff;
   transition: all .3s ease-in-out;
 }
 .lien_popup:hover {
-  background-color: #e2c372;
+  background-color: rgb(var(--secondary-color));
   cursor: pointer;
 }
 .nom_salon {

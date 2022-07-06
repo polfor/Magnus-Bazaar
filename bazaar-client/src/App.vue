@@ -13,6 +13,7 @@ export default {
 <style>
 :root {
   --main-color: #272626;
+  --main-color-light: #585454;
   --secondary-color: 226, 195, 114;
 }
 

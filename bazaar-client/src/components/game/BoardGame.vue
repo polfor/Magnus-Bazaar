@@ -243,7 +243,7 @@ export default {
   background-color: rgb(var(--secondary-color));
 }
 
-.player-container, .deck {
+.player-container {
   position: relative;
 }
 
@@ -318,6 +318,11 @@ export default {
   flex-direction: column;
   grid-template-rows: repeat(2, 1fr);
   gap: .5rem;
+}
+
+.deck {
+  position: relative;
+  z-index: 1;
 }
 
 .graveyard {

@@ -28,20 +28,7 @@
       </div>
     </div>
 
-    <!-- Winner -->
-    <div class="winner" v-if="winnerOverlay">
-      <div class="winner-container">
-        <div class="winner-points">
-          <p>{{ player.name }} : </p>
-          <span>{{ player.totalPoints }}</span>
-        </div>
-         <div class="winner-points">
-          <p>{{ opponent.name }} : </p>
-          <span>{{ opponent.totalPoints }}</span>
-        </div>
-        <p>{{ winner }} a su avoir le sens des négociations et deviens un excellent marchant</p>
-      </div>
-    </div>
+    <WinnerTable :winnerOverlay="this.winnerOverlay" :player="this.player" :opponent="this.opponent" :winner="this.winner" />
 
     <HandPlayer :wait="this.wait" :player="this.player" />
     <HandOpponent :opponent="this.opponent" />
@@ -65,6 +52,7 @@
 </template>
 
 <script>
+import WinnerTable from "./game/WinnerTable.vue"
 import HandPlayer from "./game/HandPlayer.vue"
 import HandOpponent from "./game/HandOpponent.vue"
 import BoardGame from "./game/BoardGame.vue"
@@ -92,16 +80,18 @@ export default {
           hand: [],
           enclosure: [],
           tokens: [],
-          totalPoints: 0,
-          camelToken: false
+          merchandisesPoints: 0,
+          bonusPoints: 0,
+          totalPoints: 0
       },
       opponent: {
           name: "",
           hand: [],
           enclosure: [],
           tokens: [],
-          totalPoints: 0,
-          camelToken: false
+          merchandisesPoints: 0,
+          bonusPoints: 0,
+          totalPoints: 0
       },
       tokens: [],
       deck: 0,
@@ -116,6 +106,7 @@ export default {
     }
   },
   components: {
+    WinnerTable,
     HandPlayer,
     HandOpponent,
     BoardGame
@@ -283,14 +274,12 @@ export default {
       this.player.enclosure = []
       this.player.tokens = []
       this.player.totalPoints = 0
-      this.player.camelToken = false
 
       this.opponent.name = ""
       this.opponent.hand = []
       this.opponent.enclosure = []
       this.opponent.tokens = []
       this.opponent.totalPoints = 0
-      this.opponent.camelToken = false
 
       this.tokens = []
       this.deck = 0
@@ -371,10 +360,26 @@ export default {
         this.currentPlayer = data.currentPlayer
 
         // Calcul du nombre de point du joueur
-        this.player.totalPoints = 0
+        this.player.merchandisesPoints = 0
+        this.player.bonusPoints = 0
         this.player.tokens.forEach(token => {
           if(token.type != "bonus_3" && token.type != "bonus_4" && token.type != "bonus_5"){
-            this.player.totalPoints += token.value;
+            this.player.merchandisesPoints += token.value;
+          }
+          else{
+            this.player.bonusPoints += token.value;
+          }
+        })
+
+        // Calcul du nombre de point de l'adversaire
+        this.opponent.merchandisesPoints = 0
+        this.opponent.bonusPoints = 0
+        this.opponent.tokens.forEach(token => {
+          if(token.type != "bonus_3" && token.type != "bonus_4" && token.type != "bonus_5"){
+            this.opponent.merchandisesPoints += token.value;
+          }
+          else{
+            this.opponent.bonusPoints += token.value;
           }
         })
     })
@@ -382,11 +387,17 @@ export default {
     this.socket.on('game-end', data => {
       this.resetPlayer()
       this.winnerOverlay = true
-      this.winner = data.winner == this.playerNo ? this.player.name : this.opponent.name
+
+      if(data.players[this.playerNo].camelToken){
+        this.player.bonusPoints += 5;
+      }
+      else if(data.players[this.opponentNo].camelToken){
+        this.opponent.bonusPoints += 5;
+      }
       this.player.totalPoints = data.players[this.playerNo].totalPoints
-      this.player.camelToken = data.players[this.playerNo].camelToken
       this.opponent.totalPoints = data.players[this.opponentNo].totalPoints
-      this.opponent.camelToken = data.players[this.opponentNo].camelToken
+
+      this.winner = data.winner == this.playerNo ? this.player.name : this.opponent.name
     })
 
     this.socket.on('opponent-left', () => {
@@ -684,11 +695,11 @@ export default {
   }
 
   .player-cards-one:hover .enclosure{
-    margin-top: 12vw;
+    margin-top: 13vw;
   }
 
   .player-cards-one:hover .camel-card{
-    margin-top: -12vw;
+    margin-top: -13vw;
     position: relative;
   }
 }
@@ -753,7 +764,7 @@ export default {
 
   .player-cards-one:hover .little-card{
     width: 13vw;
-    max-width: 16rem;
+    max-width: 14rem;
   }
 }
 </style>
@@ -835,7 +846,8 @@ export default {
   padding: .7rem;
   border-radius: 5px;
   border: none;
-  background-color: #ddd;
+  color: #fff;
+  background-color: var(--main-color-light);
   transition: all .3s ease-in-out;
 }
 
@@ -846,46 +858,5 @@ export default {
 .room-copy:hover {
   cursor: pointer;
   background-color: rgb(var(--secondary-color));
-}
-
-/* Winner */
-.winner {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.2);
-  z-index: 30;
-  padding: 1rem;
-}
-
-.winner p{
-  margin: 0;
-}
-
-.winner h2{
-  margin-top: 0;
-}
-
-.winner-container {
-  border-radius: 20px;
-  background: var(--main-color);
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-  min-width: 340px;
-}
-
-.winner-points {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
 }
 </style>
