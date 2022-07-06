@@ -12,7 +12,7 @@ const cardsTemplate = {
 const jsonCards = require('./cards.json').cards;
 const jsonTokens = require('./tokens.json').tokens;
 
-class Game { 
+class Game {
 
     io;
     room;
@@ -77,16 +77,11 @@ class Game {
                     player.addCamel(card)
                 }
             })
-            if(!player instanceof IAPlayer){
+            if (!(player instanceof IAPlayer)) {
                 player.socket.emit('game-start', { playerNo: index, playerNames: [this.players[0].name, this.players[1].name] })
             }
         })
 
-        console.log('this')
-        console.log(this.tokens.leather)
-        
-        console.log('base')
-        console.log(baseTokens.leather)
 
         this.buildEvents();
 
@@ -123,7 +118,7 @@ class Game {
 
     updateGame() {
 
-    
+
         if (this.checkGameEnd()) {
             this.endGame();
         } else {
@@ -157,7 +152,6 @@ class Game {
     }
 
     trade(player, data) {
-        console.log(data)
         data.tradedCards.forEach(card => {
             if (card.type != "camel") {
                 player.removeFromHand(card)
