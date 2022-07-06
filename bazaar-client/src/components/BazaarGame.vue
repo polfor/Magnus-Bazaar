@@ -28,6 +28,21 @@
       </div>
     </div>
 
+    <!-- Winner -->
+    <div class="winner" v-if="winnerOverlay">
+      <div class="winner-container">
+        <div class="winner-points">
+          <p>{{ player.name }} : </p>
+          <span>{{ player.totalPoints }}</span>
+        </div>
+         <div class="winner-points">
+          <p>{{ opponent.name }} : </p>
+          <span>{{ opponent.totalPoints }}</span>
+        </div>
+        <p>{{ winner }} a su avoir le sens des négociations et deviens un excellent marchant</p>
+      </div>
+    </div>
+
     <HandPlayer :wait="this.wait" :player="this.player" />
     <HandOpponent :opponent="this.opponent" />
 
@@ -60,6 +75,7 @@ export default {
   data () {
     return {
       wait: true,
+      winnerOverlay: false,
       copy: false,
 
       // Boutons
@@ -342,7 +358,7 @@ export default {
 
         this.player.hand = data.players[this.playerNo].hand
         this.player.enclosure = data.players[this.playerNo].enclosure
-        this.player.tokens = data.players[this.playerNo].tokens.reverse()
+        this.player.tokens = data.players[this.playerNo].tokens
 
         this.opponent.hand = data.players[this.opponentNo].hand
         this.opponent.enclosure = data.players[this.opponentNo].enclosure
@@ -355,13 +371,18 @@ export default {
         this.currentPlayer = data.currentPlayer
 
         // Calcul du nombre de point du joueur
+        this.player.totalPoints = 0
         this.player.tokens.forEach(token => {
-          this.player.totalPoints += token.value;
+          if(token.type != "bonus_3" && token.type != "bonus_4" && token.type != "bonus_5"){
+            this.player.totalPoints += token.value;
+          }
         })
     })
 
     this.socket.on('game-end', data => {
-      this.winner = data.winner
+      this.resetPlayer()
+      this.winnerOverlay = true
+      this.winner = data.winner == this.playerNo ? this.player.name : this.opponent.name
       this.player.totalPoints = data.players[this.playerNo].totalPoints
       this.player.camelToken = data.players[this.playerNo].camelToken
       this.opponent.totalPoints = data.players[this.opponentNo].totalPoints
@@ -825,5 +846,46 @@ export default {
 .room-copy:hover {
   cursor: pointer;
   background-color: rgb(var(--secondary-color));
+}
+
+/* Winner */
+.winner {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 30;
+  padding: 1rem;
+}
+
+.winner p{
+  margin: 0;
+}
+
+.winner h2{
+  margin-top: 0;
+}
+
+.winner-container {
+  border-radius: 20px;
+  background: var(--main-color);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  min-width: 340px;
+}
+
+.winner-points {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

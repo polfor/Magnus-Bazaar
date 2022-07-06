@@ -19,11 +19,11 @@
       <!-- Enclosure -->
       <div class="enclosure enclosure-one">
         <span v-if="player.enclosure.length != 0" class="enclosure-number">{{ player.enclosure.length }}</span>
-        <img @click="activeHand" :id="enclosure.id" :data-value="enclosure.value" v-for="enclosure in player.enclosure" :key="enclosure.index" class="little-card camel-card camel-card-one" src="@/assets/Camel_card.png" alt="">
+        <img @click="activeHand" :id="enclosure.id" :data-value="enclosure.value" v-for="enclosure in player.enclosure" :key="enclosure.index" class="little-card camel-card camel-card-one card-selected" src="@/assets/Camel_card.png" alt="">
       </div>
 
       <!-- Hand tokens -->
-      <div class="hand-tokens" v-if="wait == false">
+      <div class="hand-tokens" v-if="wait == false" :class="{ 'active': tokensOpen && this.player.tokens != 0 }" @mouseenter="tokensOpen = true" @mouseleave="tokensOpen = false">
         <div class="hand-tokens-list token-list">
           <img class="token token-hidden" src="@/assets/Merchant-coin.png" alt="">
           <template v-for="token in this.player.tokens">
@@ -50,6 +50,10 @@
             <img v-if="token.type == 'leather' && token.value == 2" :key="token.id" class="token" src="@/assets/Leather_coin-2.png" alt="">
             <img v-if="token.type == 'leather' && token.value == 3" :key="token.id" class="token" src="@/assets/Leather_coin-3.png" alt="">
             <img v-if="token.type == 'leather' && token.value == 4" :key="token.id" class="token" src="@/assets/Leather_coin-4.png" alt="">
+            <!-- Bonus -->
+            <img v-if="token.type == 'bonus_3'" :key="token.id" class="token" src="@/assets/3_cards_coin.png" alt="">
+            <img v-if="token.type == 'bonus_4'" :key="token.id" class="token" src="@/assets/4_cards_coin.png" alt="">
+            <img v-if="token.type == 'bonus_5'" :key="token.id" class="token" src="@/assets/5_cards_coin.png" alt="">
           </template>
 
           <span class="hand-tokens-points">{{ player.totalPoints }}</span>
@@ -63,10 +67,10 @@ export default {
     name: "HandPlayer",
     props : ['wait', 'player'],
     data() {
-        return {
-            // hand
-            handOpen: false,
-        }
+      return {
+        handOpen: false,
+        tokensOpen: false
+      }
     },
     methods: {
         activeHand(ev){
@@ -109,7 +113,7 @@ export default {
 }
 
 .hand-tokens-list.token-list {
-  justify-content: center;
+  justify-content: flex-start;
   margin-right: 0;
   /* margin-right: 3%; */
 }
@@ -124,10 +128,38 @@ export default {
   top: 0;
   width: 100%;
   height: 100%;
-  /* margin-right: -3%; */
 }
 
 .hand-tokens-list .token-hidden {
   position: relative;
+}
+
+.hand-tokens.active{
+  background: rgba(0,0,0,0.5);
+  overflow-x: auto;
+  width: 100%;
+  z-index: 40;
+  transition: all .3s ease-in-out;
+}
+
+.hand-tokens.active .hand-tokens-list {
+  margin-right: 2rem;
+}
+
+.hand-tokens.active .token:not(.token-hidden){
+  position: relative;
+  z-index: 20;
+  margin-right: -2rem;
+  left: max(-5vw, -3.5rem);
+}
+
+.hand-tokens.active .hand-tokens-points{
+  opacity: 0;
+}
+
+@media (min-width: 1536px){
+  .hand-tokens.active .token:not(.token-hidden){
+    left: max(-5vw, -4.25rem);
+  }
 }
 </style>
