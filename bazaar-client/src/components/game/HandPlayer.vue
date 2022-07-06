@@ -24,7 +24,7 @@
           <img @click="activeHand" :id="enclosure.id" :data-value="enclosure.value" v-for="enclosure in player.enclosure" :key="enclosure.index" class="little-card camel-card camel-card-one card-selected" src="@/assets/Camel_card.png" alt="">
         </div>
       </div>
-      
+
       <!-- Hand tokens -->
       <div class="hand-tokens" v-if="wait == false" :class="{ 'active': tokensOpen && this.player.tokens != 0 }" @mouseenter="tokensOpen = true" @mouseleave="tokensOpen = false">
         <div class="hand-tokens-list token-list">
@@ -59,7 +59,7 @@
             <img v-if="token.type == 'bonus_5'" :key="token.id" class="token" src="@/assets/5_cards_coin.png" alt="">
           </template>
 
-          <span class="hand-tokens-points">{{ player.totalPoints }}</span>
+          <span class="hand-tokens-points">{{ player.merchandisesPoints }}</span>
         </div>
       </div>
     </div>
