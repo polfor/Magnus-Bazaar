@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <WinnerTable :winnerOverlay="this.winnerOverlay" :player="this.player" :opponent="this.opponent" :winner="this.winner" />
+    <WinnerTable :socket="this.socket" :winnerOverlay="this.winnerOverlay" :player="this.player" :opponent="this.opponent" :winner="this.winner" />
 
     <HandPlayer :wait="this.wait" :player="this.player" />
     <HandOpponent :opponent="this.opponent" />
