@@ -404,8 +404,6 @@ export default {
             this.opponent.bonusPoints += token.value;
           }
         })
-
-        this.winnerOverlay = true
     })
 
     this.socket.on('game-end', data => {
