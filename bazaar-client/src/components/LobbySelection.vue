@@ -51,7 +51,7 @@
       <div class="pop_up" v-show="isShow_joinRoom">
         <div class="container_join">
           <h2>Rejoindre un salon</h2>
-          <form id="joinRoom" class="join_room" action="">
+          <form id="joinRoom" class="join_room" action="" @submit="joinRoom">
             <div class="item_popup">
               <input type="text" class="input" v-model="username" placeholder="Votre pseudo" required />
             </div>
@@ -87,7 +87,7 @@
       <div class="pop_up" v-show="isShow_createRoom">
         <div class="container_create">
           <h2>Créer un salon</h2>
-          <form id="createRoom" class="create_room" action="">
+          <form id="createRoom" class="create_room" action="" @submit="createRoom">
             <div>
               <div class="item_popup">
                 <input type="text" class="input" v-model="username" placeholder="Votre pseudo" required />
@@ -140,22 +140,23 @@ export default {
         this.isShow_joinRoom = false
         this.isShow_createRoom = false
         this.username = ""
+      },
+
+      createRoom(e) {
+        e.preventDefault()
+        this.socket.emit("createroom", {name : this.username});
+      },
+
+      joinRoom(e) {
+        e.preventDefault()
+        this.socket.emit('joinroom', {name: this.username, room: e.target[1].value});
       }
     },
     created() {
       this.emitter.on('setLobby', (data) => this.setOverlay(data))
+      this.emitter.on('setName', (data) => this.username = data.name)
     },
     mounted () {
-        const roomCreation = document.querySelector('#createRoom')
-        const roomJoin = document.querySelector('#joinRoom')
-        roomCreation.addEventListener('submit', e => {
-            e.preventDefault()
-            this.socket.emit("createroom", {name : this.username});
-        })
-        roomJoin.addEventListener('submit', e => {
-            e.preventDefault()
-            this.socket.emit('joinroom', {name: this.username, room: e.target[1].value});
-        })
         this.socket.on('roomjoined', data => {
             var player = data.player ? data.player : 'Un joueur';
             this.emitter.emit('addAlert', {

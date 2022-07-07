@@ -55,16 +55,14 @@ export default {
             setTimeout(() => {
                 this.alerts.splice(0, 1);
             }, 3000);
-        }
+        },
     },
-    
     created() {
         this.socket = io("http://localhost:3000");
         this.emitter.on('addAlert', (data) => this.createAlert(data))
         this.emitter.on('setLobby', (data) => this.lobby = data)
         this.emitter.on('setRoom', (data) => this.room = data)
     },
-
     mounted(){
         this.socket.on("alert", data => {
             this.createAlert(data);

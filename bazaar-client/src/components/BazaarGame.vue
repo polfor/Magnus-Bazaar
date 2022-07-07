@@ -263,42 +263,7 @@ export default {
     quit() {
       this.socket.emit('leave', {room: this.room});
       this.emitter.emit('setLobby', true);
-      this.resetValue();
-    },
-
-    resetValue() {
-      this.wait = true
-      this.winnerOverlay = false
-      this.copy = false
-            
-      // Boutons
-      this.buttons = false
-      this.tradeButton = false
-      this.takeButton = false
-      this.sellButton = false
-
-      this.player.name = ""
-      this.player.hand = []
-      this.player.enclosure = []
-      this.player.tokens = []
-      this.player.totalPoints = 0
-
-      this.opponent.name = ""
-      this.opponent.hand = []
-      this.opponent.enclosure = []
-      this.opponent.tokens = []
-      this.opponent.totalPoints = 0
-
-      this.tokens = []
-      this.deck = 0
-      this.graveyard = []
-      this.market = []
-      this.currentPlayer = 0
-      this.winner = ""
-
-      // trade
-      this.tradeGive = []
-      this.tradeWant = []   
+      this.emitter.emit('setName', {name: this.player.name});
     },
 
     sell() {
@@ -335,6 +300,7 @@ export default {
   mounted () {
     this.socket.on('game-start', data => {
         // Réinitialiation pour le restart 
+        this.emitter.emit('setLobby', false);
         this.winnerOverlay = false;
         this.copy = false
         this.buttons = false
@@ -417,22 +383,19 @@ export default {
       this.winner = data.winner == this.playerNo ? this.player.name : this.opponent.name
     })
 
-    this.socket.on('opponent-left', () => {
-      this.copy = false,
-      this.wait = true;
-      var player = this.player.name ? this.player.name : "Un joueur";
-      this.emitter.on('leave', () => {
-        this.emitter.emit('addAlert', {
-            type: "leave",
-            message: player + " a quitté la salle " + this.room,
-        });
-      });
-    })
-
     this.socket.on('ia-start', () => { 
       this.wait = false 
       this.ia = true
     })
+
+    this.socket.on('opponent-left', () => { 
+      this.emitter.emit('addAlert', {
+          type: "leave",
+          message: this.opponent.name + " a quitté la salle " + this.room,
+      });
+      this.wait = true;
+    })
+
     this.emitter.on('activeCards', (ev) => this.active(ev))
     this.emitter.on('setCards', () => this.activeButtons())
     this.emitter.on('sell', () => this.sell())
@@ -739,14 +702,6 @@ export default {
     padding: 6rem 0;
   }
 
-  .enclosure-number, .deck-number {
-    top: -1rem;
-    left: -1rem;
-    width: 46px;
-    height: 46px;
-    font-size: 1.5rem;
-  }
-
   .player-current {
     top: -2rem;
     left: -3rem;
@@ -787,7 +742,7 @@ export default {
   .token {
     max-width: 4.25rem;
   }
-  
+
   .little-card {
     max-width: 160px;
   }
@@ -799,6 +754,14 @@ export default {
 
   .player-cards-one:hover .little-card{
     max-width: 14rem;
+  }
+
+  .enclosure-number, .deck-number {
+    top: -1rem;
+    left: -1rem;
+    width: 46px;
+    height: 46px;
+    font-size: 1.5rem;
   }
 }
 </style>
