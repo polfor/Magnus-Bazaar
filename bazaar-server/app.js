@@ -106,6 +106,7 @@ SocketIo.of('/').adapter.on('delete-room', (room) => {
 SocketIo.of('/').adapter.on('leave-room', (room, id) => {
     if (rooms[room]) {
         SocketIo.to(room).emit('opponent-left');
+        SocketIo.to(id).emit('player-left');
     }
 })
 
