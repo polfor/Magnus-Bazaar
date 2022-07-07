@@ -264,6 +264,7 @@ export default {
 
     quit() {
       this.socket.emit('leave', {room: this.room});
+      this.socket.emit('rank');
       this.emitter.emit('setLobby', true);
       this.emitter.emit('setName', {name: this.player.name});
     },
@@ -759,7 +760,7 @@ export default {
   }
 
   .tokens.active .tokens-container {
-    max-width: 56rem;
+    max-width: 40rem;
   }
 
   .tokens.active .token{
