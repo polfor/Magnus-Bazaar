@@ -2,7 +2,7 @@
     <!-- Hand player -->
     <div>
 
-      <div @mouseenter="handOpen = true" @mouseleave="handOpen = false" v-bind:class="{ open: handOpen }" class="player-cards player-cards-one">
+      <div @mouseenter="handOpen = true" @mouseleave="handOpen = false" :class="{ open: handOpen }" class="player-cards player-cards-one">
         <!-- Hand -->
         <div class="hand-container-one">
           <div class="hand">
@@ -26,8 +26,7 @@
       </div>
 
       <!-- Hand tokens -->
-      <div class="hand-tokens" v-if="wait == false" :class="{ 'active': tokensOpen && this.player.tokens != 0 }" @mouseenter="tokensOpen = true" @mouseleave="tokensOpen = false">
-        <p class="hand-tokens-info">Le nombre de points affichés sont le cumul des points des jetons marchands et ne prend pas en compte les jetons bonus qui seront affichés seulement en fin de partie</p>
+      <div class="hand-tokens" v-if="wait == false" :class="{ 'active': tokensOpen && this.player.merchandisesPoints != 0 }" @mouseenter="tokensOpen = true" @mouseleave="tokensOpen = false">
         <div class="hand-tokens-list token-list">
           <img class="token token-hidden" src="@/assets/Merchant-coin.png" alt="">
           <template v-for="token in this.player.tokens">
@@ -54,13 +53,24 @@
             <img v-if="token.type == 'leather' && token.value == 2" :key="token.id" class="token" src="@/assets/Leather_coin-2.png" alt="">
             <img v-if="token.type == 'leather' && token.value == 3" :key="token.id" class="token" src="@/assets/Leather_coin-3.png" alt="">
             <img v-if="token.type == 'leather' && token.value == 4" :key="token.id" class="token" src="@/assets/Leather_coin-4.png" alt="">
+          </template>
+
+          <span class="hand-tokens-points">{{ player.merchandisesPoints }}</span>
+        </div>
+      </div>
+
+      <!-- Hand tokens -->
+      <div class="hand-tokens hand-tokens-bonus" v-if="wait == false" :class="{ 'active': tokensBonusOpen && this.player.bonusPoints != 0 }" @mouseenter="tokensBonusOpen = true" @mouseleave="tokensBonusOpen = false">
+        <div class="hand-tokens-list token-list">
+          <img class="token token-hidden" src="@/assets/Merchant-coin.png" alt="">
+          <template v-for="token in this.player.tokens">
             <!-- Bonus -->
             <img v-if="token.type == 'bonus_3'" :key="token.id" class="token" src="@/assets/3_cards_coin.png" alt="">
             <img v-if="token.type == 'bonus_4'" :key="token.id" class="token" src="@/assets/4_cards_coin.png" alt="">
             <img v-if="token.type == 'bonus_5'" :key="token.id" class="token" src="@/assets/5_cards_coin.png" alt="">
           </template>
 
-          <span class="hand-tokens-points">{{ player.merchandisesPoints }}</span>
+          <span class="hand-tokens-points">?</span>
         </div>
       </div>
     </div>
@@ -73,7 +83,8 @@ export default {
     data() {
       return {
         handOpen: false,
-        tokensOpen: false
+        tokensOpen: false,
+        tokensBonusOpen: false
       }
     },
     methods: {
@@ -93,15 +104,8 @@ export default {
   padding: 1rem;
 }
 
-.hand-tokens-info {
-  font-size: .875rem;
-  font-style: italic;
-  margin: 0;
-  margin-bottom: 0.5rem;
-  display: none;
-  opacity: 0;
-  max-width: 768px;
-  transition: all .3s ease-in-out;
+.hand-tokens-bonus{
+  left: 4rem;
 }
 
 .hand-tokens-list {
@@ -147,11 +151,15 @@ export default {
 }
 
 .hand-tokens.active{
-  background: rgba(0,0,0,0.5);
+  background-color: rgba(0,0,0,0.5);
   overflow-x: auto;
   width: calc(100% - 2rem);
   z-index: 40;
-  transition: all .3s ease-in-out;
+  transition: background-color .3s ease-in-out;
+}
+
+.hand-tokens-bonus.active{
+  left: 0;
 }
 
 .hand-tokens.active .hand-tokens-info {

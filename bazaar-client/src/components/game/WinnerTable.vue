@@ -46,7 +46,7 @@
                 <td><strong>{{ opponent.totalPoints }}</strong></td>
             </tr>
         </table>
-        <p><strong>{{ winner }}</strong> a su avoir le sens des négociations et devient un marchant reconnu au sein du Magnus Bazaar</p>
+        <p><strong>{{ winner }}</strong> <span v-if="ia">avez</span> <span v-else>a</span> su avoir le sens des négociations et <span v-if="ia">êtes devenu.e</span><span v-else>devient</span> un marchand reconnu au sein du Magnus Bazaar</p>
         <div class="winner-restart">
             <div>
                 <div class="winner-restart-wait" v-if="restart">
@@ -63,7 +63,7 @@
 <script>
 export default {
     name: "WinnerTable",
-    props : ['socket', 'winnerOverlay', 'player', 'opponent', 'winner'],
+    props : ['socket', 'winnerOverlay', 'player', 'opponent', 'winner', 'ia'],
     data(){
         return {
             restart: false

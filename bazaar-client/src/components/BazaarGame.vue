@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <WinnerTable :socket="this.socket" :winnerOverlay="this.winnerOverlay" :player="this.player" :opponent="this.opponent" :winner="this.winner" />
+    <WinnerTable :socket="this.socket" :winnerOverlay="this.winnerOverlay" :player="this.player" :opponent="this.opponent" :winner="this.winner" :ia="this.ia" />
 
     <HandPlayer :wait="this.wait" :player="this.player" />
     <HandOpponent :opponent="this.opponent" />
@@ -358,7 +358,7 @@ export default {
 
       this.emitter.emit('addAlert', {
           type: "check",
-          message: "Le nom de la salle a bien été copier",
+          message: "Le nom de la salle a bien été copié",
       });
     }
   },
@@ -412,7 +412,6 @@ export default {
 
     this.socket.on('game-end', data => {
       this.resetPlayer()
-      this.calculTokensPoints()
       this.winnerOverlay = true
 
       this.player.camelToken = data.players[this.playerNo].camelToken;
