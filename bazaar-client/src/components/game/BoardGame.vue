@@ -237,6 +237,7 @@ export default {
   display: inline-block;
   position: absolute;
   right: 0;
+  white-space: nowrap;
 }
 
 .player.active{
