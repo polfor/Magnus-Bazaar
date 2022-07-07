@@ -112,7 +112,7 @@ export default {
     min-width: 48px;
 }
 
-.rank-leader-name-0 {
+.rank-leader-name-1 {
     right: 0;
 }
 
@@ -137,10 +137,6 @@ export default {
     color: #000;
     width: 48px;
     margin: auto;
-}
-
-.rank-position span {
-    transform: rotate(-90deg);
 }
 
 .rank-position-0 {
