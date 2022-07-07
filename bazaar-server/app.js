@@ -18,6 +18,9 @@ var games = []
 var iaIndex = []
 
 SocketIo.on('connection', socket => {
+
+    sendLeaderboard(socket)
+
     socket.on('createroom', data => {
         let roomname = randomWords({
             exactly: 3,
@@ -97,24 +100,7 @@ SocketIo.on('connection', socket => {
     })
 
     socket.on('rank', () => {
-        let endedGames = games.map(game => {
-            if (game.isEnded()) {
-                return game
-            }
-        })
-
-        endedGames.sort((a, b) => {
-            return a.getScores().score - b.getScores().score
-        })
-
-        let scoreBoard = endedGames.map(game => {
-            return {
-                name: game.getScores().name,
-                score: game.getScores().score
-            }
-        })
-
-        socket.emit('leaderboard', scoreBoard);
+        sendLeaderboard(socket)
     })
 
 })
@@ -161,4 +147,25 @@ function startGame(roomName) {
             waitingRestart = 0;
         }
     })
+}
+
+function sendLeaderboard(socket) {
+    let endedGames = games.map(game => {
+        if (game.isEnded()) {
+            return game
+        }
+    })
+
+    endedGames.sort((a, b) => {
+        return a.getScores().score - b.getScores().score
+    })
+
+    let scoreBoard = endedGames.map(game => {
+        return {
+            name: game.getScores().name,
+            score: game.getScores().score
+        }
+    })
+
+    socket.emit('leaderboard', scoreBoard);
 }
