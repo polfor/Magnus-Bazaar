@@ -153,7 +153,7 @@ function sendLeaderboard(socket) {
 
     let endedGames = []
     for (let game in games) {
-        if (games[game].isEnded()) {
+        if (games[game].isEnded() && !/(ia-).*/g.test(game)) {
             endedGames.push(games[game])
         }
     }
