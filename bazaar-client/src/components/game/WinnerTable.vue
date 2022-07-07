@@ -46,7 +46,7 @@
                 <td><strong>{{ opponent.totalPoints }}</strong></td>
             </tr>
         </table>
-        <p><strong>{{ winner }}</strong> <span v-if="ia == false || winner === 'Le Marchand'">a</span> <span v-else>avez</span> su avoir le sens des négociations et <span v-if="ia">êtes devenu.e</span><span v-else>devient</span> un marchand reconnu au sein du Magnus Bazaar</p>
+        <p><strong>{{ winner }}</strong> <span v-if="ia == false || winner === 'Le Marchand'">a</span> <span v-else>avez</span> su avoir le sens des négociations et <span v-if="ia == false || winner === 'Le Marchand'">devient</span><span v-else>êtes devenu.e</span> un marchand reconnu au sein du Magnus Bazaar</p>
         <div class="winner-restart">
             <div>
                 <div class="winner-restart-wait" v-if="restart">
