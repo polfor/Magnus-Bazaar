@@ -1,5 +1,7 @@
 <template>
   <div v-if="lobby" class="lobby">
+    <LeaderBoard />
+
     <!-- Navigation -->
     <div class="grille">
       <div class="colonne1">
@@ -49,6 +51,7 @@
     <!-- Popup salon rejoindre une partie -->
     <transition name="fade">
       <div class="pop_up" v-show="isShow_joinRoom">
+        <div class="background-overlay" v-show="isShow_joinRoom" @click="isShow_joinRoom = false"></div>
         <div class="container_join">
           <h2>Rejoindre un salon</h2>
           <form id="joinRoom" class="join_room" action="" @submit="joinRoom">
@@ -85,6 +88,7 @@
     <!-- Popup salon créer une partie -->
     <transition name="fade">
       <div class="pop_up" v-show="isShow_createRoom">
+        <div class="background-overlay" v-show="isShow_createRoom" @click="isShow_createRoom = false"></div>
         <div class="container_create">
           <h2>Créer un salon</h2>
           <form id="createRoom" class="create_room" action="" @submit="createRoom">
@@ -125,6 +129,8 @@
 </template>
 
 <script>
+import LeaderBoard from "./LeaderBoard.vue";
+
 export default {
     name: "LobbySelection",
     props: ['socket', 'lobby'],
@@ -134,6 +140,9 @@ export default {
         isShow_createRoom: false,
         username: ""
       }
+    },
+    components: {
+      LeaderBoard
     },
     methods: {
       setOverlay() {
@@ -249,7 +258,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.4);
 }
 .container_create {
   align-content: center;
@@ -323,6 +331,13 @@ export default {
     position: absolute;
     left: -2px;
     top: 0;
+  }
+
+  .copyright {
+    margin: auto;
+    margin-top: 2rem;
+    color: white;
+    font-size: .875rem;
   }
 }
 </style>
