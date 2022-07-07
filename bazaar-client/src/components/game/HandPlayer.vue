@@ -131,11 +131,11 @@ export default {
 .hand-tokens-list.token-list {
   justify-content: flex-start;
   margin-right: 0;
-  /* margin-right: 3%; */
 }
 
 .hand-tokens-list .token {
   margin-right: 0;
+  max-width: 4.5rem;
 }
 
 .hand-tokens-list .token:not(.token-hidden) {
