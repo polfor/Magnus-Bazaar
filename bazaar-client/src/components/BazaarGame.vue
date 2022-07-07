@@ -324,6 +324,32 @@ export default {
       });
     },
 
+    calculTokensPoints() {
+      // Calcul du nombre de point du joueur
+      this.player.merchandisesPoints = 0
+      this.player.bonusPoints = 0
+      this.player.tokens.forEach(token => {
+        if(token.type != "bonus_3" && token.type != "bonus_4" && token.type != "bonus_5"){
+          this.player.merchandisesPoints += token.value;
+        }
+        else{
+          this.player.bonusPoints += token.value;
+        }
+      })
+
+      // Calcul du nombre de point de l'adversaire
+      this.opponent.merchandisesPoints = 0
+      this.opponent.bonusPoints = 0
+      this.opponent.tokens.forEach(token => {
+        if(token.type != "bonus_3" && token.type != "bonus_4" && token.type != "bonus_5"){
+          this.opponent.merchandisesPoints += token.value;
+        }
+        else{
+          this.opponent.bonusPoints += token.value;
+        }
+      })
+    },
+
     copyText() {
       var copyText = document.getElementById("room");
       navigator.clipboard.writeText(copyText.innerHTML);
@@ -381,36 +407,15 @@ export default {
 
         this.ia && data.currentPlayer == 0 ? setTimeout(this.currentPlayer = data.currentPlayer, 3000) : this.currentPlayer = data.currentPlayer
 
-        // Calcul du nombre de point du joueur
-        this.player.merchandisesPoints = 0
-        this.player.bonusPoints = 0
-        this.player.tokens.forEach(token => {
-          if(token.type != "bonus_3" && token.type != "bonus_4" && token.type != "bonus_5"){
-            this.player.merchandisesPoints += token.value;
-          }
-          else{
-            this.player.bonusPoints += token.value;
-          }
-        })
-
-        // Calcul du nombre de point de l'adversaire
-        this.opponent.merchandisesPoints = 0
-        this.opponent.bonusPoints = 0
-        this.opponent.tokens.forEach(token => {
-          if(token.type != "bonus_3" && token.type != "bonus_4" && token.type != "bonus_5"){
-            this.opponent.merchandisesPoints += token.value;
-          }
-          else{
-            this.opponent.bonusPoints += token.value;
-          }
-        })
+        this.calculTokensPoints()
     })
 
     this.socket.on('game-end', data => {
       this.resetPlayer()
+      this.calculTokensPoints()
       this.winnerOverlay = true
 
-      this.player.camelToken = data.players[this.opponentNo].camelToken;
+      this.player.camelToken = data.players[this.playerNo].camelToken;
       this.opponent.camelToken = data.players[this.opponentNo].camelToken;
 
       this.player.totalPoints = data.players[this.playerNo].totalPoints
