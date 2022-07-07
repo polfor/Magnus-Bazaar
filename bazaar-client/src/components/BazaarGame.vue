@@ -75,6 +75,7 @@ export default {
       // json send
       playerNo: 0,
       opponentNo: 1,
+      ia: false,
       player: {
           name: "",
           hand: [],
@@ -262,35 +263,7 @@ export default {
     quit() {
       this.socket.emit('leave', {room: this.room});
       this.emitter.emit('setLobby', true);
-      
-      // Boutons
-      this.buttons = false
-      this.tradeButton = false
-      this.takeButton = false
-      this.sellButton = false
-
-      this.player.name = ""
-      this.player.hand = []
-      this.player.enclosure = []
-      this.player.tokens = []
-      this.player.totalPoints = 0
-
-      this.opponent.name = ""
-      this.opponent.hand = []
-      this.opponent.enclosure = []
-      this.opponent.tokens = []
-      this.opponent.totalPoints = 0
-
-      this.tokens = []
-      this.deck = 0
-      this.graveyard = []
-      this.market = []
-      this.currentPlayer = 0
-      this.winner = ""
-
-      // trade
-      this.tradeGive = []
-      this.tradeWant = []   
+      this.emitter.emit('setName', {name: this.player.name});
     },
 
     sell() {
@@ -326,6 +299,16 @@ export default {
   },
   mounted () {
     this.socket.on('game-start', data => {
+        // Réinitialiation pour le restart 
+        this.emitter.emit('setLobby', false);
+        this.winnerOverlay = false;
+        this.copy = false
+        this.buttons = false
+        this.tradeButton = false
+        this.takeButton = false
+        this.sellButton = false
+
+        // Setup
         this.playerNo = data.playerNo;
         if(!this.playerNo){
             this.opponentNo = 1;
@@ -357,7 +340,7 @@ export default {
         this.deck = data.deck.length
         this.graveyard = data.graveyard
 
-        this.currentPlayer = data.currentPlayer
+        this.ia && data.currentPlayer == 0 ? setTimeout(this.currentPlayer = data.currentPlayer, 3000) : this.currentPlayer = data.currentPlayer
 
         // Calcul du nombre de point du joueur
         this.player.merchandisesPoints = 0
@@ -400,19 +383,19 @@ export default {
       this.winner = data.winner == this.playerNo ? this.player.name : this.opponent.name
     })
 
-    this.socket.on('opponent-left', () => {
-      this.copy = false,
-      this.wait = true;
-      var player = this.player.name ? this.player.name : "Un joueur";
-      this.emitter.on('leave', () => {
-        this.emitter.emit('addAlert', {
-            type: "leave",
-            message: player + " a quitté la salle " + this.room,
-        });
-      });
+    this.socket.on('ia-start', () => { 
+      this.wait = false 
+      this.ia = true
     })
 
-    this.socket.on('ia-start', () => { this.wait = false })
+    this.socket.on('opponent-left', () => { 
+      this.emitter.emit('addAlert', {
+          type: "leave",
+          message: this.opponent.name + " a quitté la salle " + this.room,
+      });
+      this.wait = true;
+    })
+
     this.emitter.on('activeCards', (ev) => this.active(ev))
     this.emitter.on('setCards', () => this.activeButtons())
     this.emitter.on('sell', () => this.sell())
@@ -707,7 +690,7 @@ export default {
 @media (min-width: 1536px) {
   /* Buttons */
   .bazaarGame .lien {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 
   /* Interface */
@@ -717,14 +700,6 @@ export default {
 
   .interface {
     padding: 6rem 0;
-  }
-
-  .enclosure-number, .deck-number {
-    top: -1rem;
-    left: -1rem;
-    width: 46px;
-    height: 46px;
-    font-size: 1.5rem;
   }
 
   .player-current {
@@ -739,10 +714,6 @@ export default {
     width: 23vw;
   }
 
-  .token {
-    max-width: 4.25rem;
-  }
-
   .tokens.active .tokens-container {
     max-width: 56rem;
   }
@@ -754,17 +725,43 @@ export default {
   /* Hand */
   .card, .little-card {
     width: 13vw;
-    max-width: 11.5rem;
   }
 
   .little-card {
     width: 13vw;
-    max-width: 160px;
+    max-width: 135px;
   }
 
   .player-cards-one:hover .little-card{
     width: 13vw;
+    max-width: 11rem;
+  }
+}
+
+@media (min-width: 1920px) {
+  .token {
+    max-width: 4.25rem;
+  }
+
+  .little-card {
+    max-width: 160px;
+  }
+
+  .card, .little-card {
+    width: 13vw;
+    max-width: 11.5rem;
+  }
+
+  .player-cards-one:hover .little-card{
     max-width: 14rem;
+  }
+
+  .enclosure-number, .deck-number {
+    top: -1rem;
+    left: -1rem;
+    width: 46px;
+    height: 46px;
+    font-size: 1.5rem;
   }
 }
 </style>

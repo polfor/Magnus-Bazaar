@@ -130,4 +130,14 @@ function startGame(roomName) {
             waitingRestart = 0;
         }
     })
+
+    rooms[roomName].player2.socket.on('restart', () => {
+        if (waitingRestart == 0) {
+            SocketIo.to(roomName).emit('waiting-restart');
+            waitingRestart = 1;
+        } else {
+            games[roomName + restarts++] = new Game(SocketIo, roomName, new Player(rooms[roomName].player1.socket, rooms[roomName].player1.name), new Player(rooms[roomName].player2.socket, rooms[roomName].player2.name))
+            waitingRestart = 0;
+        }
+    })
 }
