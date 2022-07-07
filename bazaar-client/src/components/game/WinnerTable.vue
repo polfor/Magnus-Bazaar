@@ -5,17 +5,21 @@
         <table>
             <tr class="winner-table-title">
                 <td></td>
-                <td>Points des jetons</td>
+                <td><img class="token" src="@/assets/Ruby_coin-7.png" alt=""></td>
                 <td></td>
-                <td>Points des jetons bonus</td>
+                <td><img class="token" src="@/assets/5_cards_coin.png" alt=""></td>
                 <td></td>
-                <td>Points totaux</td>
+                <td><img class="token" src="@/assets/Camel_coin.png" alt=""></td>
+                <td></td>
+                <td class="total">Points totaux</td>
             </tr>
             <tr class="winner-table-value">
                 <td class="winner-table-name">{{ player.name }}:</td>
                 <td>{{ player.merchandisesPoints }}</td>
                 <td>+</td>
                 <td>{{ player.bonusPoints }}</td>
+                <td>+</td>
+                <td><span v-if="player.camelToken">5</span><span v-else>0</span></td>
                 <td>=</td>
                 <td><strong>{{ player.totalPoints }}</strong></td>
             </tr>
@@ -23,17 +27,21 @@
         <table>
             <tr class="winner-table-title">
                 <td></td>
-                <td>Points des jetons</td>
+                <td><img class="token" src="@/assets/Ruby_coin-7.png" alt=""></td>
                 <td></td>
-                <td>Points des jetons bonus</td>
+                <td><img class="token" src="@/assets/5_cards_coin.png" alt=""></td>
                 <td></td>
-                <td>Points totaux</td>
+                <td><img class="token" src="@/assets/Camel_coin.png" alt=""></td>
+                <td></td>
+                <td class="total">Points totaux</td>
             </tr>
             <tr class="winner-table-value">
                 <td class="winner-table-name">{{ opponent.name }}:</td>
                 <td>{{ opponent.merchandisesPoints }}</td>
                 <td>+</td>
                 <td>{{ opponent.bonusPoints }}</td>
+                <td>+</td>
+                <td><span v-if="opponent.camelToken">5</span><span v-else>0</span></td>
                 <td>=</td>
                 <td><strong>{{ opponent.totalPoints }}</strong></td>
             </tr>
@@ -86,6 +94,10 @@ export default {
   padding: 1rem;
 }
 
+.winner .token {
+  margin-right: 0;
+}
+
 .winner p{
   margin: 0;
 }
@@ -134,7 +146,7 @@ export default {
   font-size: .875rem;
 }
 
-.winner-table-title td {
+.winner-table-title .total {
   font-style: italic;
   opacity: .5;
 }

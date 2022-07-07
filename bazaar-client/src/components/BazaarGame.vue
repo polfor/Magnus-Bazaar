@@ -83,7 +83,8 @@ export default {
           tokens: [],
           merchandisesPoints: 0,
           bonusPoints: 0,
-          totalPoints: 0
+          totalPoints: 0,
+          camelToken: false
       },
       opponent: {
           name: "",
@@ -92,7 +93,8 @@ export default {
           tokens: [],
           merchandisesPoints: 0,
           bonusPoints: 0,
-          totalPoints: 0
+          totalPoints: 0,
+          camelToken: false
       },
       tokens: [],
       deck: 0,
@@ -282,12 +284,14 @@ export default {
       this.player.enclosure = []
       this.player.tokens = []
       this.player.totalPoints = 0
+      this.player.camelToken = false
 
       this.opponent.name = ""
       this.opponent.hand = []
       this.opponent.enclosure = []
       this.opponent.tokens = []
       this.opponent.totalPoints = 0
+      this.opponent.camelToken = false
 
       this.tokens = []
       this.deck = 0
@@ -400,18 +404,17 @@ export default {
             this.opponent.bonusPoints += token.value;
           }
         })
+
+        this.winnerOverlay = true
     })
 
     this.socket.on('game-end', data => {
       this.resetPlayer()
       this.winnerOverlay = true
 
-      if(data.players[this.playerNo].camelToken){
-        this.player.bonusPoints += 5;
-      }
-      else if(data.players[this.opponentNo].camelToken){
-        this.opponent.bonusPoints += 5;
-      }
+      this.player.camelToken = data.players[this.opponentNo].camelToken;
+      this.opponent.camelToken = data.players[this.opponentNo].camelToken;
+
       this.player.totalPoints = data.players[this.playerNo].totalPoints
       this.opponent.totalPoints = data.players[this.opponentNo].totalPoints
 

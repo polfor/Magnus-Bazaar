@@ -58,7 +58,7 @@ export default {
         },
     },
     created() {
-        this.socket = io("http://localhost:3000");
+        this.socket = io(process.env.VUE_APP_SERVER_IP);
         this.emitter.on('addAlert', (data) => this.createAlert(data))
         this.emitter.on('setLobby', (data) => this.lobby = data)
         this.emitter.on('setRoom', (data) => this.room = data)

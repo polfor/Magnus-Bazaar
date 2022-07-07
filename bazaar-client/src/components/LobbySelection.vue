@@ -1,6 +1,6 @@
 <template>
   <div v-if="lobby" class="lobby">
-    <LeaderBoard />
+    <LeaderBoard :socket="this.socket"/>
 
     <!-- Navigation -->
     <div class="grille">
