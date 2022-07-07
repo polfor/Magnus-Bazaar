@@ -17,6 +17,9 @@ class Game {
     io;
     room;
     seed;
+    ended = false;
+    winner;
+    winnerScore;
     deck = [];
     graveyard = [];
     market = [];
@@ -361,7 +364,27 @@ class Game {
             }
         }
 
+        if (results.winner != 2) {
+            this.ended = true;
+            this.winner = this.players[results.winner].getName();
+            this.winnerScore = results.players[results.winner].totalPoints;
+        }
+
         this.io.to(this.room).emit('game-end', results);
+    }
+
+    isEnded() {
+        if (this.ended) {
+            return true;
+        }
+        return false;
+    }
+
+    getScores() {
+        return {
+            name: this.winner,
+            score: this.winnerScore
+        }
     }
 }
 

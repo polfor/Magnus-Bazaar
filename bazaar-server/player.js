@@ -53,6 +53,10 @@ class Player {
     getSocketId() {
         return this.socket.id
     }
+
+    getName() {
+        return this.name;
+    }
 }
 
 module.exports = Player;
