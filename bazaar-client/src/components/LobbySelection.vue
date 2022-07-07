@@ -206,7 +206,6 @@ export default {
 }
 
 .titre {
-  margin-top: 4rem;
   color: white;
 }
 .image_accueil {

@@ -183,6 +183,10 @@ export default {
 }
 
 @media (min-width: 1536px){
+  .hand-tokens-bonus{
+    left: 6rem;
+  }
+
   .hand-tokens.active .token:not(.token-hidden){
     left: max(-5vw, -4.25rem);
   }
