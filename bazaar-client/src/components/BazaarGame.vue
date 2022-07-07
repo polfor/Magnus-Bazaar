@@ -266,6 +266,41 @@ export default {
       this.emitter.emit('setName', {name: this.player.name});
     },
 
+    resetValue() {
+      this.wait = true
+      this.winnerOverlay = false
+      this.copy = false
+            
+      // Boutons
+      this.buttons = false
+      this.tradeButton = false
+      this.takeButton = false
+      this.sellButton = false
+
+      this.player.name = ""
+      this.player.hand = []
+      this.player.enclosure = []
+      this.player.tokens = []
+      this.player.totalPoints = 0
+
+      this.opponent.name = ""
+      this.opponent.hand = []
+      this.opponent.enclosure = []
+      this.opponent.tokens = []
+      this.opponent.totalPoints = 0
+
+      this.tokens = []
+      this.deck = 0
+      this.graveyard = []
+      this.market = []
+      this.currentPlayer = 0
+      this.winner = ""
+
+      // trade
+      this.tradeGive = []
+      this.tradeWant = []
+    },
+
     sell() {
       this.socket.emit('sell', {soldCards: this.tradeGive});
       this.resetPlayer();
@@ -297,7 +332,7 @@ export default {
       });
     }
   },
-  mounted () {
+  mounted() {
     this.socket.on('game-start', data => {
         // Réinitialiation pour le restart 
         this.emitter.emit('setLobby', false);
@@ -394,6 +429,10 @@ export default {
           message: this.opponent.name + " a quitté la salle " + this.room,
       });
       this.wait = true;
+    })
+
+    this.socket.on('player-left', () => {
+      this.resetValue();
     })
 
     this.emitter.on('activeCards', (ev) => this.active(ev))
