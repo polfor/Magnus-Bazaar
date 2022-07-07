@@ -150,11 +150,14 @@ function startGame(roomName) {
 }
 
 function sendLeaderboard(socket) {
-    let endedGames = games.map(game => {
-        if (game.isEnded()) {
-            return game
+
+    let endedGames = []
+    for (let game in games) {
+        if (games[game].isEnded()) {
+            endedGames.push(games[game])
         }
-    })
+    }
+
 
     endedGames.sort((a, b) => {
         return a.getScores().score - b.getScores().score
@@ -166,6 +169,7 @@ function sendLeaderboard(socket) {
             score: game.getScores().score
         }
     })
+
 
     socket.emit('leaderboard', scoreBoard);
 }
