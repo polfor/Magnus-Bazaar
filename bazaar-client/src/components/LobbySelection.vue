@@ -1,5 +1,7 @@
 <template>
   <div v-if="lobby" class="lobby">
+    <LeaderBoard />
+
     <!-- Navigation -->
     <div class="grille">
       <div class="colonne1">
@@ -125,6 +127,8 @@
 </template>
 
 <script>
+import LeaderBoard from "./LeaderBoard.vue";
+
 export default {
     name: "LobbySelection",
     props: ['socket', 'lobby'],
@@ -134,6 +138,9 @@ export default {
         isShow_createRoom: false,
         username: ""
       }
+    },
+    components: {
+      LeaderBoard
     },
     methods: {
       setOverlay() {
