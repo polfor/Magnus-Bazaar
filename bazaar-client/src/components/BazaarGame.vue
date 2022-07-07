@@ -763,7 +763,7 @@ export default {
   }
 
   .tokens.active .token{
-    max-width: 7.5rem;
+    max-width: 5.5rem;
   }
 
   /* Hand */

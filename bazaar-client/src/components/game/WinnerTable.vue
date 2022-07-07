@@ -71,8 +71,13 @@ export default {
     },
     methods: {
         restartGame() {
+          if(this.ia){
+            this.socket.emit('ia-create')
+          }
+          else {
             this.socket.emit('restart')
             this.restart = true
+          }
         }
     }
 }
