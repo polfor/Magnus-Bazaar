@@ -11,23 +11,17 @@
           <a @click="this.socket.emit('ia-create')" class="lien">Jouer contre une IA</a>
         </div>
         <div class="bouton creer">
-          <a @click="isShow_createRoom = !isShow_createRoom" class="lien"
-            >Créer un salon</a
-          >
+          <a @click="isShow_createRoom = !isShow_createRoom" class="lien">Créer un salon</a>
         </div>
 
         <div class="bouton rejoindre">
-          <a class="lien" @click="isShow_joinRoom = !isShow_joinRoom">
-            Rejoindre un salon
-          </a>
+          <a class="lien" @click="isShow_joinRoom = !isShow_joinRoom">Rejoindre un salon</a>
         </div>
         <div class="bouton regles">
           <router-link class="lien" to="/regles">Règles du jeu</router-link>
         </div>
         <div class="bouton communication">
-          <router-link class="lien" to="/communication"
-            >Communication</router-link
-          >
+          <router-link class="lien" to="/communication">Communication</router-link>
         </div>
         <div class="copyright">
           ©2022, FORSANS Paul, QUEMERAS Arthur, TRAVERS Nicolas
@@ -59,7 +53,7 @@
           <h2>Rejoindre un salon</h2>
           <form id="joinRoom" class="join_room" action="">
             <div class="item_popup">
-              <input type="text" class="input" placeholder="Votre pseudo" required />
+              <input type="text" class="input" v-model="username" placeholder="Votre pseudo" required />
             </div>
             <div class="item_popup">
               <input type="text" class="input" placeholder="Nom du salon" required />
@@ -96,11 +90,11 @@
           <form id="createRoom" class="create_room" action="">
             <div>
               <div class="item_popup">
-                <input type="text" class="input" placeholder="Votre pseudo" required />
+                <input type="text" class="input" v-model="username" placeholder="Votre pseudo" required />
               </div>
               <div class="item_popup">
                 <input
-                  @click="isShow_createRoom = !isShow_createRoom"
+                  @click="isShow_createRoom = false"
                   class="lien_popup"
                   type="submit"
                   value="Créer"
@@ -133,25 +127,34 @@
 <script>
 export default {
     name: "LobbySelection",
-    data: function () {
+    props: ['socket', 'lobby'],
+    data(){
       return {
         isShow_joinRoom: false,
         isShow_createRoom: false,
-      };
+        username: ""
+      }
     },
-    props: ['socket', 'lobby'],
+    methods: {
+      setOverlay() {
+        this.isShow_joinRoom = false
+        this.isShow_createRoom = false
+        this.username = ""
+      }
+    },
+    created() {
+      this.emitter.on('setLobby', (data) => this.setOverlay(data))
+    },
     mounted () {
         const roomCreation = document.querySelector('#createRoom')
         const roomJoin = document.querySelector('#joinRoom')
-        if (roomCreation) {
-            roomCreation.addEventListener('submit', e => {
-                e.preventDefault()
-                this.socket.emit("createroom", {name : e.target[0].value});
-            })
-        }
+        roomCreation.addEventListener('submit', e => {
+            e.preventDefault()
+            this.socket.emit("createroom", {name : this.username});
+        })
         roomJoin.addEventListener('submit', e => {
             e.preventDefault()
-            this.socket.emit('joinroom', {name: e.target[0].value, room: e.target[1].value});
+            this.socket.emit('joinroom', {name: this.username, room: e.target[1].value});
         })
         this.socket.on('roomjoined', data => {
             var player = data.player ? data.player : 'Un joueur';

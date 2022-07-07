@@ -727,7 +727,7 @@ export default {
 @media (min-width: 1536px) {
   /* Buttons */
   .bazaarGame .lien {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 
   /* Interface */
@@ -759,10 +759,6 @@ export default {
     width: 23vw;
   }
 
-  .token {
-    max-width: 4.25rem;
-  }
-
   .tokens.active .tokens-container {
     max-width: 56rem;
   }
@@ -774,16 +770,34 @@ export default {
   /* Hand */
   .card, .little-card {
     width: 13vw;
-    max-width: 11.5rem;
   }
 
   .little-card {
     width: 13vw;
-    max-width: 160px;
+    max-width: 135px;
   }
 
   .player-cards-one:hover .little-card{
     width: 13vw;
+    max-width: 11rem;
+  }
+}
+
+@media (min-width: 1920px) {
+  .token {
+    max-width: 4.25rem;
+  }
+  
+  .little-card {
+    max-width: 160px;
+  }
+
+  .card, .little-card {
+    width: 13vw;
+    max-width: 11.5rem;
+  }
+
+  .player-cards-one:hover .little-card{
     max-width: 14rem;
   }
 }
