@@ -1,5 +1,7 @@
 <template>
   <div v-if="lobby" class="lobby">
+    <LeaderBoard :socket="this.socket"/>
+
     <!-- Navigation -->
     <div class="grille">
       <div class="colonne1">
@@ -11,23 +13,17 @@
           <a @click="this.socket.emit('ia-create')" class="lien">Jouer contre une IA</a>
         </div>
         <div class="bouton creer">
-          <a @click="isShow_createRoom = !isShow_createRoom" class="lien"
-            >Créer un salon</a
-          >
+          <a @click="isShow_createRoom = !isShow_createRoom" class="lien">Créer un salon</a>
         </div>
 
         <div class="bouton rejoindre">
-          <a class="lien" @click="isShow_joinRoom = !isShow_joinRoom">
-            Rejoindre un salon
-          </a>
+          <a class="lien" @click="isShow_joinRoom = !isShow_joinRoom">Rejoindre un salon</a>
         </div>
         <div class="bouton regles">
           <router-link class="lien" to="/regles">Règles du jeu</router-link>
         </div>
         <div class="bouton communication">
-          <router-link class="lien" to="/communication"
-            >Communication</router-link
-          >
+          <router-link class="lien" to="/communication">Communication</router-link>
         </div>
         <div class="copyright">
           ©2022, FORSANS Paul, QUEMERAS Arthur, TRAVERS Nicolas
@@ -55,11 +51,12 @@
     <!-- Popup salon rejoindre une partie -->
     <transition name="fade">
       <div class="pop_up" v-show="isShow_joinRoom">
+        <div class="background-overlay" v-show="isShow_joinRoom" @click="isShow_joinRoom = false"></div>
         <div class="container_join">
           <h2>Rejoindre un salon</h2>
-          <form id="joinRoom" class="join_room" action="">
+          <form id="joinRoom" class="join_room" action="" @submit="joinRoom">
             <div class="item_popup">
-              <input type="text" class="input" placeholder="Votre pseudo" required />
+              <input type="text" class="input" v-model="username" placeholder="Votre pseudo" required />
             </div>
             <div class="item_popup">
               <input type="text" class="input" placeholder="Nom du salon" required />
@@ -91,16 +88,17 @@
     <!-- Popup salon créer une partie -->
     <transition name="fade">
       <div class="pop_up" v-show="isShow_createRoom">
+        <div class="background-overlay" v-show="isShow_createRoom" @click="isShow_createRoom = false"></div>
         <div class="container_create">
           <h2>Créer un salon</h2>
-          <form id="createRoom" class="create_room" action="">
+          <form id="createRoom" class="create_room" action="" @submit="createRoom">
             <div>
               <div class="item_popup">
-                <input type="text" class="input" placeholder="Votre pseudo" required />
+                <input type="text" class="input" v-model="username" placeholder="Votre pseudo" required />
               </div>
               <div class="item_popup">
                 <input
-                  @click="isShow_createRoom = !isShow_createRoom"
+                  @click="isShow_createRoom = false"
                   class="lien_popup"
                   type="submit"
                   value="Créer"
@@ -131,28 +129,43 @@
 </template>
 
 <script>
+import LeaderBoard from "./LeaderBoard.vue";
+
 export default {
     name: "LobbySelection",
-    data: function () {
+    props: ['socket', 'lobby'],
+    data(){
       return {
         isShow_joinRoom: false,
         isShow_createRoom: false,
-      };
+        username: ""
+      }
     },
-    props: ['socket', 'lobby'],
+    components: {
+      LeaderBoard
+    },
+    methods: {
+      setOverlay() {
+        this.isShow_joinRoom = false
+        this.isShow_createRoom = false
+        this.username = ""
+      },
+
+      createRoom(e) {
+        e.preventDefault()
+        this.socket.emit("createroom", {name : this.username});
+      },
+
+      joinRoom(e) {
+        e.preventDefault()
+        this.socket.emit('joinroom', {name: this.username, room: e.target[1].value});
+      }
+    },
+    created() {
+      this.emitter.on('setLobby', (data) => this.setOverlay(data))
+      this.emitter.on('setName', (data) => this.username = data.name)
+    },
     mounted () {
-        const roomCreation = document.querySelector('#createRoom')
-        const roomJoin = document.querySelector('#joinRoom')
-        if (roomCreation) {
-            roomCreation.addEventListener('submit', e => {
-                e.preventDefault()
-                this.socket.emit("createroom", {name : e.target[0].value});
-            })
-        }
-        roomJoin.addEventListener('submit', e => {
-            e.preventDefault()
-            this.socket.emit('joinroom', {name: e.target[0].value, room: e.target[1].value});
-        })
         this.socket.on('roomjoined', data => {
             var player = data.player ? data.player : 'Un joueur';
             this.emitter.emit('addAlert', {
@@ -162,9 +175,7 @@ export default {
             this.emitter.emit('setRoom', data.room);
             this.emitter.emit('setLobby', false);
         })
-        this.socket.on('noroom', data => {
-            console.log('La room '+ data.room + ' n\'existe pas');
-        })
+        this.socket.on('noroom')
 
         this.socket.on('ia-start', () => {
           this.emitter.emit('addAlert', {
@@ -213,7 +224,7 @@ export default {
   width: 10rem;
   display: inline-block;
   color: var(--main-color);
-  background-color: #ddd;
+  background-color: var(--main-color-light);
   text-decoration: none;
   font-family: 'Poppins', sans-serif;
   font-size: large;
@@ -221,10 +232,11 @@ export default {
   border-radius: 0.5rem;
   border: none;
   margin: auto;
+  color: #fff;
   transition: all .3s ease-in-out;
 }
 .lien_popup:hover {
-  background-color: #e2c372;
+  background-color: rgb(var(--secondary-color));
   cursor: pointer;
 }
 .nom_salon {
@@ -246,7 +258,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.4);
 }
 .container_create {
   align-content: center;
@@ -320,6 +331,13 @@ export default {
     position: absolute;
     left: -2px;
     top: 0;
+  }
+
+  .copyright {
+    margin: auto;
+    margin-top: 2rem;
+    color: white;
+    font-size: .875rem;
   }
 }
 </style>

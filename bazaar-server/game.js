@@ -17,22 +17,21 @@ class Game {
     io;
     room;
     seed;
+    ended = false;
+    winner;
+    winnerScore;
     deck = [];
     graveyard = [];
     market = [];
-    tokens = {
+    merchandises = {
         diamond: [],
         gold: [],
         silver: [],
         cloth: [],
         spice: [],
-        leather: [],
-        bonus: {
-            3: [],
-            4: [],
-            5: []
-        }
-    }
+        leather: []
+    };
+    bonus = [];
     players = [];
     currentPlayer;
 
@@ -59,15 +58,15 @@ class Game {
             this.market.push(card)
         });
 
-        this.tokens.diamond = baseTokens.diamond;
-        this.tokens.gold = baseTokens.gold;
-        this.tokens.silver = baseTokens.silver;
-        this.tokens.cloth = baseTokens.cloth;
-        this.tokens.spice = baseTokens.spice;
-        this.tokens.leather = baseTokens.leather;
-        this.tokens.bonus[3] = this.shuffle(baseTokens.bonus[3]);
-        this.tokens.bonus[4] = this.shuffle(baseTokens.bonus[4]);
-        this.tokens.bonus[5] = this.shuffle(baseTokens.bonus[5]);
+        this.merchandises.diamond = baseTokens.diamond;
+        this.merchandises.gold = baseTokens.gold;
+        this.merchandises.silver = baseTokens.silver;
+        this.merchandises.cloth = baseTokens.cloth;
+        this.merchandises.spice = baseTokens.spice;
+        this.merchandises.leather = baseTokens.leather;
+        this.bonus[3] = this.shuffle(baseTokens.bonus[3]);
+        this.bonus[4] = this.shuffle(baseTokens.bonus[4]);
+        this.bonus[5] = this.shuffle(baseTokens.bonus[5]);
 
         this.players.forEach((player, index) => {
             this.deck.splice(0, 5).forEach(card => {
@@ -143,7 +142,7 @@ class Game {
                 ],
                 market: this.market,
                 graveyard: this.graveyard,
-                tokens: this.tokens,
+                tokens: this.merchandises,
                 currentPlayer: this.currentPlayer
             })
         }
@@ -186,22 +185,34 @@ class Game {
             this.graveyard.push(player.removeFromHand(card));
             switch (card.value) {
                 case "diamond":
-                    player.addToTokens(this.tokens.diamond.splice(this.tokens.diamond.length - 1, 1)[0])
+                    if (this.merchandises.diamond.length) {
+                        player.addToTokens(this.merchandises.diamond.splice(this.merchandises.diamond.length - 1, 1)[0])
+                    }
                     break;
                 case "gold":
-                    player.addToTokens(this.tokens.gold.splice(this.tokens.gold.length - 1, 1)[0])
+                    if (this.merchandises.gold.length) {
+                        player.addToTokens(this.merchandises.gold.splice(this.merchandises.gold.length - 1, 1)[0])
+                    }
                     break;
                 case "silver":
-                    player.addToTokens(this.tokens.silver.splice(this.tokens.silver.length - 1, 1)[0])
+                    if (this.merchandises.silver.length) {
+                        player.addToTokens(this.merchandises.silver.splice(this.merchandises.silver.length - 1, 1)[0])
+                    }
                     break;
                 case "cloth":
-                    player.addToTokens(this.tokens.cloth.splice(this.tokens.cloth.length - 1, 1)[0])
+                    if (this.merchandises.cloth.length) {
+                        player.addToTokens(this.merchandises.cloth.splice(this.merchandises.cloth.length - 1, 1)[0])
+                    }
                     break;
                 case "spice":
-                    player.addToTokens(this.tokens.spice.splice(this.tokens.spice.length - 1, 1)[0])
+                    if (this.merchandises.spice.length) {
+                        player.addToTokens(this.merchandises.spice.splice(this.merchandises.spice.length - 1, 1)[0])
+                    }
                     break;
                 case "leather":
-                    player.addToTokens(this.tokens.leather.splice(this.tokens.leather.length - 1, 1)[0])
+                    if (this.merchandises.leather.length) {
+                        player.addToTokens(this.merchandises.leather.splice(this.merchandises.leather.length - 1, 1)[0])
+                    }
                     break;
                 default:
                     player.socket.emit("alert", { type: "error", message: "Essayé de vendre une carte illégale", card: card })
@@ -211,9 +222,9 @@ class Game {
         let nbSoldCards = data.soldCards.length
         if (nbSoldCards >= 3) {
             if (nbSoldCards >= 5) {
-                player.addToTokens(this.tokens.bonus[5].splice(0, 1)[0]);
+                player.addToTokens(this.bonus[5].splice(0, 1)[0]);
             } else {
-                player.addToTokens(this.tokens.bonus[nbSoldCards].splice(0, 1)[0]);
+                player.addToTokens(this.bonus[nbSoldCards].splice(0, 1)[0]);
             }
         }
 
@@ -239,7 +250,7 @@ class Game {
             ],
             market: this.market,
             graveyard: this.graveyard,
-            tokens: this.tokens,
+            tokens: this.merchandises,
             currentPlayer: this.currentPlayer
         })
     }
@@ -255,8 +266,8 @@ class Game {
 
     checkGameEnd() {
         let emptyTokens = 0;
-        for (let tokenType in this.tokens) {
-            if (Array.isArray(tokenType) && !tokenType.length) {
+        for (let tokenType in this.merchandises) {
+            if (!this.merchandises[tokenType].length) {
                 emptyTokens++;
             }
         }
@@ -277,7 +288,7 @@ class Game {
                     camelToken: false
                 }
             ],
-            winner
+            winner: 0
         }
         this.players.forEach((player, index) => {
             player.getTokens().forEach(token => {
@@ -353,7 +364,27 @@ class Game {
             }
         }
 
+        if (results.winner != 2) {
+            this.ended = true;
+            this.winner = this.players[results.winner].getName();
+            this.winnerScore = results.players[results.winner].totalPoints;
+        }
+
         this.io.to(this.room).emit('game-end', results);
+    }
+
+    isEnded() {
+        if (this.ended) {
+            return true;
+        }
+        return false;
+    }
+
+    getScores() {
+        return {
+            name: this.winner,
+            score: this.winnerScore
+        }
     }
 }
 

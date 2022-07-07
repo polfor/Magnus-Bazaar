@@ -18,6 +18,9 @@ var games = []
 var iaIndex = []
 
 SocketIo.on('connection', socket => {
+
+    sendLeaderboard(socket)
+
     socket.on('createroom', data => {
         let roomname = randomWords({
             exactly: 3,
@@ -96,6 +99,10 @@ SocketIo.on('connection', socket => {
         socket.leave(data.room);
     })
 
+    socket.on('rank', () => {
+        sendLeaderboard(socket)
+    })
+
 })
 
 
@@ -106,6 +113,7 @@ SocketIo.of('/').adapter.on('delete-room', (room) => {
 SocketIo.of('/').adapter.on('leave-room', (room, id) => {
     if (rooms[room]) {
         SocketIo.to(room).emit('opponent-left');
+        SocketIo.to(id).emit('player-left');
     }
 })
 
@@ -117,5 +125,47 @@ Http.listen(3000, () => {
 
 
 function startGame(roomName) {
-    games[roomName] = (new Game(SocketIo, roomName, new Player(rooms[roomName].player1.socket, rooms[roomName].player1.name), new Player(rooms[roomName].player2.socket, rooms[roomName].player2.name)));
+    games[roomName] = new Game(SocketIo, roomName, new Player(rooms[roomName].player1.socket, rooms[roomName].player1.name), new Player(rooms[roomName].player2.socket, rooms[roomName].player2.name));
+    let waitingRestart = 0;
+    let restarts = 1;
+    rooms[roomName].player1.socket.on('restart', () => {
+        if (waitingRestart == 0) {
+            SocketIo.to(roomName).emit('waiting-restart');
+            waitingRestart = 1;
+        } else {
+            games[roomName + restarts++] = new Game(SocketIo, roomName, new Player(rooms[roomName].player1.socket, rooms[roomName].player1.name), new Player(rooms[roomName].player2.socket, rooms[roomName].player2.name))
+            waitingRestart = 0;
+        }
+    })
+
+    rooms[roomName].player2.socket.on('restart', () => {
+        if (waitingRestart == 0) {
+            SocketIo.to(roomName).emit('waiting-restart');
+            waitingRestart = 1;
+        } else {
+            games[roomName + restarts++] = new Game(SocketIo, roomName, new Player(rooms[roomName].player1.socket, rooms[roomName].player1.name), new Player(rooms[roomName].player2.socket, rooms[roomName].player2.name))
+            waitingRestart = 0;
+        }
+    })
+}
+
+function sendLeaderboard(socket) {
+    let endedGames = games.map(game => {
+        if (game.isEnded()) {
+            return game
+        }
+    })
+
+    endedGames.sort((a, b) => {
+        return a.getScores().score - b.getScores().score
+    })
+
+    let scoreBoard = endedGames.map(game => {
+        return {
+            name: game.getScores().name,
+            score: game.getScores().score
+        }
+    })
+
+    socket.emit('leaderboard', scoreBoard);
 }

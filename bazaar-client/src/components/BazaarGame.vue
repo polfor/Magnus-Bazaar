@@ -28,6 +28,8 @@
       </div>
     </div>
 
+    <WinnerTable :socket="this.socket" :winnerOverlay="this.winnerOverlay" :player="this.player" :opponent="this.opponent" :winner="this.winner" />
+
     <HandPlayer :wait="this.wait" :player="this.player" />
     <HandOpponent :opponent="this.opponent" />
 
@@ -50,6 +52,7 @@
 </template>
 
 <script>
+import WinnerTable from "./game/WinnerTable.vue"
 import HandPlayer from "./game/HandPlayer.vue"
 import HandOpponent from "./game/HandOpponent.vue"
 import BoardGame from "./game/BoardGame.vue"
@@ -60,6 +63,7 @@ export default {
   data () {
     return {
       wait: true,
+      winnerOverlay: false,
       copy: false,
 
       // Boutons
@@ -71,11 +75,14 @@ export default {
       // json send
       playerNo: 0,
       opponentNo: 1,
+      ia: false,
       player: {
           name: "",
           hand: [],
           enclosure: [],
           tokens: [],
+          merchandisesPoints: 0,
+          bonusPoints: 0,
           totalPoints: 0,
           camelToken: false
       },
@@ -84,6 +91,8 @@ export default {
           hand: [],
           enclosure: [],
           tokens: [],
+          merchandisesPoints: 0,
+          bonusPoints: 0,
           totalPoints: 0,
           camelToken: false
       },
@@ -100,6 +109,7 @@ export default {
     }
   },
   components: {
+    WinnerTable,
     HandPlayer,
     HandOpponent,
     BoardGame
@@ -255,7 +265,14 @@ export default {
     quit() {
       this.socket.emit('leave', {room: this.room});
       this.emitter.emit('setLobby', true);
-      
+      this.emitter.emit('setName', {name: this.player.name});
+    },
+
+    resetValue() {
+      this.wait = true
+      this.winnerOverlay = false
+      this.copy = false
+            
       // Boutons
       this.buttons = false
       this.tradeButton = false
@@ -285,7 +302,7 @@ export default {
 
       // trade
       this.tradeGive = []
-      this.tradeWant = []   
+      this.tradeWant = []
     },
 
     sell() {
@@ -307,6 +324,32 @@ export default {
       });
     },
 
+    calculTokensPoints() {
+      // Calcul du nombre de point du joueur
+      this.player.merchandisesPoints = 0
+      this.player.bonusPoints = 0
+      this.player.tokens.forEach(token => {
+        if(token.type != "bonus_3" && token.type != "bonus_4" && token.type != "bonus_5"){
+          this.player.merchandisesPoints += token.value;
+        }
+        else{
+          this.player.bonusPoints += token.value;
+        }
+      })
+
+      // Calcul du nombre de point de l'adversaire
+      this.opponent.merchandisesPoints = 0
+      this.opponent.bonusPoints = 0
+      this.opponent.tokens.forEach(token => {
+        if(token.type != "bonus_3" && token.type != "bonus_4" && token.type != "bonus_5"){
+          this.opponent.merchandisesPoints += token.value;
+        }
+        else{
+          this.opponent.bonusPoints += token.value;
+        }
+      })
+    },
+
     copyText() {
       var copyText = document.getElementById("room");
       navigator.clipboard.writeText(copyText.innerHTML);
@@ -319,8 +362,18 @@ export default {
       });
     }
   },
-  mounted () {
+  mounted() {
     this.socket.on('game-start', data => {
+        // Réinitialiation pour le restart 
+        this.emitter.emit('setLobby', false);
+        this.winnerOverlay = false;
+        this.copy = false
+        this.buttons = false
+        this.tradeButton = false
+        this.takeButton = false
+        this.sellButton = false
+
+        // Setup
         this.playerNo = data.playerNo;
         if(!this.playerNo){
             this.opponentNo = 1;
@@ -342,7 +395,7 @@ export default {
 
         this.player.hand = data.players[this.playerNo].hand
         this.player.enclosure = data.players[this.playerNo].enclosure
-        this.player.tokens = data.players[this.playerNo].tokens.reverse()
+        this.player.tokens = data.players[this.playerNo].tokens
 
         this.opponent.hand = data.players[this.opponentNo].hand
         this.opponent.enclosure = data.players[this.opponentNo].enclosure
@@ -352,35 +405,42 @@ export default {
         this.deck = data.deck.length
         this.graveyard = data.graveyard
 
-        this.currentPlayer = data.currentPlayer
+        this.ia && data.currentPlayer == 0 ? setTimeout(this.currentPlayer = data.currentPlayer, 3000) : this.currentPlayer = data.currentPlayer
 
-        // Calcul du nombre de point du joueur
-        this.player.tokens.forEach(token => {
-          this.player.totalPoints += token.value;
-        })
+        this.calculTokensPoints()
     })
 
     this.socket.on('game-end', data => {
-      this.winner = data.winner
+      this.resetPlayer()
+      this.calculTokensPoints()
+      this.winnerOverlay = true
+
+      this.player.camelToken = data.players[this.playerNo].camelToken;
+      this.opponent.camelToken = data.players[this.opponentNo].camelToken;
+
       this.player.totalPoints = data.players[this.playerNo].totalPoints
-      this.player.camelToken = data.players[this.playerNo].camelToken
       this.opponent.totalPoints = data.players[this.opponentNo].totalPoints
-      this.opponent.camelToken = data.players[this.opponentNo].camelToken
+
+      this.winner = data.winner == this.playerNo ? this.player.name : this.opponent.name
     })
 
-    this.socket.on('opponent-left', () => {
-      this.copy = false,
-      this.wait = true;
-      var player = this.player.name ? this.player.name : "Un joueur";
-      this.emitter.on('leave', () => {
-        this.emitter.emit('addAlert', {
-            type: "leave",
-            message: player + " a quitté la salle " + this.room,
-        });
+    this.socket.on('ia-start', () => { 
+      this.wait = false 
+      this.ia = true
+    })
+
+    this.socket.on('opponent-left', () => { 
+      this.emitter.emit('addAlert', {
+          type: "leave",
+          message: this.opponent.name + " a quitté la salle " + this.room,
       });
+      this.wait = true;
     })
 
-    this.socket.on('ia-start', () => { this.wait = false })
+    this.socket.on('player-left', () => {
+      this.resetValue();
+    })
+
     this.emitter.on('activeCards', (ev) => this.active(ev))
     this.emitter.on('setCards', () => this.activeButtons())
     this.emitter.on('sell', () => this.sell())
@@ -663,11 +723,11 @@ export default {
   }
 
   .player-cards-one:hover .enclosure{
-    margin-top: 12vw;
+    margin-top: 13vw;
   }
 
   .player-cards-one:hover .camel-card{
-    margin-top: -12vw;
+    margin-top: -13vw;
     position: relative;
   }
 }
@@ -675,7 +735,7 @@ export default {
 @media (min-width: 1536px) {
   /* Buttons */
   .bazaarGame .lien {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
   }
 
   /* Interface */
@@ -685,14 +745,6 @@ export default {
 
   .interface {
     padding: 6rem 0;
-  }
-
-  .enclosure-number, .deck-number {
-    top: -1rem;
-    left: -1rem;
-    width: 46px;
-    height: 46px;
-    font-size: 1.5rem;
   }
 
   .player-current {
@@ -707,10 +759,6 @@ export default {
     width: 23vw;
   }
 
-  .token {
-    max-width: 4.25rem;
-  }
-
   .tokens.active .tokens-container {
     max-width: 56rem;
   }
@@ -722,17 +770,43 @@ export default {
   /* Hand */
   .card, .little-card {
     width: 13vw;
-    max-width: 11.5rem;
   }
 
   .little-card {
     width: 13vw;
-    max-width: 160px;
+    max-width: 135px;
   }
 
   .player-cards-one:hover .little-card{
     width: 13vw;
-    max-width: 16rem;
+    max-width: 11rem;
+  }
+}
+
+@media (min-width: 1920px) {
+  .token {
+    max-width: 4.25rem;
+  }
+
+  .little-card {
+    max-width: 160px;
+  }
+
+  .card, .little-card {
+    width: 13vw;
+    max-width: 11.5rem;
+  }
+
+  .player-cards-one:hover .little-card{
+    max-width: 14rem;
+  }
+
+  .enclosure-number, .deck-number {
+    top: -1rem;
+    left: -1rem;
+    width: 46px;
+    height: 46px;
+    font-size: 1.5rem;
   }
 }
 </style>
@@ -814,7 +888,8 @@ export default {
   padding: .7rem;
   border-radius: 5px;
   border: none;
-  background-color: #ddd;
+  color: #fff;
+  background-color: var(--main-color-light);
   transition: all .3s ease-in-out;
 }
 

@@ -13,6 +13,7 @@ export default {
 <style>
 :root {
   --main-color: #272626;
+  --main-color-light: #585454;
   --secondary-color: 226, 195, 114;
 }
 
@@ -74,5 +75,15 @@ body {
   .lien {
     font-size: 1rem;
   }
+}
+
+/* Overlay */
+.background-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.2);
 }
 </style>

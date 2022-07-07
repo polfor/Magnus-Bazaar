@@ -85,9 +85,9 @@
           <!-- Buttons -->
           <transition name="fade">
             <div class="buttons" v-if="buttons">
-              <button id="trade" :class="{ 'disable': !tradeButton }" class="lien" @click="tradeButton ? this.emitter.emit('trade') : ''">Échanger</button>
-              <button id="take" :class="{ 'disable': !takeButton }" class="lien" @click="takeButton ? this.emitter.emit('trade') : ''">Prendre</button>
-              <button id="sell" :class="{ 'disable': !sellButton }" class="lien" @click="sellButton ? this.emitter.emit('sell') : ''">Vendre</button>
+              <button id="trade" :class="{ 'disable': !tradeButton }" class="lien" @click="tradeButton && currentPlayer == playerNo ? this.emitter.emit('trade') : ''">Échanger</button>
+              <button id="take" :class="{ 'disable': !takeButton }" class="lien" @click="takeButton && currentPlayer == playerNo ? this.emitter.emit('trade') : ''">Prendre</button>
+              <button id="sell" :class="{ 'disable': !sellButton }" class="lien" @click="sellButton && currentPlayer == playerNo ? this.emitter.emit('sell') : ''">Vendre</button>
             </div>
           </transition>
         </div>
@@ -108,9 +108,10 @@
           <div class="game-cards">
             <!-- Deck -->
             <div class="deck card empty-cards">
-              <span v-if="deck != 0" class="deck-number">{{ deck }}</span>
+              <span v-if="wait == false" class="deck-number">{{ deck }}</span>
               <img v-if="deck >= 27" src="@/assets/Deck_full.png" alt="">
               <img v-if="deck <= 26 && deck != 0" src="@/assets/Deck_half.png" alt="">
+              <img v-if="deck == 0 && wait == false" class="card card-hidden" src="@/assets/Back_card.png" alt="">
             </div>
 
             <!-- Graveyard -->
@@ -236,13 +237,14 @@ export default {
   display: inline-block;
   position: absolute;
   right: 0;
+  white-space: nowrap;
 }
 
 .player.active{
   background-color: rgb(var(--secondary-color));
 }
 
-.player-container, .deck {
+.player-container {
   position: relative;
 }
 
@@ -317,6 +319,11 @@ export default {
   flex-direction: column;
   grid-template-rows: repeat(2, 1fr);
   gap: .5rem;
+}
+
+.deck {
+  position: relative;
+  z-index: 1;
 }
 
 .graveyard {
