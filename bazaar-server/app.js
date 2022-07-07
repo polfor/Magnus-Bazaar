@@ -160,7 +160,7 @@ function sendLeaderboard(socket) {
 
 
     endedGames.sort((a, b) => {
-        return a.getScores().score - b.getScores().score
+        return b.getScores().score - a.getScores().score
     })
 
     let scoreBoard = endedGames.map(game => {
@@ -169,7 +169,6 @@ function sendLeaderboard(socket) {
             score: game.getScores().score
         }
     })
-
 
     socket.emit('leaderboard', scoreBoard);
 }
