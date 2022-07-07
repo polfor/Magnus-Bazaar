@@ -182,11 +182,13 @@ export default {
   opacity: 0;
 }
 
-@media (min-width: 1536px){
+@media (min-width: 1280px){
   .hand-tokens-bonus{
     left: 6rem;
   }
+}
 
+@media (min-width: 1536px){
   .hand-tokens.active .token:not(.token-hidden){
     left: max(-5vw, -4.25rem);
   }
